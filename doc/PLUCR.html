@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to Policy Learning Under Constraint R-package (PLUCR)</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to Policy Learning Under
+Constraint R-package (PLUCR)</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(PLUCR)</span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>1. Introduction</h1>
+<p>The <code>PLUCR</code> package provides tools for estimating
+treatment policies that maximize a primary clinical outcome while
+controlling for the occurrence of adverse events. This dual-objective
+framework is particularly relevant in medical or decision-making
+settings where benefits must be balanced against potential harms.</p>
+<p>Many existing methods derive treatment policies based on the sign of
+the Conditional Average Treatment Effect (CATE). In this setup,
+individuals with a positive CATE are assigned treatment, as it is
+expected to be beneficial; those with a non-positive CATE are not
+treated. While effective in simple settings, this strategy becomes
+inadequate when multiple outcomes must be considered — particularly when
+adverse events are ignored.</p>
+<p><code>PLUCR</code> addresses this limitation by framing the policy
+learning task as a constrained optimization problem. The goal is to
+learn a policy that not only improves the primary outcome but also
+respects pre-specified constraints on adverse effects. The method
+implemented in <code>PLUCR</code> estimates treatment policies by
+adapting the Conditional Average Treatment Effect (CATE) to ensure
+compliance with a predefined constraint on adverse events. This is
+achieved through an iterative procedure that alternates between
+optimizing the policy and correcting its estimator, ultimately leading
+to a constrained-optimal policy.</p>
+</div>
+<div id="getting-started" class="section level1">
+<h1>2. Getting started</h1>
+<p>This section demonstrates a basic example of how to use the
+<code>PLUCR</code> package. We begin by generating a synthetic dataset
+and applying the main function, <code>main_algorithm()</code>, to learn
+an optimal policy under adverse event constraints.</p>
+<div id="installation" class="section level2">
+<h2>2.1. Installation</h2>
+<p>You can install the development version from your local source:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;path/to/PLUCR_package&quot;</span>)</span></code></pre></div>
+</div>
+<div id="load-required-packages-and-data" class="section level2">
+<h2>2.2. Load required packages and data</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(PLUCR)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(SuperLearner)</span></code></pre></div>
+<p>We generate synthetic observational data using the built-in
+<code>data_gen()</code> function. This function also produces the
+complete data structure (which is typically unavailable in real-world
+applications and used here for evaluation purposes only).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">2000</span>  <span class="co"># Sample size</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>exp <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">data_gen</span>(n, <span class="at">seed=</span><span class="dv">2025</span>) <span class="co"># changer scenario score de propension expit(-0.5*X3 + 0.5*1(X1&gt;0.3)) </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co"># # Complete data (not available in real settings)</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>df_complete <span class="ot">&lt;-</span> exp[[<span class="dv">1</span>]] </span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co"># # Observational data (to be used for training)</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>df_obs <span class="ot">&lt;-</span> exp[[<span class="dv">2</span>]]</span></code></pre></div>
+</div>
+<div id="prepare-variables-and-function-parameters" class="section level2">
+<h2>2.3. Prepare Variables and Function parameters</h2>
+<p>In this step, we extract the necessary variables from the
+observational dataset and define the parameters required by the
+<code>main_algorithm()</code> function. This includes specifying the
+covariates, treatment indicator, outcomes, and adverse events.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Covariates matrix </span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> df_obs <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;X.&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># Binary treatment assignment (0 = control, 1 = treated)</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>A <span class="ot">&lt;-</span> df_obs<span class="sc">$</span>Treatment</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co"># Primary outcome, assumed to be scaled to [0, 1]</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>Y <span class="ot">&lt;-</span> df_obs<span class="sc">$</span>Y</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co"># Binary indicator of adverse events (0=No adverse event, 1=adverse event)</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>Xi <span class="ot">&lt;-</span> df_obs<span class="sc">$</span>Xi</span></code></pre></div>
+<p>We now define the parameters to be passed to
+<code>main_algorithm()</code>. These include the learners used in
+<code>SuperLearner</code> estimation, the directory for saving results,
+and tuning parameters that control constraint enforcement and
+optimization precision.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># SuperLearner library used for estimating nuisance functions</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># You can customize this list. The default includes:</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># - SL.mean: simple mean predictor</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># - SL.glm: generalized linear model</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># - SL.ranger: random forest</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># - SL.grf: generalized random forest</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># - SL.xgboost: gradient boosting</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>SL.library <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;SL.mean&quot;</span>, <span class="st">&quot;SL.glm&quot;</span>, <span class="st">&quot;SL.ranger&quot;</span>, <span class="st">&quot;SL.grf&quot;</span>, <span class="st">&quot;SL.xgboost&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co"># Root directory where output files and intermediate results will be saved</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>root.path <span class="ot">&lt;-</span> <span class="st">&quot;results&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co"># Constraint tolerance (alpha): maximum allowed increase in adverse event risk</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co"># Example: 0.15 means the policy may increase adverse event probability by up to 15%</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>alpha.tolerance <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co"># Optimization precision: controls granularity of the policy search</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co"># Smaller values lead to finer approximations but require more computation</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>optimization.precision <span class="ot">&lt;-</span> <span class="fl">0.05</span></span></code></pre></div>
+</div>
+<div id="run-the-main-algorithm" class="section level2">
+<h2>2.4. Run the main algorithm</h2>
+<p>With all variables and parameters defined, we now apply the main
+function <code>main_algorithm()</code> from the <code>PLUCR</code>
+package. This function performs the entire estimation pipeline,
+including: 1- Estimating nuisance components using
+<code>SuperLearner</code>, 2- Learning a treatment policy that maximizes
+the primary outcome, enforcing a constraint on the probability of
+adverse events with the alternated procedure.</p>
+<p>The output includes both: - An unconstrained policy (based solely on
+primary outcome maximization) - A constrained-optimal policy (that
+respects the adverse event constraint).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>output <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">main_algorithm</span>(<span class="at">X=</span>X, <span class="at">A=</span>A, <span class="at">Y=</span>Y, <span class="at">Xi=</span>Xi, </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                                <span class="at">alpha=</span>alpha.tolerance, <span class="at">precision=</span>optimization.precision,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                                <span class="at">SL.library=</span> SL.library, <span class="at">root.path=</span>root.path)</span></code></pre></div>
+</div>
+</div>
+<div id="understanding-the-algorithm-internally" class="section level1">
+<h1>3. Understanding the Algorithm Internally</h1>
+<p>The <code>main_algorithm()</code> function is designed to abstract
+away the technical details while still allowing flexibility through its
+parameters. Internally, it carries out a constrained policy learning
+procedure, broken down into three main stages, each performed on a
+different fold.</p>
+<div id="preliminary-step-data-checks-and-cross-fitting-folds" class="section level2">
+<h2>3.1. Preliminary Step: Data Checks and Cross-Fitting Folds</h2>
+<p>Before estimating nuisance functions and optimizing the policy, the
+algorithm performs three important preliminary tasks: - Creates the
+folds where results will be saved. - Verifies that the input variables
+(X, A, Y and Xi) meet the required format and assumptions, such as
+outcome ranges, binary treatment/adverse event values. - Creates 3
+cross-validation folds to enable cross-fitting.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># Folds for cross-validation </span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>folds <span class="ot">&lt;-</span> SuperLearner<span class="sc">::</span><span class="fu">CVFolds</span>(n, </span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                               <span class="at">id =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>                               <span class="at">Y =</span> Y,</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>                               <span class="at">cvControl =</span> SuperLearner<span class="sc">::</span><span class="fu">SuperLearner.CV.control</span>(<span class="at">V =</span> JFold, </span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                                                                                 <span class="at">shuffle =</span><span class="cn">TRUE</span>))</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># Check data</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>checks<span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">check_data</span>(Y, Xi, A, X, folds)</span></code></pre></div>
+</div>
+<div id="step-1-estimate-and-save-nuisance-parameters" class="section level2">
+<h2>3.2. Step 1: Estimate and Save Nuisance Parameters</h2>
+<p>Once the variables have been validated and the cross-fitting folds
+are defined, the algorithm proceeds to estimate the nuisance parameters.
+These models are each trained using the pre-defined folds to enable
+cross-fitting, which improves robustness and reduces overfitting.</p>
+<p>The key nuisance parameters estimated are:</p>
+<ul>
+<li><strong>Primary outcome model:</strong> <span class="math inline">\(E[Y \mid A, X]\)</span><br />
+</li>
+<li><strong>Adverse event model:</strong> <span class="math inline">\(E[\xi \mid A, X]\)</span><br />
+</li>
+<li><strong>Propensity score model:</strong> <span class="math inline">\(P[A \mid X]\)</span></li>
+</ul>
+<p>Each model is fit separately and the estimates are saved for later
+use in policy learning.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Estimate primary outcome model E[Y | A, X]</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>mu.hat.nj <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">estimate_mu</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">Y =</span> Y, <span class="at">A =</span> A, <span class="at">X =</span> X, <span class="at">folds =</span> folds,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">SL.library =</span> SL.library, <span class="at">V =</span> <span class="dv">2</span><span class="dt">L</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="fu">saveRDS</span>(mu.hat.nj, <span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;Mu.hat&quot;</span>, <span class="st">&quot;mu.hat.nj.rds&quot;</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># Estimate adverse event model E[Xi | A, X]</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>nu.hat.nj <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">estimate_nu</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="at">Xi =</span> Xi, <span class="at">A =</span> A, <span class="at">X =</span> X, <span class="at">folds =</span> folds,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">SL.library =</span> SL.library, <span class="at">V =</span> <span class="dv">2</span><span class="dt">L</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>)</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="fu">saveRDS</span>(nu.hat.nj, <span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;Nu.hat&quot;</span>, <span class="st">&quot;nu.hat.nj.rds&quot;</span>))</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co"># Estimate propensity score model P[A | X]</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>ps.hat.nj <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">estimate_ps</span>(</span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>  <span class="at">A =</span> A, <span class="at">X =</span> X, <span class="at">folds =</span> folds,</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>  <span class="at">SL.library =</span> SL.library, <span class="at">V =</span> <span class="dv">2</span><span class="dt">L</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>)</span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="fu">saveRDS</span>(ps.hat.nj, <span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;PS.hat&quot;</span>, <span class="st">&quot;ps.hat.nj.rds&quot;</span>))</span></code></pre></div>
+<p>After estimating the nuisance parameters, the next step is to
+organize the data into <strong>training</strong> and
+<strong>testing</strong> sets. This allows us to:</p>
+<ul>
+<li>Learn nuisance components on a first training subset of the
+data.</li>
+<li>Estimate the optimal treatment policy on a second independent
+training set of the data.</li>
+<li>Evaluate the learned policy’s performance on an independent test
+set.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Training functions &amp; data (first and second folds)</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co"># functions (first fold)</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>mu0_train <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">mu.hat.nj</span>(<span class="at">a=</span>a,<span class="at">x=</span>x,<span class="at">ff=</span><span class="dv">1</span>)}</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>nu0_train <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">nu.hat.nj</span>(<span class="at">a=</span>a,<span class="at">x=</span>x,<span class="at">ff=</span><span class="dv">1</span>)}</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>prop_score_train <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">ps.hat.nj</span>(a,x,<span class="dv">1</span>)}</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># data (second fold)</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>X_train <span class="ot">&lt;-</span> X[folds[[<span class="dv">2</span>]],]</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>A_train <span class="ot">&lt;-</span> A[folds[[<span class="dv">2</span>]]]</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>Y_train <span class="ot">&lt;-</span> Y[folds[[<span class="dv">2</span>]]]</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>Xi_train <span class="ot">&lt;-</span> Xi[folds[[<span class="dv">2</span>]]]</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  </span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># Testing functions &amp; data (third fold)</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co"># functions</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>mu0_test <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">mu.hat.nj</span>(a,x,<span class="dv">3</span>)}</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>nu0_test <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">nu.hat.nj</span>(a,x,<span class="dv">3</span>)}</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>prop_score_test <span class="ot">&lt;-</span> <span class="cf">function</span>(a,x){<span class="fu">ps.hat.nj</span>(a,x,<span class="dv">3</span>)}</span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co"># data (third fold)</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>X_test <span class="ot">&lt;-</span> X[folds[[<span class="dv">3</span>]],]</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>A_test <span class="ot">&lt;-</span> A[folds[[<span class="dv">3</span>]]]</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>Y_test <span class="ot">&lt;-</span> Y[folds[[<span class="dv">3</span>]]]</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>Xi_test <span class="ot">&lt;-</span> Xi[folds[[<span class="dv">3</span>]]]</span></code></pre></div>
+</div>
+<div id="step-2-policy-optimization" class="section level2">
+<h2>3.3. Step 2: Policy optimization</h2>
+<p>In this step, we run the core algorithm of the <code>PLUCR</code>
+package — the <strong>alternating optimization procedure</strong>
+implemented in the <code>Optimization_Estimation()</code> function. This
+procedure learns an optimal treatment policy that maximizes the expected
+primary outcome while controlling the probability of adverse events.</p>
+<p>The procedure is executed over a grid of <span class="math inline">\((\lambda, \beta)\)</span> values, where:</p>
+<ul>
+<li><span class="math inline">\(\lambda\)</span> controls the trade-off
+between maximizing the primary outcome and satisfying the
+constraint.</li>
+<li><span class="math inline">\(\beta\)</span> is a tuning parameter
+influencing the optimization regularization.</li>
+</ul>
+<p>Before evaluating the entire grid, the algorithm first solves the
+problem with <span class="math inline">\(\lambda = 0\)</span> in order
+to check whether the unconstrained optimal policy already satisfies the
+constraint. If it does, no further optimization over the grid is
+necessary.</p>
+<p>During the search over <span class="math inline">\(\lambda\)</span>,
+once the constraint is satisfied for the first time, the procedure saves
+the corresponding results at each <span class="math inline">\(\beta\)</span> value. The search over <span class="math inline">\(\lambda\)</span> then stops when the upper bound
+of the confidence interval for the constraint value drops below
+zero.</p>
+<p><strong>Alternating Optimization Procedure</strong></p>
+<p>Whether with <span class="math inline">\(\lambda = 0\)</span> or
+<span class="math inline">\(\lambda &gt; 0\)</span>, the procedure
+iterates as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Initial estimation of the plug-in objective function <span class="math inline">\(L(\psi)\)</span> using <span class="math inline">\(\Delta\mu_n^k\)</span> and <span class="math inline">\(\Delta\nu_n^k\)</span> derived from,</p>
+<ul>
+<li><span class="math inline">\(\mu_n^k\)</span>: the expected outcome
+model (for k=0, this corresponds to <code>mu0_train</code>).</li>
+<li><span class="math inline">\(\nu_n^k\)</span>: the adverse event
+model (for k=0, this corresponds to <code>nu0_train</code>).</li>
+</ul></li>
+<li><p><strong>Policy optimization</strong>: Frank- Wolfe algorithm
+Minimize <span class="math inline">\(L^k_n(\psi)\)</span> to obtain a
+new candidate policy <span class="math inline">\(\psi_k\)</span>.</p></li>
+<li><p><strong>Update nuisance parameters</strong>:</p>
+<ul>
+<li>Estimate <span class="math inline">\(\epsilon_1\)</span> and <span class="math inline">\(\epsilon_2\)</span> to correct the outcome and
+adverse event models using all previous solutions <span class="math inline">\((\psi_0, ..., \psi_k)\)</span>, yielding updated
+models <span class="math inline">\(\mu_n^{k+1}\)</span>, <span class="math inline">\(\nu_n^{k+1}\)</span> (using functions
+<code>update_mu_XA</code>, <code>update_nu_XA</code>).</li>
+</ul></li>
+<li><p>Repeat until convergence or until the maximum number of
+iterations is reached.</p></li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Start by testing the unconstrained case with lambda = 0</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>saved <span class="ot">&lt;-</span> <span class="cn">FALSE</span>  <span class="co"># Flag to track whether a valid result has already been saved</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>combinations <span class="ot">&lt;-</span> <span class="cn">NULL</span>  <span class="co"># Matrix to store (beta, lambda) pairs that satisfy the constraint</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># Arbitrary beta value since constraint is not evaluated yet</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># Run optimization with lambda = 0 (no constraint)</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>out <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">Optimization_Estimation</span>(mu0_train, nu0_train, prop_score_train, </span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>                                        X_train, A_train, Y_train, Xi_train, </span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>                                        <span class="at">lambda=</span><span class="dv">0</span>, alpha, precision, beta, centered, </span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>                                        <span class="fu">file.path</span>(root.path,<span class="st">&quot;Intermediate&quot;</span>,<span class="fu">paste0</span>(<span class="dv">0</span>,<span class="st">&quot;_&quot;</span>,beta)))</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co"># Extract the final policy from the iteration  </span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>theta_0 <span class="ot">&lt;-</span> out<span class="sc">$</span>theta_collection[[<span class="fu">length</span>(out<span class="sc">$</span>theta_collection)]]</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co"># Evaluate the policy on the test data</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>res_0 <span class="ot">&lt;-</span> <span class="fu">process_results</span>(theta_0, </span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>                         X_test, A_test, Y_test, Xi_test, </span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>                         mu0_test, nu0_test, prop_score_test, </span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a>                         <span class="at">lambda=</span><span class="dv">0</span>, alpha,  beta, centered)</span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co"># Save the evaluation results</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="fu">saveRDS</span>(res_0[[<span class="dv">1</span>]], <span class="at">file=</span><span class="fu">file.path</span>(root.path,<span class="st">&quot;Evaluation&quot;</span>,<span class="fu">paste0</span>(<span class="dv">0</span>,<span class="st">&quot;_&quot;</span>,beta,<span class="st">&quot;.rds&quot;</span>)))</span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a>  </span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co"># If the constraint is satisfied, save the corresponding policy and mark as saved</span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>saved <span class="sc">&amp;&amp;</span> res_0[[<span class="dv">1</span>]]<span class="sc">$</span>constraint <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a>    <span class="fu">saveRDS</span>(theta_0, <span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;Theta_opt&quot;</span>, <span class="fu">paste0</span>(<span class="dv">0</span>, <span class="st">&quot;_&quot;</span>, beta, <span class="st">&quot;.rds&quot;</span>)))</span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a>    psi_0 <span class="ot">&lt;-</span> <span class="fu">make_psi</span>(theta_opt)</span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a>    sigma_beta_0 <span class="ot">&lt;-</span> <span class="fu">sigma_beta</span>(<span class="fu">psi_0</span>(X), <span class="at">beta=</span><span class="fl">0.05</span>, <span class="at">centered =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a>    combinations <span class="ot">&lt;-</span> <span class="fu">rbind</span>(combinations, <span class="fu">c</span>(beta, lambda))</span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a>    saved <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a>}</span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co"># If the upper bound of the constraint&#39;s CI is below zero, stop here</span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="cf">if</span>(res_0[[<span class="dv">2</span>]]<span class="sc">&lt;</span><span class="dv">0</span>){</span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a>    <span class="fu">print</span>(theta_0)</span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a>    <span class="co"># Begin training over the grid</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a>    <span class="do">##for (beta in Betas){</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a>      <span class="cf">for</span> (lambda <span class="cf">in</span> Lambdas){</span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a>       <span class="co"># Run alternated procedure for each beta and lambda combination </span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a>        out <span class="ot">&lt;-</span> PLUCR<span class="sc">::</span><span class="fu">Optimization_Estimation</span>(mu0_train, nu0_train, prop_score_train, </span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a>                                              X_train, A_train, Y_train, Xi_train, </span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a>                                              lambda, alpha, precision, beta, centered,</span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a>                                            <span class="fu">file.path</span>(root.path,<span class="st">&quot;Intermediate&quot;</span>,<span class="fu">paste0</span>(lambda,<span class="st">&quot;_&quot;</span>,beta)))</span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a>        <span class="co"># Extract final policy</span></span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>        theta_opt <span class="ot">&lt;-</span> out<span class="sc">$</span>theta_collection[[<span class="fu">length</span>(out<span class="sc">$</span>theta_collection)]]</span>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a>         <span class="co"># Evaluate the policy on test set</span></span>
+<span id="cb11-46"><a href="#cb11-46" tabindex="-1"></a>        res <span class="ot">&lt;-</span> <span class="fu">process_results</span>(theta_opt, </span>
+<span id="cb11-47"><a href="#cb11-47" tabindex="-1"></a>                               X_test, A_test, Y_test, Xi_test, </span>
+<span id="cb11-48"><a href="#cb11-48" tabindex="-1"></a>                               mu0_test, nu0_test, prop_score_test, </span>
+<span id="cb11-49"><a href="#cb11-49" tabindex="-1"></a>                               lambda, alpha, beta, centered)</span>
+<span id="cb11-50"><a href="#cb11-50" tabindex="-1"></a>        <span class="co"># Save evaluation results</span></span>
+<span id="cb11-51"><a href="#cb11-51" tabindex="-1"></a>        <span class="fu">saveRDS</span>(res[[<span class="dv">1</span>]], <span class="at">file=</span><span class="fu">file.path</span>(root.path,<span class="st">&quot;Evaluation&quot;</span>, <span class="fu">paste0</span>(lambda,<span class="st">&quot;_&quot;</span>,beta,<span class="st">&quot;.rds&quot;</span>)))</span>
+<span id="cb11-52"><a href="#cb11-52" tabindex="-1"></a>        </span>
+<span id="cb11-53"><a href="#cb11-53" tabindex="-1"></a>        <span class="co"># If constraint is satisfied for the first time, save the optimal policy</span></span>
+<span id="cb11-54"><a href="#cb11-54" tabindex="-1"></a>        <span class="cf">if</span> (<span class="sc">!</span>saved <span class="sc">&amp;&amp;</span> res[[<span class="dv">1</span>]]<span class="sc">$</span>constraint <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb11-55"><a href="#cb11-55" tabindex="-1"></a>          <span class="fu">saveRDS</span>(theta_opt, </span>
+<span id="cb11-56"><a href="#cb11-56" tabindex="-1"></a>                  <span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;Theta_opt&quot;</span>, <span class="fu">paste0</span>(lambda, <span class="st">&quot;_&quot;</span>, beta, <span class="st">&quot;.rds&quot;</span>)))</span>
+<span id="cb11-57"><a href="#cb11-57" tabindex="-1"></a>          saved <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb11-58"><a href="#cb11-58" tabindex="-1"></a>          psi_opt <span class="ot">&lt;-</span> <span class="fu">make_psi</span>(theta_opt)</span>
+<span id="cb11-59"><a href="#cb11-59" tabindex="-1"></a>          sigma_beta_opt <span class="ot">&lt;-</span> <span class="fu">sigma_beta</span>(<span class="fu">psi_opt</span>(X), <span class="at">beta=</span><span class="fl">0.05</span>, <span class="at">centered =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-60"><a href="#cb11-60" tabindex="-1"></a>          combinations <span class="ot">&lt;-</span> <span class="fu">rbind</span>(combinations, <span class="fu">c</span>(beta, lambda))</span>
+<span id="cb11-61"><a href="#cb11-61" tabindex="-1"></a>        }</span>
+<span id="cb11-62"><a href="#cb11-62" tabindex="-1"></a>        <span class="co"># Stop search if constraint&#39;s upper CI bound is negative</span></span>
+<span id="cb11-63"><a href="#cb11-63" tabindex="-1"></a>        <span class="cf">if</span>(res[[<span class="dv">2</span>]]<span class="sc">&lt;</span><span class="dv">0</span>){</span>
+<span id="cb11-64"><a href="#cb11-64" tabindex="-1"></a>          <span class="cf">break</span></span>
+<span id="cb11-65"><a href="#cb11-65" tabindex="-1"></a>        }</span>
+<span id="cb11-66"><a href="#cb11-66" tabindex="-1"></a>        </span>
+<span id="cb11-67"><a href="#cb11-67" tabindex="-1"></a>      <span class="co">#}</span></span>
+<span id="cb11-68"><a href="#cb11-68" tabindex="-1"></a>      }</span>
+<span id="cb11-69"><a href="#cb11-69" tabindex="-1"></a>    theta_final <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">file.path</span>(root.path, <span class="st">&quot;Theta_opt&quot;</span>, </span>
+<span id="cb11-70"><a href="#cb11-70" tabindex="-1"></a>                                            <span class="fu">paste0</span>(combinations[,<span class="dv">2</span>], <span class="st">&quot;_&quot;</span>, combinations[,<span class="dv">1</span>], <span class="st">&quot;.rds&quot;</span>)))</span>
+<span id="cb11-71"><a href="#cb11-71" tabindex="-1"></a>  }</span>
+<span id="cb11-72"><a href="#cb11-72" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">list</span>(theta_0, theta_final))</span></code></pre></div>
+</div>
+</div>
+<div id="play-with-results" class="section level1">
+<h1>4. Play with results</h1>
+<p>[complete]</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
