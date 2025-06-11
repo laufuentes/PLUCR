@@ -109,11 +109,14 @@ optimization.precision <- 0.05
 
 ## 2.4. Run the main algorithm 
 With all variables and parameters defined, we now apply the main function `main_algorithm()` from the `PLUCR` package. This function performs the entire estimation pipeline, including:
+
 1- Estimating nuisance components using `SuperLearner`,
+
 2- Learning a treatment policy that maximizes the primary outcome, enforcing a constraint on the probability of adverse events with the alternated procedure. 
 
 The output includes both:
 - An unconstrained policy (based solely on primary outcome maximization)
+
 - A constrained-optimal policy (that respects the adverse event constraint).
 ```{r, eval=FALSE}
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
@@ -128,8 +131,11 @@ The `main_algorithm()` function is designed to abstract away the technical detai
 
 ## 3.1. Preliminary Step: Data Checks and Cross-Fitting Folds
 Before estimating nuisance functions and optimizing the policy, the algorithm performs three important preliminary tasks:
+
 - Creates the folds where results will be saved. 
+
 - Verifies that the input variables (X, A, Y and Xi) meet the required format and assumptions, such as outcome ranges, binary treatment/adverse event values.
+
 - Creates 3 cross-validation folds to enable cross-fitting. 
 ```{r, eval=FALSE}
 n <- nrow(X)
