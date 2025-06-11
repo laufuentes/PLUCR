@@ -115,6 +115,7 @@ With all variables and parameters defined, we now apply the main function `main_
 2- Learning a treatment policy that maximizes the primary outcome, enforcing a constraint on the probability of adverse events with the alternated procedure. 
 
 The output includes both:
+
 - An unconstrained policy (based solely on primary outcome maximization)
 
 - A constrained-optimal policy (that respects the adverse event constraint).
@@ -290,7 +291,8 @@ if(res_0[[2]]<0){
         out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
                                               X_train, A_train, Y_train, Xi_train, 
                                               lambda, alpha, precision, beta, centered,
-                                              file.path(root.path,"Intermediate", paste0(lambda,"_",beta)))
+                                              file.path(root.path,"Intermediate", 
+                                                        paste0(lambda,"_",beta)))
         # Extract final policy
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
          # Evaluate the policy on test set
@@ -299,7 +301,8 @@ if(res_0[[2]]<0){
                                mu0_test, nu0_test, prop_score_test, 
                                lambda, alpha, beta, centered)
         # Save evaluation results
-        saveRDS(res[[1]], file=file.path(root.path, "Evaluation", paste0(lambda,"_",beta,".rds")))
+        saveRDS(res[[1]], file=file.path(root.path, "Evaluation", 
+                                         paste0(lambda,"_",beta,".rds")))
         
         # If constraint is satisfied for the first time, save the optimal policy
         if (!saved && res[[1]]$constraint < 0) {
@@ -316,11 +319,15 @@ if(res_0[[2]]<0){
         }
       }
     }
-  # Load all lambda-optimal results and select the (beta, lambda) combination that minimizes the objective function
+  # Load all lambda-optimal results and select the (beta, lambda) combination 
+  # that minimizes the objective function
   optimal_combination <- get_opt_beta_lambda(combinations,root.path)
   
   # Load the corresponding theta for the optimal (beta, lambda) combination
-  theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
+  theta_final <- readRDS(file = file.path(root.path, 
+                                          "Theta_opt", 
+                                          paste0(optimal_combination$beta, "_", 
+                                                 optimal_combination$lambda, ".rds"))) 
   }
 print(list(theta_0, theta_final))
 ```
