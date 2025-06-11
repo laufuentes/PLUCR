@@ -53,7 +53,7 @@ We generate synthetic observational data using the built-in `data_gen()` functio
 ```{r, eval=FALSE}
 
 n <- 2000  # Sample size
-exp <- PLUCR::data_gen(n, seed=2025) # changer scenario score de propension expit(-0.5*X3 + 0.5*1(X1>0.3)) 
+exp <- PLUCR::data_gen(n, seed=2025) 
 
 # # Complete data (not available in real settings)
 df_complete <- exp[[1]] 
