@@ -12,7 +12,7 @@ SGD(
   delta_Mu,
   delta_Nu,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
   batch_prop = 1/3,
@@ -29,7 +29,7 @@ SGD_X(
   delta_Mu_X,
   delta_Nu_X,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
   batch_prop = 1/3,
@@ -42,21 +42,21 @@ SGD_X(
 \arguments{
 \item{theta_current}{A numeric matrix of size 1 x d (intialization for parameter to estimate).}
 
-\item{psi}{A function that takes X as input.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{X}{A numeric matrix of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{delta_Mu}{A function of \code{X} that determines the difference between primary counterfactual outcomes.}
+\item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 
-\item{delta_Nu}{A function of \code{X} that determines the difference between secondary counterfactual outcomes.}
+\item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 
-\item{lambda}{A numeric scalar controlling the weight of the constraint function in the objective.}
+\item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar (0.05 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
-\item{beta}{A numeric scalar (0.05 by default) controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{centered}{A logical (FALSE by default) indicating whether to center the policy.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
 \item{batch_prop}{Proportion of data in a batch (by default 1/3).}
 
@@ -66,7 +66,7 @@ SGD_X(
 
 \item{lr}{Learning rate parameter (by default 1e-2).}
 
-\item{verbose}{A logical value indicating whether to print progress.}
+\item{verbose}{A logical value indicating whether to print progress updates. Default is \code{FALSE}.}
 }
 \value{
 A numeric matrix of size 1 x d (optimized parameters).

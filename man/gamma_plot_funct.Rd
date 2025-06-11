@@ -7,15 +7,15 @@
 gamma_plot_funct(psi_X, lambda, beta, df, centered)
 }
 \arguments{
-\item{psi_X}{A numeric vector of policy scores.}
+\item{psi_X}{A numeric vector with values in the range \code{[-1, 1]} representing the output of \code{psi} at fixed X.}
 
-\item{lambda}{The lambda value used (for display purposes).}
+\item{lambda}{Regularization scalar for the constraint (display purposes).}
 
-\item{beta}{The smoothing parameter used in the policy.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
 \item{df}{A data frame with at least columns X.1 and X.2.}
 
-\item{centered}{Logical indicating whether probabilities are centered.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
 A ggplot object.

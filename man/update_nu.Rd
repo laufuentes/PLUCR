@@ -16,24 +16,24 @@ update_nu(
 )
 }
 \arguments{
-\item{A}{A vector of binary treatment indicators (0 or 1).}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{nu0}{A function predicting the adverse event given treatment and covariates.}
+\item{nu0}{A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).}
 
 \item{epsilon2}{A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.}
 
 \item{theta_collection}{A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.}
 
-\item{prop_score}{A function of treatment and covariates to compute the propensity score.}
+\item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 
-\item{beta}{A numeric scalar controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta}.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
-A numeric vector of updated mu on the [0,1] scale.
+A numeric vector of updated nu on the [0,1] scale.
 }
 \description{
 Computes updated Nu predictions by adding the bias correction for all previous solutions at X

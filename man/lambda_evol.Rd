@@ -11,7 +11,7 @@ lambda_evol(results, type_simu, beta_opt)
 
 \item{type_simu}{A string indicating the simulation type (e.g., "oracular" or "empirical").}
 
-\item{beta_opt}{A numeric value for the beta whose lambda evolution is being plotted.}
+\item{beta_opt}{The optimal non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 }
 \value{
 Saves a plot to "figures/<type_simu>/lambda_evol.pdf".

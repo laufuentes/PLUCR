@@ -16,11 +16,11 @@ logit <- qlogis
 #'
 #' Performs quality control checks on the input data to ensure it meets expected formats and conditions.
 #'
-#' @param Y A numeric vector or matrix of primary outcomes. Expected to contain values strictly between 0 and 1.
-#' @param Xi A numeric vector or matrix of adverse event outcomes. Must be binary (0 or 1).
-#' @param A A binary vector indicating treatment assignment (0 or 1).
-#' @param X A data frame or matrix of covariates.
-#' @param folds A vector indicating the fold assignment for each observation.
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #'
 #' @return A list with elements: `ok` (logical), and `diagnoses` (character vector of issues).
 #' @export
@@ -84,11 +84,11 @@ check_data <- function(Y, Xi, A, X, folds) {
 #' Link function mapping \eqn{[-1,1]} to \eqn{[0,1]}, parametrized    
 #' by \code{beta} with an optional centering.
 #'
-#' @param t A vector of numerics.
-#' @param beta A numeric scalar (0.05 by default) controlling the sharpness of the link function.
-#' @param centered A logical (FALSE by default) indicating whether to apply centering to the link function.
+#' @param t A vector of numerics (in [-1,1]).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
-#' @return A numeric vector of probabilities.
+#' @return A numeric vector of treatment probabilities.
 #' @export
 sigma_beta <- function(t, beta=0.05, centered=FALSE) {
   c_beta <- 1 / log((1 + exp(beta)) / (1 + exp(-beta)))
@@ -106,9 +106,9 @@ sigma_beta <- function(t, beta=0.05, centered=FALSE) {
 #' Computes the derivative of the link function \code{sigma_beta},  
 #' with respect to t.
 #'
-#' @param t A vector of numerics.
-#' @param beta A numeric scalar (0.05 by default) controlling the sharpness of the link function.
-#' @param centered A logical (FALSE by default) indicating whether to apply centering to the link function.
+#' @param t A vector of numerics (in [-1,1]).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
 #' @return The derivative of \code{sigma_beta} evaluated at t.
 #' @export
@@ -130,24 +130,18 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  
 #' and the expected outcome is calculated using counterfactual outcomes.
 #'
-#' @param psi A function that takes a numeric matrix \code{X} as input and returns a numeric vector.
-#' @param X A numeric matrix of size n x d (input data).
-#' @param counterfactual_outcomes A list of length 2 containing:
-#'   \itemize{
-#'     \item \code{counterfactual_outcomes[[1]]}: Outcome if treated (\eqn{Y(1)}).
-#'     \item \code{counterfactual_outcomes[[2]]}: Outcome if not treated (\eqn{Y(0)}).
-#'   }
-#' @param beta A numeric scalar (0.05 by default) controlling the sharpness of the probability function.
-#' @param centered A logical (FALSE by default) indicating whether to apply centering in \code{sigma_beta}.
-#' @param alpha A numeric scalar (0.05 by default) representing the constraint tolerance (not directly used here but for consistency).
-#' @param B Integer (default 1e4) number of Monte Carlo repetitions.
-#' @param seed Integer or NA (default value).
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
+#' @param seed Integer or NA (NA by default).
 #'
-#' @return A numeric scalar representing the expected outcome under the policy.
+#' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.05, B=1e4, seed=NA){
+V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
   `%>%`<- magrittr::`%>%`
-  df <- data_gen(B,seed=seed)
+  df <- data_gen(B, seed=seed)
   X <- df%>%dplyr::select(dplyr::starts_with("X."))
   y1 <- df$y1
   y0 <- df$y0
@@ -166,9 +160,9 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.05, B=1e4, seed=NA){
 #'
 #' This function computes the inverse propensity score weight based on treatment assignment and a propensity score model.
 #'
-#' @param A A binary treatment indicator (0 or 1).
-#' @param X A data frame or vector of covariates used in the propensity score model.
-#' @param prop_score A function that takes a treatment (A) and covariates as arguments and returns the estimated propensity score.
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #'
 #' @return A numeric value representing the inverse propensity score weight.
 #'
@@ -178,7 +172,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.05, B=1e4, seed=NA){
 #' HX(1, data.frame(x1 = 1, x2 = 2), prop_model)
 #'
 #' @export
-HX <- function(A,X, prop_score){
+HX <- function(A, X, prop_score){
   out <- (2*A-1)/prop_score(A,X)
   return(out)
 }

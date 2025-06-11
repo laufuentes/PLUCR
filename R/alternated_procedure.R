@@ -28,7 +28,7 @@ update_mu_XA <- function(offset_mu_XA, epsilon1, psi_collection, H_XA){
 #' @param sigma_psi_collection A matrix whose columns are optimal \code{psi} solutions composed by sigma.
 #' @param H_XA A numeric vector of inverse-propensity weights, typically from \code{HX()}.
 #'
-#' @return A numeric vector of nu on the \[0,1\] scale.
+#' @return A numeric vector of updated nu on the \[0,1\] scale.
 #'
 #'@export
 update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
@@ -42,12 +42,12 @@ update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
 #' \code{psi(X)} scaled by coefficients \code{epsilon1_collection},
 #' then transforms back via the logistic function.
 #'
-#' @param A A vector of binary treatment indicators (0 or 1).
-#' @param X A matrix or data frame of covariates.
-#' @param mu0 A function predicting the primary outcome given treatment and covariates.
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param epsilon1 A numeric vector of GLM coefficients for each column in \code{psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{psi} functions.
-#' @param prop_score A function of A and X to compute the propensity score.
+#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #'
 #' @return A numeric vector of updated mu on the \[0,1\] scale.
 #'
@@ -66,16 +66,16 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 #' \code{sigma_beta(psi(X),beta,centered)} scaled by coefficients \code{epsilon2_collection},
 #' then transforms back via the logistic function.
 #'
-#' @param A A vector of binary treatment indicators (0 or 1).
-#' @param X A matrix or data frame of covariates.
-#' @param nu0 A function predicting the adverse event given treatment and covariates.
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param epsilon2 A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.
-#' @param prop_score A function of treatment and covariates to compute the propensity score.
-#' @param beta A numeric scalar controlling the sharpness of the probability function.
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta}.
+#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
-#' @return A numeric vector of updated mu on the \[0,1\] scale.
+#' @return A numeric vector of updated nu on the \[0,1\] scale.
 #'
 #'@export
 update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.05, centered=FALSE){
@@ -92,19 +92,19 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' It iteratively finds a solution and corrects the objective function for such optimal solution, until 
 #' two consecutive solutions do not change much. 
 #'
-#' @param mu0 A function that returns the conditional mean of the outcome given treatment and covariates.
-#' @param nu0 A function that returns the conditional mean of the adverse event.
-#' @param prop_score A function that estimates the propensity score given treatment and covariates.
-#' @param X A matrix or data frame of covariates.
-#' @param A A binary vector (0/1) indicating treatment assignment.
-#' @param Y A numeric vector or matrix of primary outcomes.
-#' @param Xi A numeric vector or matrix of primary outcomes.
-#' @param lambda A numeric scalar controlling the weight of the constraint function in the objective.
-#' @param alpha A numeric scalar representing the constraint tolerance.
-#' @param precision A numeric scalar that determines the convergence precision desired.
-#' @param beta A numeric scalar controlling the sharpness of the probability function.
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta}.
-#' @param filepath_results Path to the folder where intermediate and final results are saved.
+#' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
+#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
+#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
+#' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
+#' @param alpha A numeric scalar representing the constraint tolerance (0.1 by default).
+#' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#' @param root.path Path to the folder where all results are to be saved.
 #'
 #' @return A list containing:
 #' \item{iter}{The number of completed iterations.}
@@ -122,11 +122,11 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #'
 #' @examples
 #' # (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-#' # Optimization_Estimation(mu0, nu0, prop_score, df, lambda=0.1, alpha=0.1, precision=1e-4,
-#' #                         beta=1, centered=TRUE, folder="path/to/folder", prefix="run1")
+#' # Optimization_Estimation(mu0, nu0, prop_score, df, lambda=1, alpha=0.1, precision=0.025,
+#' #                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
 #'
 #' @export
-Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha, precision, beta=0.05, centered=FALSE, filepath_results){
+Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, root.path){
   tol <- 7.5*1e-2
   max_iter <- 1.5*1e1
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
@@ -197,8 +197,8 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       theta_collection=theta_collection
     )
     
-    step_file_prev <- file.path(paste0(filepath_results,"_step_", k - 1, ".rds"))
-    step_file_current <- file.path(paste0(filepath_results,"_step_", k, ".rds"))
+    step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
+    step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
     
     saveRDS(out, file = step_file_current)
     

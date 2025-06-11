@@ -7,7 +7,7 @@
 h_Y(X, A)
 }
 \arguments{
-\item{X}{A matrix of covariates where each row is an observation and columns represent features.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
 \item{A}{A vector indicating treatment assignment (+1 or -1) for each observation.}
 }

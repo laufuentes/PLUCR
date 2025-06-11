@@ -10,7 +10,7 @@ FW(
   delta_Mu,
   delta_Nu,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
   precision = 0.05,
@@ -22,7 +22,7 @@ FW_X(
   delta_Mu,
   delta_Nu,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
   precision = 0.05,
@@ -30,21 +30,21 @@ FW_X(
 )
 }
 \arguments{
-\item{X}{A numeric matrix (input data).}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{delta_Mu}{A function of \code{X} that determines the difference between primary counterfactual outcomes.}
+\item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 
-\item{delta_Nu}{A function of \code{X} that determines the difference between secondary counterfactual outcomes.}
+\item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 
-\item{lambda}{A numeric scalar controlling the weight of the constraint function in the objective.}
+\item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar (0.05 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
-\item{beta}{A numeric scalar (0.05 by default) controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
 \item{centered}{A logical (FALSE by default) indicating whether to center the policy.}
 
-\item{precision}{A numeric scalar (0.05 by default) that determines the convergence precision desired.}
+\item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 
 \item{verbose}{A logical value indicating whether to print progress updates. Default is \code{TRUE}.}
 }

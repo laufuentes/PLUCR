@@ -7,12 +7,11 @@
 make_psi(Theta)
 }
 \arguments{
-\item{Theta}{A numeric matrix of size k x d, where each row represents the k-th solution
-\code{theta} obtained from the inner minimization in the FW algorithm.}
+\item{Theta}{A numeric matrix (k x d). Each row \code{theta} is from FW inner minimization, used to recover an extremal point for convex function construction.}
 }
 \value{
-A function that computes \code{psi} for a given input matrix \code{x},
-using a convex combination of past solutions.
+A function \code{psi} that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]},
+using a convex combination of past \code{theta} solutions.
 }
 \description{
 Constructs a convex combination function \code{psi} based on the sequence of solutions

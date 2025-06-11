@@ -7,11 +7,11 @@
 R_p(psi, X, delta_Mu)
 }
 \arguments{
-\item{psi}{A function that takes a numeric matrix \code{X} as input and returns a numeric vector.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{X}{A numeric matrix of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{delta_Mu}{A function of \code{X} that determines the difference between primary counterfactual outcomes.}
+\item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 }
 \value{
 A numeric scalar representing the risk function value.

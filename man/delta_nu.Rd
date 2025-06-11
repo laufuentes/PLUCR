@@ -7,10 +7,10 @@
 delta_nu(X)
 }
 \arguments{
-\item{X}{A matrix of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 }
 \value{
-A numeric vector representing the estimated treatment effect for Xi for each observation.
+A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 }
 \description{
 Computes the difference in expected outcomes under treatment and control.

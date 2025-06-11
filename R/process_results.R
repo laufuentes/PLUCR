@@ -1,0 +1,88 @@
+#' Evaluate a policy
+#'
+#' This function evaluates the optimal policy derived from \code{theta} and gives the upper bound of the constraint estimator. 
+#' It updates \code{mu0} and \code{nu0} following the estimation step from the alternating optimization procedure. This enables 
+#' targeted estimation of the objective functions: risk, constraint, and the main objective, providing a consistent upper bound 
+#' for the constraint estimator.
+#'
+#' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
+#' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
+#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
+#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
+#' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
+#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#'
+#' @return A vector of optimized policy parameters (`theta`) trained across folds.
+#' @export
+process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, alpha,  beta, centered) {
+  # Correct estimators
+  offset_mu <- qlogis(mu0(A,X))
+  offset_nu <- qlogis(nu0(A,X))
+  
+  psi<- make_psi(theta)
+  psi_X <- psi(X)
+  sigma_psi_X <- sigma_beta(psi_X,beta, centered)
+  H_XA <- HX(A, X, prop_score)
+  
+  df_mu <- tibble::tibble(
+    y = Y, new.cov=H_XA*as.vector(psi_X))
+  
+  df_nu <- tibble::tibble(
+    xi = Xi, new.cov=H_XA*as.vector(sigma_psi_X))
+  
+  mu_update_obj <- stats::glm(y ~ -1 + ., offset=offset_mu, data = df_mu, family=binomial())
+  epsilon1 <- as.matrix(as.numeric(mu_update_obj$coefficients))
+  
+  nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
+  epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
+  
+  Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
+      update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
+  Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
+      update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
+  # Extract the policy for the current index
+  results <- data.frame(
+    lambda = lambda,
+    beta = beta,
+    risk = R_p(psi, X, Delta_mu),
+    constraint = S_p(
+      psi, X,
+      beta, alpha, centered, 
+      Delta_nu),
+    obj = Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered))
+  colnames(results) <- c("lambda","beta","risk","constraint","obj")
+  # Upper bound 
+  updated_nuXA <- update_nu_XA(qlogis(nu0(A,X)), epsilon2, sigma_psi_X, H_XA)
+  V_n <- var(H_XA* sigma_psi_X*(Xi- updated_nuXA) +
+               sigma_psi_X* Delta_nu(X) -results$constraint)
+  upper_bound <- results$constraint + 1.64*sqrt(V_n/nrow(X))
+  
+  return(list(results, upper_bound)) # Return the updated results for this index
+}
+
+#' Select Optimal Beta and Lambda Combination
+#'
+#' This function loads intermediate results corresponding to lambda-optimal solutions for each beta value.
+#' It identifies and returns the beta-lambda combination that minimizes the objective function.
+#'
+#' @param combinations A matrix or data frame where each row corresponds to a beta and optimal-lambda pair.
+#' @param root.path Path to the folder where all results are to be saved.
+#'
+#' @return A vector of intermediate results including the optimal: lambda, beta, risk, constraint, obj. 
+#' @export
+get_opt_beta_lambda <- function(combinations,root.path){
+  target_filenames <- paste0(combinations[,1], "_", combinations[,2], ".rds")
+  all_files <- list.files(
+    file.path(root.path, "Evaluation"), 
+    pattern = "\\.rds$", full.names = TRUE)
+  matched_files <- all_files[basename(all_files) %in% target_filenames]
+  optimal_solutions <- do.call(rbind,lapply(matched_files, readRDS))
+  optimal_combination <- optimal_solutions[which.min(optimal_solutions$obj),]
+  return(optimal_combination)
+}

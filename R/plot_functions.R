@@ -39,7 +39,7 @@ synthetic_setting_plot <- function(df_complete, delta_Mu, delta_Nu) {
 #'
 #' @param results A data frame or tibble containing `lambda`, `risk`, `constraint`, `obj`, and `beta` columns.
 #' @param type_simu A string indicating the simulation type (e.g., "oracular" or "empirical").
-#' @param beta_opt A numeric value for the beta whose lambda evolution is being plotted.
+#' @param beta_opt The optimal non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #'
 #' @return Saves a plot to "figures/<type_simu>/lambda_evol.pdf".
 #' @export
@@ -83,11 +83,11 @@ lambda_evol <- function(results, type_simu, beta_opt) {
 #'
 #' Plots the smoothed treatment assignment probability over covariates X.1 and X.2.
 #'
-#' @param psi_X A numeric vector of policy scores.
-#' @param lambda The lambda value used (for display purposes).
-#' @param beta The smoothing parameter used in the policy.
+#' @param psi_X A numeric vector with values in the range \code{[-1, 1]} representing the output of \code{psi} at fixed X.
+#' @param lambda Regularization scalar for the constraint (display purposes).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param df A data frame with at least columns X.1 and X.2.
-#' @param centered Logical indicating whether probabilities are centered.
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
 #' @return A ggplot object.
 #' @export

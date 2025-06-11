@@ -7,17 +7,17 @@
 S_p(psi, X, beta, alpha, centered, delta_Nu)
 }
 \arguments{
-\item{psi}{A function that takes a numeric matrix \code{X} as input and returns a numeric vector.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{X}{A numeric matrix of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{beta}{A numeric scalar controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance.}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta}.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{delta_Nu}{A function of \code{X} that determines the difference between secondary counterfactual outcomes.}
+\item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 }
 \value{
 A numeric scalar representing the constraint function value.

@@ -4,7 +4,7 @@ logit <- qlogis
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates where each row is an observation and columns represent features.
+#' @param X A matrix of covariates of size n x d (input data).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -21,8 +21,8 @@ h_Y<- function(X,A){
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates where each row is an observation and columns represent features.
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
@@ -44,7 +44,7 @@ h_Y_complicated <- function(X, A) {
 #' Generates a dataset simulating treatment assignment, covariates, and potential outcomes.
 #'
 #' @param n Number of observations to generate.
-#' @param seed Integer or NA (default value).
+#' @param seed Integer or NA (NA by default).
 #'
 #' @return A list containing two data frames: \code{df_complete} with all potential outcomes and 
 #' treatment assignments, and \code{df_obs} with observed outcomes based on treatment.
@@ -81,7 +81,7 @@ data_gen <- function(n,seed=NA){
 #' Generates a dataset simulating treatment assignment, covariates, and potential outcomes.
 #'
 #' @param n Number of observations to generate.
-#' @param seed Integer or NA (default value).
+#' @param seed Integer or NA (NA by default).
 #'
 #' @return A list containing two data frames: \code{df_complete} with all potential outcomes and 
 #' treatment assignments, and \code{df_obs} with observed outcomes based on treatment.
@@ -118,9 +118,9 @@ data_gen_complicated <- function(n,seed=NA){
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates.
+#' @param X A matrix of covariates of size n x d (input data).
 #'
-#' @return A numeric vector representing the estimated treatment effect for Y for each observation.
+#' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' delta_mu(X)
@@ -135,9 +135,9 @@ delta_mu_complicated <- function(X){
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates.
+#' @param X A matrix of covariates of size n x d (input data).
 #'
-#' @return A numeric vector representing the estimated treatment effect for Y for each observation.
+#' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' delta_mu(X)
@@ -153,9 +153,9 @@ delta_mu <- function(X){
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates.
+#' @param X A matrix of covariates of size n x d (input data).
 #'
-#' @return A numeric vector representing the estimated treatment effect for Xi for each observation.
+#' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' delta_nu(X)
@@ -169,9 +169,9 @@ delta_nu <- function(X){
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates.
+#' @param X A matrix of covariates of size n x d (input data).
 #'
-#' @return A numeric vector representing the estimated treatment effect for Xi for each observation.
+#' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' delta_nu_complicated(X)

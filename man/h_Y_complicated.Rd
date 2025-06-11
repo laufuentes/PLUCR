@@ -7,9 +7,9 @@
 h_Y_complicated(X, A)
 }
 \arguments{
-\item{X}{A matrix of covariates where each row is an observation and columns represent features.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{A}{A vector indicating treatment assignment (+1 or -1) for each observation.}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (-1 or 1).}
 }
 \value{
 A numeric vector with the transformed values based on covariates and treatment.

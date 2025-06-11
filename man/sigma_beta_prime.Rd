@@ -7,11 +7,11 @@
 sigma_beta_prime(t, beta = 0.05, centered = FALSE)
 }
 \arguments{
-\item{t}{A vector of numerics.}
+\item{t}{A vector of numerics (in \link{-1,1}).}
 
-\item{beta}{A numeric scalar (0.05 by default) controlling the sharpness of the link function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{centered}{A logical (FALSE by default) indicating whether to apply centering to the link function.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
 The derivative of \code{sigma_beta} evaluated at t.

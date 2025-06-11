@@ -7,10 +7,10 @@
 delta_mu(X)
 }
 \arguments{
-\item{X}{A matrix of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 }
 \value{
-A numeric vector representing the estimated treatment effect for Y for each observation.
+A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 }
 \description{
 Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.

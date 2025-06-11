@@ -7,20 +7,22 @@
 estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.001)
 }
 \arguments{
-\item{Y}{A numeric vector or matrix of primary outcomes.}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
 
-\item{A}{A binary vector indicating treatment assignment.}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates.}
+\item{X}{A matrix or data frame of covariates of size n x d (input data).}
 
-\item{SL.library}{Libraries for training learner}
+\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
 
-\item{V}{Number of folds (5 by default)}
+\item{SL.library}{Vector of libraries for training SuperLearner.}
 
-\item{threshold}{threshold estimations between \link{threshold, 1-threshold}}
+\item{V}{Number of folds inside the SuperLearner (2L by default).}
+
+\item{threshold}{A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-3 by default). Constrains estimation to $\link{threshold, 1 - threshold}$.}
 }
 \value{
-A list of functions predicting the expected outcome for treated units or control unis, each one trained without the j-th fold.
+A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X)
 }
 \description{
 This function trains conditional mean of primary outcome models for treated and control groups
@@ -32,6 +34,7 @@ set.seed(123)
 X <- matrix(rnorm(100 * 5), ncol = 5)
 A <- stats::rbinom(100, 1, 0.5)
 Y <- runif(100)
+JFold <- 3
 folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
 SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
 mu_functions <- estimate_mu(Y, A, X, folds)

@@ -262,11 +262,11 @@ res_0 <- process_results(theta_0,
                          mu0_test, nu0_test, prop_score_test, 
                          lambda=0, alpha,  beta, centered)
 # Save the evaluation results
-saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(0,"_",beta,".rds")))
+saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
   
 # If the constraint is satisfied, save the corresponding policy and mark as saved
 if (!saved && res_0[[1]]$constraint < 0) {
-    saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(0, "_", beta, ".rds")))
+    saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
     psi_0 <- make_psi(theta_opt)
     sigma_beta_0 <- sigma_beta(psi_0(X), beta=0.05, centered = FALSE)
     combinations <- rbind(combinations, c(beta, lambda))
@@ -276,14 +276,15 @@ if (!saved && res_0[[1]]$constraint < 0) {
 if(res_0[[2]]<0){
     print(theta_0)
 }else{
-    # Begin training over the grid
-    ##for (beta in Betas){
+    # Begin training over the grid: find for each beta value the optimal lambda
+    for (beta in Betas){
+      saved <- FALSE
       for (lambda in Lambdas){
        # Run alternated procedure for each beta and lambda combination 
         out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
                                               X_train, A_train, Y_train, Xi_train, 
                                               lambda, alpha, precision, beta, centered,
-                                            file.path(root.path,"Intermediate",paste0(lambda,"_",beta)))
+                                              file.path(root.path,"Intermediate", paste0(lambda,"_",beta)))
         # Extract final policy
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
          # Evaluate the policy on test set
@@ -292,7 +293,7 @@ if(res_0[[2]]<0){
                                mu0_test, nu0_test, prop_score_test, 
                                lambda, alpha, beta, centered)
         # Save evaluation results
-        saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(lambda,"_",beta,".rds")))
+        saveRDS(res[[1]], file=file.path(root.path, "Evaluation", paste0(lambda,"_",beta,".rds")))
         
         # If constraint is satisfied for the first time, save the optimal policy
         if (!saved && res[[1]]$constraint < 0) {
@@ -307,11 +308,13 @@ if(res_0[[2]]<0){
         if(res[[2]]<0){
           break
         }
-        
-      #}
       }
-    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", 
-                                            paste0(combinations[,2], "_", combinations[,1], ".rds")))
+    }
+  # Load all lambda-optimal results and select the (beta, lambda) combination that minimizes the objective function
+  optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+  
+  # Load the corresponding theta for the optimal (beta, lambda) combination
+  theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
   }
 print(list(theta_0, theta_final))
 ```

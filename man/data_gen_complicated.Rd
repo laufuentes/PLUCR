@@ -9,7 +9,7 @@ data_gen_complicated(n, seed = NA)
 \arguments{
 \item{n}{Number of observations to generate.}
 
-\item{seed}{Integer or NA (default value).}
+\item{seed}{Integer or NA (NA by default).}
 }
 \value{
 A list containing two data frames: \code{df_complete} with all potential outcomes and

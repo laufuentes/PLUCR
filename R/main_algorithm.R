@@ -3,32 +3,33 @@
 #' This function runs the whole algorithm. It first checks the data, then computes the nuisance parameters using SuperLearner librarie. 
 #' Then proceed onto the 
 #'
-#' @param X A matrix or data frame of covariates.
-#' @param A A binary vector (0/1) indicating treatment assignment.
-#' @param Y A numeric vector or matrix of primary outcomes.
-#' @param Xi A numeric vector or matrix of primary outcomes.
-#' @param Lambdas A sequence of scalars controlling the weight of the constraint function in the objective (seq(1,8,by=1) by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (0.01 by default).
-#' @param precision A numeric scalar that determines the convergence precision desired (0.025 by default).
-#' @param Betas A vector of scalars controlling the sharpness of the probability function (c(0.05, 0.5, 1, 2) by default).
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector of size n indicating treatment assignment (0 or 1).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
+#' @param Lambdas A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
+#' @param Betas A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.5, 1, 2) by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
-#' @param Jfold Number of folds for the whole procedure, needs to be set to 3L
-#' @param V Number of folds inside the SuperLearner (2L by default)
-#' @param SL.library Libraries for training learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default)
+#' @param Jfold Number of folds for the main algorithm, needs to be set to 3L.
+#' @param V Number of folds inside the SuperLearner (2L by default).
+#' @param SL.library Vector of libraries for training Super Learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #' @export
 main_algorithm <- function(X, A, Y, Xi, 
-                           Lambdas=seq(1,8,by=1), alpha=0.1, precision=0.025,
+                           Lambdas=seq(1,8,by=1), alpha=0.1, precision=0.05,
                            Betas=c(0.05, 0.5, 1, 2), centered=FALSE,
                            Jfold=3, V=2L, 
-                           SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"),root.path){
+                           SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"), 
+                           root.path){
   # Check whether the root.path exists and contains proper folder to save data
   if (!dir.exists(root.path)) {
     warning(sprintf("The directory '%s' does not exist. Creatung it...", root.path))
     dir.create(root.path, recursive = TRUE)
   }
   # Subdirectories to check
-  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat","Intermediate", "Evaluation","Theta_opt")
+  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat","Intermediate", "Evaluation", "Theta_opt")
   
   for (subdir in subdirs) {
     subdir_path <- file.path(root.path, subdir)
@@ -115,18 +116,19 @@ main_algorithm <- function(X, A, Y, Xi,
   ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
   else{
     ### Training 
-    #for (beta in Betas){
+    for (beta in Betas){
+      saved <- FALSE
       for (lambda in Lambdas){
         # Policy optimization
         out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
                                               X_train, A_train, Y_train, Xi_train, 
-                                              lambda, alpha, precision, beta, centered, file.path(root.path,"Intermediate",paste0(lambda,"_",beta)))
+                                              lambda, alpha, precision, beta, centered, file.path(root.path,"Intermediate",paste0(beta,"_",lambda)))
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        saveRDS(res[[1]], file=file.path(root.path,"Evaluation",paste0(lambda,"_",beta,".rds")))
+        saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
         if (!saved && res[[1]]$constraint < 0) {
-          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(lambda, "_", beta, ".rds")))
+          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
           psi_opt <- make_psi(theta_opt)
           sigma_beta_opt <- sigma_beta(psi_opt(X),beta=0.05,centered = FALSE)
@@ -135,10 +137,10 @@ main_algorithm <- function(X, A, Y, Xi,
         if(res[[2]]<0){
           break
         }
-        
-      #}
       }
-    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(combinations[,2], "_", combinations[,1], ".rds")))
+    }
+    optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
   }
   return(list(theta_0,theta_final))
 }

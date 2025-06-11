@@ -16,7 +16,7 @@ update_nu_XA(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA)
 \item{H_XA}{A numeric vector of inverse-propensity weights, typically from \code{HX()}.}
 }
 \value{
-A numeric vector of nu on the [0,1] scale.
+A numeric vector of updated nu on the [0,1] scale.
 }
 \description{
 Computes updated Nu predictions by adding the bias correction for fixed

@@ -4,31 +4,23 @@
 \alias{V_p}
 \title{Oracular Approximation of Value Function}
 \usage{
-V_p(psi, beta = 0.05, centered = FALSE, alpha = 0.05, B = 10000, seed = NA)
+V_p(psi, beta = 0.05, centered = FALSE, alpha = 0.1, B = 10000, seed = NA)
 }
 \arguments{
-\item{psi}{A function that takes a numeric matrix \code{X} as input and returns a numeric vector.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{beta}{A numeric scalar (0.05 by default) controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{centered}{A logical (FALSE by default) indicating whether to apply centering in \code{sigma_beta}.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{alpha}{A numeric scalar (0.05 by default) representing the constraint tolerance (not directly used here but for consistency).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
-\item{B}{Integer (default 1e4) number of Monte Carlo repetitions.}
+\item{B}{Integer, number of Monte Carlo repetitions (1e4 by default).}
 
-\item{seed}{Integer or NA (default value).}
-
-\item{X}{A numeric matrix of size n x d (input data).}
-
-\item{counterfactual_outcomes}{A list of length 2 containing:
-\itemize{
-\item \code{counterfactual_outcomes[[1]]}: Outcome if treated (\eqn{Y(1)}).
-\item \code{counterfactual_outcomes[[2]]}: Outcome if not treated (\eqn{Y(0)}).
-}}
+\item{seed}{Integer or NA (NA by default).}
 }
 \value{
-A numeric scalar representing the expected outcome under the policy.
+A numeric scalar representing the expected primary outcome under the policy.
 }
 \description{
 Computes the expected outcome under a policy determined by the previously optimized \code{psi(X)}.

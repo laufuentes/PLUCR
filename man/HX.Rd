@@ -7,11 +7,11 @@
 HX(A, X, prop_score)
 }
 \arguments{
-\item{A}{A binary treatment indicator (0 or 1).}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A data frame or vector of covariates used in the propensity score model.}
+\item{X}{A matrix or data frame of covariates of size n x d (input data).}
 
-\item{prop_score}{A function that takes a treatment (A) and covariates as arguments and returns the estimated propensity score.}
+\item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 }
 \value{
 A numeric value representing the inverse propensity score weight.

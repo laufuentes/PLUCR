@@ -7,17 +7,17 @@
 update_mu(A, X, mu0, epsilon1, theta_collection, prop_score)
 }
 \arguments{
-\item{A}{A vector of binary treatment indicators (0 or 1).}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{mu0}{A function predicting the primary outcome given treatment and covariates.}
+\item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
 
 \item{epsilon1}{A numeric vector of GLM coefficients for each column in \code{psi_collection}.}
 
 \item{theta_collection}{A list of the optimal \code{theta} enabling the reconstruction of optimal \code{psi} functions.}
 
-\item{prop_score}{A function of A and X to compute the propensity score.}
+\item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 }
 \value{
 A numeric vector of updated mu on the [0,1] scale.

@@ -13,39 +13,39 @@ Optimization_Estimation(
   Y,
   Xi,
   lambda,
-  alpha,
-  precision,
+  alpha = 0.1,
+  precision = 0.05,
   beta = 0.05,
   centered = FALSE,
-  filepath_results
+  root.path
 )
 }
 \arguments{
-\item{mu0}{A function that returns the conditional mean of the outcome given treatment and covariates.}
+\item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
 
-\item{nu0}{A function that returns the conditional mean of the adverse event.}
+\item{nu0}{A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).}
 
-\item{prop_score}{A function that estimates the propensity score given treatment and covariates.}
+\item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 
-\item{X}{A matrix or data frame of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{A}{A binary vector (0/1) indicating treatment assignment.}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of primary outcomes.}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
 
-\item{Xi}{A numeric vector or matrix of primary outcomes.}
+\item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
-\item{lambda}{A numeric scalar controlling the weight of the constraint function in the objective.}
+\item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance.}
+\item{alpha}{A numeric scalar representing the constraint tolerance (0.1 by default).}
 
-\item{precision}{A numeric scalar that determines the convergence precision desired.}
+\item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 
-\item{beta}{A numeric scalar controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta}.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{filepath_results}{Path to the folder where intermediate and final results are saved.}
+\item{root.path}{Path to the folder where all results are to be saved.}
 }
 \value{
 A list containing:
@@ -69,7 +69,7 @@ If the optimization converges or the maximum number of iterations is reached, th
 }
 \examples{
 # (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-# Optimization_Estimation(mu0, nu0, prop_score, df, lambda=0.1, alpha=0.1, precision=1e-4,
-#                         beta=1, centered=TRUE, folder="path/to/folder", prefix="run1")
+# Optimization_Estimation(mu0, nu0, prop_score, df, lambda=1, alpha=0.1, precision=0.025,
+#                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
 
 }

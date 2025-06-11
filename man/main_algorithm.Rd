@@ -11,7 +11,7 @@ main_algorithm(
   Xi,
   Lambdas = seq(1, 8, by = 1),
   alpha = 0.1,
-  precision = 0.025,
+  precision = 0.05,
   Betas = c(0.05, 0.5, 1, 2),
   centered = FALSE,
   Jfold = 3,
@@ -21,29 +21,29 @@ main_algorithm(
 )
 }
 \arguments{
-\item{X}{A matrix or data frame of covariates.}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{A}{A binary vector (0/1) indicating treatment assignment.}
+\item{A}{A binary vector of size n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of primary outcomes.}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
 
-\item{Xi}{A numeric vector or matrix of primary outcomes.}
+\item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
-\item{Lambdas}{A sequence of scalars controlling the weight of the constraint function in the objective (seq(1,8,by=1) by default).}
+\item{Lambdas}{A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (0.01 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
-\item{precision}{A numeric scalar that determines the convergence precision desired (0.025 by default).}
+\item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 
-\item{Betas}{A vector of scalars controlling the sharpness of the probability function (c(0.05, 0.5, 1, 2) by default).}
+\item{Betas}{A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.5, 1, 2) by default).}
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{Jfold}{Number of folds for the whole procedure, needs to be set to 3L}
+\item{Jfold}{Number of folds for the main algorithm, needs to be set to 3L.}
 
-\item{V}{Number of folds inside the SuperLearner (2L by default)}
+\item{V}{Number of folds inside the SuperLearner (2L by default).}
 
-\item{SL.library}{Libraries for training learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default)}
+\item{SL.library}{Vector of libraries for training Super Learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default).}
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }

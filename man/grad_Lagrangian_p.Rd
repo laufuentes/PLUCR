@@ -11,7 +11,7 @@ grad_Lagrangian_p(
   delta_Mu,
   delta_Nu,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE
 )
@@ -21,27 +21,25 @@ grad_Lagrangian_p_X(
   delta_Mu_X,
   delta_Nu_X,
   lambda,
-  alpha = 0.05,
+  alpha = 0.1,
   beta = 0.05,
   centered = FALSE
 )
 }
 \arguments{
-\item{psi}{A function that takes a numeric matrix \code{X} as input and returns a numeric vector.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{X}{A numeric matrix of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data).}
 
-\item{delta_Mu}{A function of \code{X} that determines the difference between primary counterfactual outcomes.}
+\item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 
-\item{delta_Nu}{A function of \code{X} that determines the difference between secondary counterfactual outcomes.}
+\item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 
-\item{lambda}{A numeric scalar controlling the weight of the constraint function in the objective.}
+\item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar (0.05 by default) representing the constraint tolerance.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
-\item{beta}{A numeric scalar (0.05 by default) controlling the sharpness of the probability function.}
-
-\item{centered}{A logical (FALSE by default) indicating whether to apply centering in \code{sigma_beta}.}
+\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
 A numeric vector representing the gradient of the objective function with respect to \code{psi(X)}.
