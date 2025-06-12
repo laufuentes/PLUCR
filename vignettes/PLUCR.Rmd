@@ -320,7 +320,7 @@ if(res_0[[2]]<0){
       }
     }
   # Load all lambda-optimal results and select the (beta, lambda) combination 
-  # that minimizes the objective function
+  # that maximizes the policy value
   optimal_combination <- get_opt_beta_lambda(combinations,root.path)
   
   # Load the corresponding theta for the optimal (beta, lambda) combination

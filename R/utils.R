@@ -156,6 +156,35 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
   return(out)
 }
 
+#' Oracular Approximation of Value Function
+#'
+#' Computes the expected outcome under a policy determined by the previously optimized \code{psi(X)}.  
+#' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  
+#' and the expected outcome is calculated using counterfactual outcomes.
+#'
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
+#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param y1 A numeric vector or matrix of length n representing primary outcomes under treatment (in [0, 1]).
+#' @param y0 A numeric vector or matrix of length n representing primary outcomes under no treatment (in [0, 1]).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#'
+#' @return A numeric scalar representing the expected primary outcome under the policy.
+#' @export
+V_Pn <- function(psi, X, y1, y0, beta=0.05, centered=FALSE){
+  `%>%`<- magrittr::`%>%`
+  psi_X <- psi(X)
+  sigma_psi <-sigma_beta(psi_X, beta, centered)
+  if(!is.na(seed)){
+    set.seed(seed)
+  }
+  # action <- stats::rbinom(nrow(X), 1, sigma_psi)
+  # out <- mean(action * y1 + (1 - action) * y0)
+  out <- mean(psi_X * y1 + (1 - psi_X) * y0)
+  return(out)
+}
+
+
 #' Compute the Inverse Propensity Score Weight
 #'
 #' This function computes the inverse propensity score weight based on treatment assignment and a propensity score model.
