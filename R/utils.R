@@ -141,8 +141,8 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @export
 V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
   `%>%`<- magrittr::`%>%`
-  df <- data_gen(B, seed=seed)
-  X <- df%>%dplyr::select(dplyr::starts_with("X."))
+  df <- data_gen(B, seed=seed)[[1]]
+  X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
   y1 <- df$y1
   y0 <- df$y0
   
@@ -156,7 +156,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
   return(out)
 }
 
-#' Oracular Approximation of Value Function
+#' Estimation of Policy Value
 #'
 #' Computes the expected outcome under a policy determined by the previously optimized \code{psi(X)}.  
 #' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  

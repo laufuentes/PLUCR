@@ -92,11 +92,18 @@ We now define the parameters to be passed to `main_algorithm()`. These include t
 # - SL.ranger: random forest
 # - SL.grf: generalized random forest
 # - SL.xgboost: gradient boosting
-
 SL.library <- c("SL.mean", "SL.glm", "SL.ranger", "SL.grf", "SL.xgboost")
 
 # Root directory where output files and intermediate results will be saved
 root.path <- "results"
+
+# An increasing sequence of non-negative numeric scalars controlling 
+# the penalty for violating the constraint (seq(1,8, by=1) by default).
+Lambda_candidates <- seq(1, 8, by=1)
+
+# A vector of non-negative scalars controlling the sharpness of the 
+# treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default)
+Beta_candidates <- c(0.05, 0.1, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.15 means the policy may increase adverse event probability by up to 15%
@@ -121,7 +128,9 @@ The output includes both:
 - A constrained-optimal policy (that respects the adverse event constraint).
 ```{r, eval=FALSE}
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
-                                alpha=alpha.tolerance, precision=optimization.precision,
+                                Lambdas = Lambda_candidates, alpha=alpha.tolerance, 
+                                Betas= Beta_candidates, 
+                                precision=optimization.precision,
                                 SL.library= SL.library, root.path=root.path)
 ```
 
