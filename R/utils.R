@@ -175,9 +175,6 @@ V_Pn <- function(psi, X, y1, y0, beta=0.05, centered=FALSE){
   `%>%`<- magrittr::`%>%`
   psi_X <- psi(X)
   sigma_psi <-sigma_beta(psi_X, beta, centered)
-  if(!is.na(seed)){
-    set.seed(seed)
-  }
   # action <- stats::rbinom(nrow(X), 1, sigma_psi)
   # out <- mean(action * y1 + (1 - action) * y0)
   out <- mean(psi_X * y1 + (1 - psi_X) * y0)

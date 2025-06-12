@@ -142,9 +142,10 @@ Before estimating nuisance functions and optimizing the policy, the algorithm pe
 n <- nrow(X)
 
 # Folds for cross-validation 
+strat_var <- interaction(Y, Xi, A, drop = TRUE)
 folds <- SuperLearner::CVFolds(n, 
                                id = NULL,
-                               Y = Y,
+                               Y = strat_var,
                                cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, 
                                                                                  shuffle =TRUE))
 # Check data
