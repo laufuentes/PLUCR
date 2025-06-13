@@ -54,7 +54,9 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
                                                 cvControl = cvControl, method = method)
   }
   mu <- function(a, x, ff) {
-    ## /!\ test whether that 'a' and 'x' are as expected... (see "testthat") /!\
+    if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
+    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
+    
     out <- rep(NA, length(a))
     out <- stats::predict(objects[[ff]],newdata = data.frame(x,A=a))$pred
     out <- pmax(threshold, pmin(1 - threshold, out))
@@ -120,7 +122,8 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
                                                 cvControl = cvControl, method = method)
   }
   nu <- function(a, x, ff) {
-    ## /!\ test whether that 'a' and 'x' are as expected... (see "testthat") /!\
+    if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
+    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
     out <- stats::predict(objects[[ff]],newdata = data.frame(x,A=a))$pred
     out <- pmax(threshold, pmin(1 - threshold, out))
     return(out)
@@ -184,7 +187,9 @@ estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
                                                 cvControl = cvControl)
   }
   ps <- function(a, x, ff) {
-    ## /!\ test whether that 'a' and 'x' are as expected... (see "testthat") /!\
+    if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
+    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
+    
     out <- rep(NA, length(a))
     if (sum(a == 1) > 0) {
       out[a == 1] <- stats::predict(objects[[ff]], newdata = x[a == 1, , drop = FALSE])$pred

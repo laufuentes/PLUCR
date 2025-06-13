@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{V_Pn}
 \alias{V_Pn}
-\title{Oracular Approximation of Value Function}
+\title{Estimation of Policy Value}
 \usage{
 V_Pn(psi, X, y1, y0, beta = 0.05, centered = FALSE)
 }
