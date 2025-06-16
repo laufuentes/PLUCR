@@ -45,8 +45,7 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
   n <- nrow(X)
   objects <- vector("list", length(folds))
   for (ff in 1:length(folds)) {
-    fold <- folds[[ff]]
-    train_indices <- setdiff(1:n, fold)
+    train_indices <- folds[[ff]]
     objects[[ff]] <- SuperLearner::SuperLearner(Y[train_indices],
                                                 data.frame(X, A = A)[train_indices, , drop = FALSE],
                                                 SL.library = SL.library,
@@ -55,8 +54,6 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
   }
   mu <- function(a, x, ff) {
     if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
-    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
-    
     out <- rep(NA, length(a))
     out <- stats::predict(objects[[ff]],newdata = data.frame(x,A=a))$pred
     out <- pmax(threshold, pmin(1 - threshold, out))
@@ -113,8 +110,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
   n <- nrow(X)
   objects <- vector("list", length(folds))
   for (ff in 1:length(folds)) {
-    fold <- folds[[ff]]
-    train_indices <- setdiff(1:n, fold)
+    train_indices <- folds[[ff]]
     objects[[ff]] <- SuperLearner::SuperLearner(Xi[train_indices],
                                                 data.frame(X, A = A)[train_indices, , drop = FALSE],
                                                 SL.library = SL.library,
@@ -123,8 +119,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
   }
   nu <- function(a, x, ff) {
     if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
-    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
-    out <- stats::predict(objects[[ff]],newdata = data.frame(x,A=a))$pred
+    out <- stats::predict(objects[[ff]],newdata = data.frame(cbind(x,A=a)))$pred
     out <- pmax(threshold, pmin(1 - threshold, out))
     return(out)
   }
@@ -174,21 +169,20 @@ estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
   }
   #cvControl = list(V = 0)
   cvControl <- SuperLearner::SuperLearner.CV.control(V = V)
-  method <- "method.NNLS"
+  method <- "method.CC_nloglik"
   n <- nrow(X)
   objects <- vector("list", length(folds))
   for (ff in 1:length(folds)) {
-    fold <- folds[[ff]]
-    train_indices <- setdiff(1:n, fold)
+    train_indices <- folds[[ff]]
     objects[[ff]] <- SuperLearner::SuperLearner(A[train_indices],
                                                 X[train_indices,],
                                                 SL.library = SL.library,
                                                 family = binomial(),
+                                                method = method,
                                                 cvControl = cvControl)
   }
   ps <- function(a, x, ff) {
     if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
-    if (sum(a == 1) == 0 || sum(a == 0) == 0) warning("No observations with a == 1 or a == 0")
     
     out <- rep(NA, length(a))
     if (sum(a == 1) > 0) {

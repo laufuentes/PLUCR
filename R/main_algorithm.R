@@ -110,6 +110,7 @@ main_algorithm <- function(X, A, Y, Xi,
   }
   ##### If your constraint was already satified with lambda=0 return
   if(res_0[[2]]<0){
+    #/!\warning()
     return(theta_0)
     }
   ##### If your constraint was not satified with lambda=0 goes onto step 2

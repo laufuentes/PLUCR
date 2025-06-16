@@ -59,7 +59,7 @@ data_gen <- function(n,seed=NA){
   }
   
   X <- matrix(stats::runif(n*10,0,1),n,10)
-  p.A <- expit(0.5*X[,3]+0.5*ifelse(X[,1]>0.3,1,0))
+  p.A <- expit(4*(X[,2]-1/2))
   Treatment <- stats::rbinom(n,1,p.A)
   epsilon_Y <- stats::rnorm(n,0,1)
   

@@ -23,6 +23,6 @@ SL.grf(Y, X, newX, family, obsWeights, ...)
 a list containing the predictions and the fitted object
 }
 \description{
-This function trains conditional mean of primary outcome models for treated and control groups
+This function trains conditional mean of a target variable for treated and control groups
 using \code{SuperLearner}, applying cross-validation to compute out-of-fold estimates.
 }

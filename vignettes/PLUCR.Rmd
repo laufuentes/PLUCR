@@ -51,7 +51,6 @@ library(SuperLearner)
 We generate synthetic observational data using the built-in `data_gen()` function. This function also produces the complete data structure (which is typically unavailable in real-world applications and used here for evaluation purposes only).
 
 ```{r, eval=FALSE}
-
 n <- 2000  # Sample size
 exp <- PLUCR::data_gen(n, seed=2025) 
 
@@ -134,12 +133,15 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 SL.library= SL.library, root.path=root.path)
 ```
 
+# 3. Play with results 
+[complete]
 
-# 3. Understanding the Algorithm Internally
+
+# Appendix. Understanding the Algorithm Internally
 
 The `main_algorithm()` function is designed to abstract away the technical details while still allowing flexibility through its parameters. Internally, it carries out a constrained policy learning procedure, broken down into three main stages, each performed on a different fold. 
 
-## 3.1. Preliminary Step: Data Checks and Cross-Fitting Folds
+## Preliminary Step: Data Checks and Cross-Fitting Folds
 Before estimating nuisance functions and optimizing the policy, the algorithm performs three important preliminary tasks:
 
 - Creates the folds where results will be saved. 
@@ -151,17 +153,16 @@ Before estimating nuisance functions and optimizing the policy, the algorithm pe
 n <- nrow(X)
 
 # Folds for cross-validation 
-strat_var <- interaction(Y, Xi, A, drop = TRUE)
 folds <- SuperLearner::CVFolds(n, 
                                id = NULL,
-                               Y = strat_var,
+                               Y = Y,
                                cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, 
                                                                                  shuffle =TRUE))
 # Check data
 checks<- PLUCR::check_data(Y, Xi, A, X, folds)
 ```
 
-## 3.2. Step 1: Estimate and Save Nuisance Parameters
+## Step 1: Estimate and Save Nuisance Parameters
 
 Once the variables have been validated and the cross-fitting folds are defined, the algorithm proceeds to estimate the nuisance parameters. These models are each trained using the pre-defined folds to enable cross-fitting, which improves robustness and reduces overfitting.
 
@@ -229,7 +230,7 @@ Y_test <- Y[folds[[3]]]
 Xi_test <- Xi[folds[[3]]]
 ```
 
-## 3.3. Step 2: Policy optimization
+## Step 2: Policy optimization
 
 In this step, we run the core algorithm of the `PLUCR` package — the **alternating optimization procedure** implemented in the `Optimization_Estimation()` function. This procedure learns an optimal treatment policy that maximizes the expected primary outcome while controlling the probability of adverse events.
 
@@ -341,8 +342,4 @@ if(res_0[[2]]<0){
   }
 print(list(theta_0, theta_final))
 ```
-
-
-# 4. Play with results 
-[complete]
 
