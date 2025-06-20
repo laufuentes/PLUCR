@@ -127,8 +127,8 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #'
 #' @export
 Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, root.path){
-  tol <- .75*1e-2
-  max_iter <- 1*1e1
+  tol <- 5*1e-2
+  max_iter <- 1.5*1e1
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X){nu0(rep(1,nrow(X)),X)-nu0(rep(0,nrow(X)),X)}
 
@@ -147,6 +147,8 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
   df_nu <- tibble::tibble(
     xi = Xi)
   
+  correction_term_mu_norm <- NULL
+  correction_term_nu_norm <- NULL
   psi_collection <- NULL
   sigma_psi_collection <- NULL
   theta_collection<-list()
@@ -159,14 +161,34 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     df_mu[[varname]] <- H*as.vector(psi_X)
     df_nu[[varname]] <- H*as.vector(sigma_psi_X)
     psi_collection <- cbind(psi_collection, as.vector(psi_X))
+    
+    if(FALSE){
+      if (!is.null(sigma_psi_collection)) {
+        new_cor <- abs(cor(as.vector(sigma_psi_X), sigma_psi_collection))
+        max_cor <- max(new_cor)
+        
+        # Stop if new sigma_psi_X is too similar to previous
+        if (max_cor > 0.90) {
+          message(glue::glue("Stopping early at iteration {k}: new sigma_psi_X is highly correlated (max_cor = {round(max_cor, 4)})"))
+          break
+        }
+      } 
+    }
     sigma_psi_collection <- cbind(sigma_psi_collection, as.vector(sigma_psi_X))
     theta_collection[[k]] <- theta
     
-    mu_update_obj <- stats::glm(Y ~ -1 + ., offset=offset_mu, data = df_mu, family=binomial())
-    nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
+      mu_update_obj <- stats::glm(Y ~ -1 + ., offset=offset_mu, data = df_mu, family=binomial())
+      nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
+      epsilon1<- as.matrix(as.numeric(mu_update_obj$coefficients))
+      epsilon2<- as.matrix(as.numeric(nu_update_obj$coefficients))
+      
+      if (any(abs(c(epsilon1,epsilon2)) > 10)) {
+        warning(glue::glue("Iteration {k}: detected large component of epsilon1 or epsilon2."))
+        break
+      }
+      correction_term_mu_norm <- cbind(correction_term_mu_norm, sqrt(mean((H*(psi_collection %*% epsilon1))^2)))
+      correction_term_nu_norm <- cbind(correction_term_nu_norm, sqrt(mean((H*(sigma_psi_collection %*% epsilon2))^2)))
     
-    epsilon1 <- as.matrix(as.numeric(mu_update_obj$coefficients))
-    epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
 
     Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_collection, HX(rep(1,nrow(X)),X,prop_score)) - 
         update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
@@ -179,10 +201,10 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     sigma_psi_X <- sigma_beta(new_psi,beta, centered)
     go_on <- (k < max_iter) & (sqrt(mean((psi_X - new_psi)^2)) > tol)
     
-    if(k%%10==0){
-      print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
-                    + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
-      print(sqrt(mean((psi_X - new_psi)^2)))}
+    #if(k%%10==0){
+    #  print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
+    #                + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
+    #  print(sqrt(mean((psi_X - new_psi)^2)))}
     
     psi_X <- new_psi
     
@@ -194,7 +216,9 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       sigma_psi_collection=sigma_psi_collection, 
       epsilon1=epsilon1, 
       epsilon2=epsilon2,
-      theta_collection=theta_collection
+      theta_collection=theta_collection, 
+      correction_term_mu_norm=correction_term_mu_norm,
+      correction_term_nu_norm=correction_term_nu_norm
     )
     
     step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
@@ -206,5 +230,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       file.remove(step_file_prev)
       cat("Deleted previous step file:", step_file_prev, "\n")}
   }
+  #MAYBE REMOVE
+  out$last_theta <- theta
   return(out)
 }

@@ -47,7 +47,7 @@ main_algorithm <- function(X, A, Y, Xi,
                                  Y = Y,
                                  cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
   # Check data
-  checks<- PLUCR::check_data(Y,Xi,A,X,folds) # /!\ changer ici s par fold 
+  checks<- PLUCR::check_data(Y, Xi, A, X, folds) 
   ########################################
   # Step 1: Compute nuisance parameters #
   ########################################
@@ -89,33 +89,43 @@ main_algorithm <- function(X, A, Y, Xi,
   ##### 1.1- Start by testing \code{lambda}=0 
   saved <- FALSE
   combinations <- NULL
-  beta <-0.05 
   lambda <- 0
+  min_constraint_lambda0 <- Inf
+  beta_0 <- NULL
   out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
                                         X_train, A_train, Y_train, Xi_train, 
-                                        lambda=0, alpha, precision, beta, centered, 
-                                        file.path(root.path,"Intermediate",paste0(0,"_",beta)))
+                                        lambda=0, alpha, precision, beta=0.05, centered, 
+                                        file.path(root.path,"Intermediate",paste0(0.05,"_",0)))
   
   ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
   theta_0 <- out$theta_collection[[length(out$theta_collection)]]
-  res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=0, alpha,  beta, centered)
-  saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(0,"_",beta,".rds")))
-  
-  if (!saved && res_0[[1]]$constraint < 0) {
-    saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(0, "_", beta, ".rds")))
-    psi_0 <- make_psi(theta_opt)
-    sigma_beta_0 <- sigma_beta(psi_0(X),beta=0.05,centered = FALSE)
-    combinations <- rbind(combinations, c(beta, lambda))
-    saved <- TRUE
-  }
-  ##### If your constraint was already satified with lambda=0 return
-  if(res_0[[2]]<0){
-    #/!\warning()
-    return(theta_0)
+  attr(theta_0, "lambda") <- 0 
+  for (beta in Betas){
+    res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=0, alpha,  beta, centered)
+    saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
+    
+    # Loop to select beta attribute leading to minimal constraint
+    if(res_0[[1]]$constraint<min_constraint_lambda0){
+      min_constraint_lambda0 <- res_0[[1]]$constraint
+      beta_0 <- beta
     }
+    # Loop to check constraint satisfaction
+    if (!saved && res_0[[1]]$constraint < 0) {
+      saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
+      psi_0 <- make_psi(theta_opt)
+      sigma_beta_0 <- sigma_beta(psi_0(X),beta=0.05,centered = FALSE)
+      combinations <- rbind(combinations, c(beta, lambda))
+      saved <- TRUE
+    }
+    ##### If your constraint was already satified with lambda=0 return
+    if(res_0[[2]]<0){
+      #/!\warning()
+      return(theta_0)
+    }
+  }
+  attr(theta_0, "beta") <- beta_0
   ##### If your constraint was not satified with lambda=0 goes onto step 2
   ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
-  else{
     ### Training 
     for (beta in Betas){
       saved <- FALSE
@@ -142,6 +152,8 @@ main_algorithm <- function(X, A, Y, Xi,
     }
     optimal_combination <- get_opt_beta_lambda(combinations,root.path)
     theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
-  }
+  
+    attr(theta_final, "lambda") <- optimal_combination$lambda 
+    attr(theta_final, "beta") <- optimal_combination$beta
   return(list(theta_0,theta_final))
 }

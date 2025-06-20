@@ -49,6 +49,17 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   
   mu1_X <- update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score))
   mu0_X <- update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score))
+  
+  # Compute optimal policy value and its lower bound
+  pi_X <- rbinom(nrow(X),1, prob= sigma_psi_X) # binary policy
+  V_pn <- V_Pn(pi_X, mu1_X, mu0_X) # estimated policy value 
+  
+  mu_AX <- update_mu_XA(qlogis(mu0(A,X)), epsilon1, pi_X, H_XA) # mu(A,X)
+  mu_pi_X <- update_mu_XA(qlogis(mu0(pi_X,X)), epsilon1, pi_X, HX(pi_X,X,prop_score)) # mu(pi(X),X)
+  
+  Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu_AX + mu_pi_X)-V_pn) #varphi
+  upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
+  
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
@@ -59,15 +70,18 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
       beta, alpha, centered, 
       Delta_nu),
     obj = Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered),
-    policy_value= V_Pn(psi, X, mu1_X, mu0_X, beta, centered))
-  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value")
-  # Upper bound 
+    policy_value= V_pn,
+    lwr_bound_policy_value = upper_bound_V_pn)
+  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value")
+  
+  # Compute upper bound for constraint
   updated_nuXA <- update_nu_XA(qlogis(nu0(A,X)), epsilon2, sigma_psi_X, H_XA)
+  
   Vs_n <- var(H_XA* sigma_psi_X*(Xi- updated_nuXA) +
-               sigma_psi_X* Delta_nu(X) -results$constraint)
-  upper_bound <- results$constraint + 1.64*sqrt(Vs_n/nrow(X))
-  # /!\ add the lower bound for the policy value 
-  return(list(results, upper_bound)) # Return the updated results for this index
+                sigma_psi_X* Delta_nu(X) -results$constraint)
+  upper_bound_sn <- results$constraint + 1.64*sqrt(Vs_n/nrow(X))
+  
+  return(list(results, upper_bound_sn)) # Return the updated results for this index
 }
 
 #' Select Optimal Beta and Lambda Combination
@@ -87,6 +101,6 @@ get_opt_beta_lambda <- function(combinations,root.path){
     pattern = "\\.rds$", full.names = TRUE)
   matched_files <- all_files[basename(all_files) %in% target_filenames]
   optimal_solutions <- do.call(rbind,lapply(matched_files, readRDS))
-  optimal_combination <- optimal_solutions[which.max(optimal_solutions$policy_value),]
+  optimal_combination <- optimal_solutions[which.max(optimal_solutions$lwr_bound_policy_value),]
   return(optimal_combination)
 }

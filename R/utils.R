@@ -171,13 +171,9 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_Pn <- function(psi, X, y1, y0, beta=0.05, centered=FALSE){
+V_Pn <- function(policy, y1, y0){
   `%>%`<- magrittr::`%>%`
-  psi_X <- psi(X)
-  sigma_psi <-sigma_beta(psi_X, beta, centered)
-  # action <- stats::rbinom(nrow(X), 1, sigma_psi)
-  # out <- mean(action * y1 + (1 - action) * y0)
-  out <- mean(psi_X * y1 + (1 - psi_X) * y0)
+  out <- mean(policy * y1 + (1 - policy) * y0)
   return(out)
 }
 

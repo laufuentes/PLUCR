@@ -4,16 +4,16 @@
 \alias{V_Pn}
 \title{Estimation of Policy Value}
 \usage{
-V_Pn(psi, X, y1, y0, beta = 0.05, centered = FALSE)
+V_Pn(policy, y1, y0)
 }
 \arguments{
-\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
-
-\item{X}{A matrix or data frame of covariates of size n x d (input data).}
-
 \item{y1}{A numeric vector or matrix of length n representing primary outcomes under treatment (in \link{0, 1}).}
 
 \item{y0}{A numeric vector or matrix of length n representing primary outcomes under no treatment (in \link{0, 1}).}
+
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
+
+\item{X}{A matrix or data frame of covariates of size n x d (input data).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
