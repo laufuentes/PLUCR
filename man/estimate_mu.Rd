@@ -4,7 +4,7 @@
 \alias{estimate_mu}
 \title{Estimate mu}
 \usage{
-estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.001)
+estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.01)
 }
 \arguments{
 \item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
@@ -19,7 +19,7 @@ estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.001)
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 
-\item{threshold}{A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-3 by default). Constrains estimation to $\link{threshold, 1 - threshold}$.}
+\item{threshold}{A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to $\link{threshold, 1 - threshold}$.}
 }
 \value{
 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X)

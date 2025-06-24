@@ -189,6 +189,18 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       correction_term_mu_norm <- cbind(correction_term_mu_norm, sqrt(mean((H*(psi_collection %*% epsilon1))^2)))
       correction_term_nu_norm <- cbind(correction_term_nu_norm, sqrt(mean((H*(sigma_psi_collection %*% epsilon2))^2)))
     
+      out <- list(
+        iter=k,
+        offset_mu=offset_mu,
+        offset_nu=offset_nu, 
+        psi_collection=psi_collection, 
+        sigma_psi_collection=sigma_psi_collection, 
+        epsilon1=epsilon1, 
+        epsilon2=epsilon2,
+        theta_collection=theta_collection, 
+        correction_term_mu_norm=correction_term_mu_norm,
+        correction_term_nu_norm=correction_term_nu_norm
+      )
 
     Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_collection, HX(rep(1,nrow(X)),X,prop_score)) - 
         update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
@@ -208,6 +220,16 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     
     psi_X <- new_psi
     
+    step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
+    step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
+    
+    saveRDS(out, file = step_file_current)
+    
+    if (file.exists(step_file_prev)) {
+      file.remove(step_file_prev)
+      cat("Deleted previous step file:", step_file_prev, "\n")}
+  }
+  if(k==1){
     out <- list(
       iter=k,
       offset_mu=offset_mu,
@@ -220,17 +242,6 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       correction_term_mu_norm=correction_term_mu_norm,
       correction_term_nu_norm=correction_term_nu_norm
     )
-    
-    step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
-    step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
-    
-    saveRDS(out, file = step_file_current)
-    
-    if (file.exists(step_file_prev)) {
-      file.remove(step_file_prev)
-      cat("Deleted previous step file:", step_file_prev, "\n")}
   }
-  #MAYBE REMOVE
-  out$last_theta <- theta
   return(out)
 }

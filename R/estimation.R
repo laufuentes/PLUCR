@@ -9,7 +9,7 @@
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
-#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-3 by default). Constrains estimation to $[threshold, 1 - threshold]$.
+#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to $[threshold, 1 - threshold]$.
 #' @return A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X)
 #' @examples
 #' \dontrun{
@@ -25,7 +25,7 @@
 #' mu_functions(1,X[1:5, ],1)  # Predict treated outcomes
 #' }
 #' @export
-estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
+estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
   if (!(threshold<5*1e-2 & threshold>0)) {
     msg_threshold <- paste("Threshold:", threshold, "is not small enough or not positive")
     warning(msg_threshold)
@@ -74,7 +74,7 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
-#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-3 by default). Constrains estimation to $[threshold, 1 - threshold]$.
+#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to $[threshold, 1 - threshold]$.
 #' @return A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X)
 #' @examples
 #' \dontrun{
@@ -90,7 +90,7 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
 #' nu_functions(1,X[1:5, ],1)  # Predict treated outcomes
 #' }
 #' @export
-estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
+estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
   if (!(threshold<5*1e-2 & threshold>0)) {
     msg_threshold <- paste("Threshold:", threshold, "is not small enough or not positive")
     warning(msg_threshold)
@@ -137,7 +137,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
-#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-3 by default). Constrains estimation to $[threshold, 1 - threshold]$.
+#' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to $[threshold, 1 - threshold]$.
 #' @return A fold-specific function predicting propensity score given treatment (A) and covariates (X)
 #' @examples
 #' \dontrun{
@@ -152,7 +152,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
 #' prop_score(1,X[1:5, ])  # Predict treated outcomes
 #' }
 #' @export
-estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-3) {
+estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
   if (!(threshold<5*1e-2 & threshold>0)) {
     msg_threshold <- paste("Threshold:", threshold, "is not small enough or not positive")
     warning(msg_threshold)
