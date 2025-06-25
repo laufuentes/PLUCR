@@ -29,7 +29,7 @@ main_algorithm <- function(X, A, Y, Xi,
     dir.create(root.path, recursive = TRUE)
   }
   # Subdirectories to check
-  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat","Intermediate", "Evaluation", "Theta_opt")
+  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat", "Folds", "Intermediate", "Evaluation", "Theta_opt")
   
   for (subdir in subdirs) {
     subdir_path <- file.path(root.path, subdir)
@@ -46,6 +46,7 @@ main_algorithm <- function(X, A, Y, Xi,
                                  id = NULL,
                                  Y = Y,
                                  cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+  saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) #Save primary outcome model
   # Check data
   checks<- PLUCR::check_data(Y, Xi, A, X, folds) 
   ########################################

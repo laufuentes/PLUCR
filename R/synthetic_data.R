@@ -52,7 +52,7 @@ h_Y_complicated <- function(X, A) {
 #' h_Y_tree(X, A)
 #' @export
 h_Y_tree <- function(X, A) {
-   form <- ifelse(X[,1]>0.4,0.5,-0.5) + ifelse(X[,2]>0.6, 0.5,-0.5)
+   form <- ifelse(X[,1]>0.4,0.6,-0.4) + ifelse(X[,2]>0.6, 0.5,-0.5)
   return(A*form)
 }
 
@@ -164,7 +164,7 @@ data_gen_tree <- function(n,seed=NA){
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   # Treatment effect is large inside the circle (radius ~ 0.3), low outside
   p1 <- ifelse(in_square, 0.95, 0.05)
-  Xi.1<- ifelse(Xi.0 == 1, 1, p1)
+  Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n,1,p1))
   df_complete <- data.frame(X=X,Treatment,y1=Y.1,y0=Y.0,Xi.1=Xi.1,Xi.0=Xi.0)
   df_obs<- data.frame(X=X,Treatment,Y=ifelse(Treatment==1,Y.1,Y.0),Xi=ifelse(Treatment==1,Xi.1,Xi.0))
   return(list(df_complete, df_obs))
