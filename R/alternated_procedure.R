@@ -54,7 +54,7 @@ update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
 #'@export
 update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){ 
   H_XA <- HX(A, X, prop_score)
-  res<- lapply(theta_collection, function(theta){make_psi(theta)(X)})
+  res <- lapply(theta_collection, function(theta){make_psi(theta)(X)})
   psi_collection <- do.call(cbind, res)
   out <- expit(logit(mu0(A, X))+ H_XA*(psi_collection%*%epsilon1)) 
   return(out)
@@ -81,7 +81,7 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.05, centered=FALSE){
   H_XA <- HX(A, X, prop_score)
   res<- lapply(theta_collection, function(theta){make_psi(theta)(X)})
-  sigma_psi_collection <- do.call(cbind, lapply(res,function(X)sigma_beta(X, beta, centered)))
+  sigma_psi_collection <- do.call(cbind, lapply(res, function(X)sigma_beta(X, beta, centered)))
   out <- expit(logit(nu0(A,X))+ H_XA*(sigma_psi_collection%*%epsilon2))
   return(out)
 }
@@ -128,7 +128,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' @export
 Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, root.path){
   tol <- 5*1e-2
-  max_iter <- 2*1e1
+  max_iter <- 1.5*1e1
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X){nu0(rep(1,nrow(X)),X)-nu0(rep(0,nrow(X)),X)}
 
@@ -137,7 +137,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
   theta <- FW(X, Delta_mu, Delta_nu, lambda, alpha, beta, centered, precision, verbose=TRUE)
   psi<- make_psi(theta)
   psi_X <- psi(X)
-  sigma_psi_X <- sigma_beta(psi_X,beta, centered)
+  sigma_psi_X <- sigma_beta(psi_X, beta, centered)
   
   offset_mu <- qlogis(mu0(A,X))
   df_mu <- tibble::tibble(
@@ -213,10 +213,11 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     sigma_psi_X <- sigma_beta(new_psi,beta, centered)
     go_on <- (k < max_iter) & (sqrt(mean((psi_X - new_psi)^2)) > tol)
     
-    #if(k%%10==0){
-    #  print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
-    #                + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
-    #  print(sqrt(mean((psi_X - new_psi)^2)))}
+    if(k%%10==0){
+      print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
+                    + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
+      #print(sqrt(mean((psi_X - new_psi)^2)))
+      }
     
     psi_X <- new_psi
     

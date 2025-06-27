@@ -15,7 +15,7 @@ SGD(
   alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
-  batch_prop = 1/3,
+  batch_prop = 1/5,
   max_iter = 1000,
   tol = 0.001,
   lr = 0.01,
@@ -32,7 +32,7 @@ SGD_X(
   alpha = 0.1,
   beta = 0.05,
   centered = FALSE,
-  batch_prop = 1/3,
+  batch_prop = 1/5,
   max_iter = 1000,
   tol = 0.001,
   lr = 0.01,
@@ -58,7 +58,7 @@ SGD_X(
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{batch_prop}{Proportion of data in a batch (by default 1/3).}
+\item{batch_prop}{Proportion of data in a batch (by default 1/5).}
 
 \item{max_iter}{Maximum number of iterations in the SGD (by default 1e3).}
 
