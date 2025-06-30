@@ -127,10 +127,11 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #'
 #' @export
 Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, root.path){
-  tol <- 5*1e-2
+  tol <- 2.5*1e-2
   max_iter <- 1.5*1e1
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X){nu0(rep(1,nrow(X)),X)-nu0(rep(0,nrow(X)),X)}
+  reason <- ""
 
   H <- HX(A,X,prop_score)
   
@@ -169,6 +170,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
         
         # Stop if new sigma_psi_X is too similar to previous
         if (max_cor > 0.90) {
+          reason <- "Stopping early at iteration: new sigma_psi_X is highly correlated (max_cor = {round(max_cor, 4)})"
           message(glue::glue("Stopping early at iteration {k}: new sigma_psi_X is highly correlated (max_cor = {round(max_cor, 4)})"))
           break
         }
@@ -183,6 +185,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       epsilon2<- as.matrix(as.numeric(nu_update_obj$coefficients))
       
       if (any(abs(c(epsilon1,epsilon2)) > 10)) {
+        reason <- "Detected large component of epsilon1 or epsilon2"
         warning(glue::glue("Iteration {k}: detected large component of epsilon1 or epsilon2."))
         break
       }
@@ -210,7 +213,6 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     if(k%%10==0){
       print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
                     + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
-      #print(sqrt(mean((psi_X - new_psi)^2)))
     }
     
     theta <- FW(X, Delta_mu, Delta_nu, lambda, alpha, beta, centered, precision, verbose=TRUE)
@@ -230,19 +232,14 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       file.remove(step_file_prev)
       cat("Deleted previous step file:", step_file_prev, "\n")}
   }
-  if(k==1){
-    out <- list(
-      iter=k,
-      offset_mu=offset_mu,
-      offset_nu=offset_nu, 
-      psi_collection=psi_collection, 
-      sigma_psi_collection=sigma_psi_collection, 
-      epsilon1=epsilon1, 
-      epsilon2=epsilon2,
-      theta_collection=theta_collection, 
-      correction_term_mu_norm=correction_term_mu_norm,
-      correction_term_nu_norm=correction_term_nu_norm
-    )
+  if(reason==""){
+    if(! k < max_iter){
+      reason <- "Maximum iterations reached"
+    }else{
+      reason <- "RMSE between consecutive solutions < tol"
+    }
   }
+  out$last_theta <- theta
+  out$reason <- reason
   return(out)
 }

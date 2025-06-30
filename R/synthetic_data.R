@@ -170,7 +170,7 @@ data_gen_tree <- function(n,seed=NA){
   Xi.0 <- stats::rbinom(n,1,0.05)
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   # Treatment effect is large inside the circle (radius ~ 0.3), low outside
-  p1 <- ifelse(in_square, 0.95, 0.05)
+  p1 <- ifelse(in_square, 0.95, 0.15)
   Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n,1,p1))
   df_complete <- data.frame(X=X,Treatment,y1=Y.1,y0=Y.0,Xi.1=Xi.1,Xi.0=Xi.0)
   df_obs<- data.frame(X=X,Treatment,Y=ifelse(Treatment==1,Y.1,Y.0),Xi=ifelse(Treatment==1,Xi.1,Xi.0))
@@ -277,7 +277,7 @@ delta_nu_complicated <- function(X){
 #' @export
 delta_nu_tree <- function(X){
   p0 <- 0.05
-  in_square <- (X[,3] > 0.4 & X[,3] < 0.7) & (X[,4] > 0.3 & X[,4] < 0.5)
-  p1 <- 0.05+ 0.95*ifelse(in_square, 0.95, 0.05)
+  in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
+  p1 <- 0.05+ 0.95*ifelse(in_square, 0.95, 0.15)
   return(p1-p0)
 }
