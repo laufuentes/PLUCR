@@ -84,7 +84,14 @@ data_gen <- function(n,seed=NA){
     0.95 * expit(h_Y(X,rep(1,n)))
   Y.0 <- 0.05 * expit(epsilon_Y) + 
     0.95 * expit(h_Y(X,rep(-1,n)))
-  
+  # logit_Xi0 <- -2 + 1.5 * X[, 3] - 1.2 * X[, 4]
+  # p.Xi0 <- expit(logit_Xi0)
+  # logit_r <- 1.5 * X[, 2] - 0.5
+  # r <- expit(logit_r)
+  # p.Xi1 <- p.Xi0 + (1 - p.Xi0) * r  # guarantees p.Xi1 ≥ p.Xi0
+  # U <- runif(n)
+  # Xi.0 <- as.integer(U < p.Xi0)
+  # Xi.1 <- as.integer(U < p.Xi1)
   Xi.0 <- stats::rbinom(n,1,0.05)
   p1 <- expit(4*(X[,2]-1/2))
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))

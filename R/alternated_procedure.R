@@ -207,17 +207,17 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_collection,HX(rep(1,nrow(X)),X,prop_score)) - 
         update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
     
+    if(k%%10==0){
+      print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
+                    + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
+      #print(sqrt(mean((psi_X - new_psi)^2)))
+    }
+    
     theta <- FW(X, Delta_mu, Delta_nu, lambda, alpha, beta, centered, precision, verbose=TRUE)
     psi<- make_psi(theta)
     new_psi <- psi(X)
     sigma_psi_X <- sigma_beta(new_psi,beta, centered)
     go_on <- (k < max_iter) & (sqrt(mean((psi_X - new_psi)^2)) > tol)
-    
-    if(k%%10==0){
-      print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
-                    + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
-      #print(sqrt(mean((psi_X - new_psi)^2)))
-      }
     
     psi_X <- new_psi
     
