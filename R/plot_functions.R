@@ -258,8 +258,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
   density_plots <- NULL
   ecdf_plots <- NULL
   
-  intermediate_result$theta_collection[[length(intermediate_result$theta_collection)+1]]<- intermediate_result$last_theta
-  
+  # intermediate_result$theta_collection[[length(intermediate_result$theta_collection)+1]]<- intermediate_result$last_theta
   for(i in 1:length(intermediate_result$theta_collection)){
     theta_corr <- intermediate_result$theta_collection[[i]]
     current_psi <- make_psi(theta_corr)(X_test)
@@ -289,7 +288,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
         color = "Method") +
       theme_minimal()
     
-    qq_plots <- append(plots, list(p_qq))
+    qq_plots <- append(qq_plots, list(p_qq))
     
     df_long<- df %>%
       pivot_longer(cols = everything(), names_to = "method", values_to = "value")
