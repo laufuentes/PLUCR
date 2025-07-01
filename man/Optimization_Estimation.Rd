@@ -17,9 +17,9 @@ Optimization_Estimation(
   precision = 0.05,
   beta = 0.05,
   centered = FALSE,
-  root.path,
   tol = 2.5 * 0.01,
-  max_iter = 20
+  max_iter = 20,
+  root.path
 )
 }
 \arguments{
@@ -47,11 +47,11 @@ Optimization_Estimation(
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{root.path}{Path to the folder where all results are to be saved.}
-
 \item{tol}{A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).}
 
 \item{max_iter}{A numeric scalar specifying the maximum number of iterations (20 by default).}
+
+\item{root.path}{Path to the folder where all results are to be saved.}
 }
 \value{
 A list containing:
