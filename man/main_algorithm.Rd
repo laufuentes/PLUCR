@@ -17,6 +17,8 @@ main_algorithm(
   Jfold = 3,
   V = 2L,
   SL.library = c("SL.mean", "SL.glm", "SL.ranger", "SL.grf"),
+  tol = 0.025,
+  max_iter = 20,
   root.path
 )
 }
@@ -44,6 +46,10 @@ main_algorithm(
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 
 \item{SL.library}{Vector of libraries for training Super Learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default).}
+
+\item{tol}{A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).}
+
+\item{max_iter}{A numeric scalar specifying the maximum number of iterations (20 by default).}
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }

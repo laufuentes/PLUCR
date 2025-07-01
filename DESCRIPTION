@@ -20,7 +20,8 @@ Imports:
     tibble, 
     SuperLearner, 
     glmnet, 
-    randomForest
+    randomForest,
+    patchwork
 Suggests: 
     knitr,
     rmarkdown
