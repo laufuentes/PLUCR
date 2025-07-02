@@ -26,7 +26,7 @@ main_algorithm <- function(X, A, Y, Xi,
                            tol=0.025, max_iter=20, root.path){
   # Check whether the root.path exists and contains proper folder to save data
   if (!dir.exists(root.path)) {
-    warning(sprintf("The directory '%s' does not exist. Creatung it...", root.path))
+    warning(sprintf("The directory '%s' does not exist. Creating it...", root.path))
     dir.create(root.path, recursive = TRUE)
   }
   # Subdirectories to check

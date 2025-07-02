@@ -149,6 +149,8 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
   
   correction_term_mu_norm <- NULL
   correction_term_nu_norm <- NULL
+  term1 <- NULL
+  term2 <- NULL
   psi_collection <- NULL
   sigma_psi_collection <- NULL
   theta_collection<-list()
@@ -191,6 +193,9 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
       correction_term_mu_norm <- cbind(correction_term_mu_norm, sqrt(mean((H*(psi_collection %*% epsilon1))^2)))
       correction_term_nu_norm <- cbind(correction_term_nu_norm, sqrt(mean((H*(sigma_psi_collection %*% epsilon2))^2)))
     
+      term1 <- cbind(term1, H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))))
+      term2 <- cbind(term2, H*(lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H))))
+      
       out <- list(
         iter=k,
         offset_mu=offset_mu,
@@ -201,7 +206,9 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
         epsilon2=epsilon2,
         theta_collection=theta_collection, 
         correction_term_mu_norm=correction_term_mu_norm,
-        correction_term_nu_norm=correction_term_nu_norm
+        correction_term_nu_norm=correction_term_nu_norm,
+        term1= term1, 
+        term2=term2
       )
 
     Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_collection, HX(rep(1,nrow(X)),X,prop_score)) - 

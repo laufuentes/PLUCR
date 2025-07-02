@@ -186,7 +186,51 @@ iterative_bias_plot <- function(intermediate_result, root.path, name){
     theme_minimal()
   
   ggsave(bias_plot, filename = file.path(root.path, "Images",paste0("Iterative_bias_",name,".pdf")))
-  return("Image saved")
+  
+  term1_df <- as.data.frame(intermediate_result$term1)  # samples x iterations
+  term2_df <- as.data.frame(intermediate_result$term2)
+  
+  term1_stats <- data.frame(
+    iterations = 1:ncol(term1_df),
+    mean = colMeans(term1_df),
+    variance = apply(term1_df, 2, var),
+    term = "term1"
+  )
+  
+  term2_stats <- data.frame(
+    iterations = 1:ncol(term2_df),
+    mean = colMeans(term2_df),
+    variance = apply(term2_df, 2, var),
+    term = "term2"
+  )
+  
+  mean_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = mean)) +
+    geom_line(color = "blue") + geom_point(color = "blue") +
+    labs(title = "Mean of term1 over iterations") +
+    theme_minimal()
+  
+  # term1 variance plot
+  var_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = variance)) +
+    geom_line(color = "blue") + geom_point(color = "blue") +
+    labs(title = "Variance of term1 over iterations") +
+    theme_minimal()
+  
+  # term2 mean plot
+  mean_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = mean)) +
+    geom_line(color = "red") + geom_point(color = "red") +
+    labs(title = "Mean of term2 over iterations") +
+    theme_minimal()
+  
+  # term2 variance plot
+  var_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = variance)) +
+    geom_line(color = "red") + geom_point(color = "red") +
+    labs(title = "Variance of term2 over iterations") +
+    theme_minimal()
+  
+  wrap_plots(list(mean_plot_term1, mean_plot_term2,var_plot_term1,var_plot_term2), ncol = 2) 
+  ggsave(filename = file.path(root.path, "Images", paste0("Bias_terms_", name, ".pdf")), width = 19, height = 10)
+  
+  return("Images saved")
 }
 
 #' Visualize the evolution of the RMSE and maximum RSE between consecutive iterations.  
