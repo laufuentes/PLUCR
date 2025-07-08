@@ -118,10 +118,11 @@ lambda_evol <- function(results, type_simu, beta_opt) {
 #' @param Var_X_axis Vector of covariates values for x-axis (length n).
 #' @param Var_Y_axis Vector of covariates values for y-axis (length n).
 #' @param root.path Path to the folder where images are to be saved.
+#' @param name A string to add to the end of filename. 
 #'
 #' @return A message indicating that the image was saved.
 #' @export
-visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var_Y_axis, root.path) {
+visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var_Y_axis, root.path, name) {
   policy <- sigma_beta(psi_X, beta, centered)
   
   df <- data.frame(
@@ -137,7 +138,7 @@ visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "right")
   
-  ggsave(p, filename = file.path(root.path, "Images","Treatment_assignment"))
+  ggsave(p, filename = file.path(root.path, "Images",paste0("Treatment_assignment_",name,".pdf")))
   return("Image saved")
 }
 

@@ -11,7 +11,8 @@ visual_treatment_plot(
   centered,
   Var_X_axis,
   Var_Y_axis,
-  root.path
+  root.path,
+  name
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ visual_treatment_plot(
 \item{Var_Y_axis}{Vector of covariates values for y-axis (length n).}
 
 \item{root.path}{Path to the folder where images are to be saved.}
+
+\item{name}{A string to add to the end of filename.}
 }
 \value{
 A message indicating that the image was saved.
