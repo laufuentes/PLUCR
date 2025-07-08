@@ -18,7 +18,7 @@ Optimization_Estimation(
   beta = 0.05,
   centered = FALSE,
   tol = 2.5 * 0.01,
-  max_iter = 20,
+  max_iter = 5,
   root.path
 )
 }
@@ -49,7 +49,7 @@ Optimization_Estimation(
 
 \item{tol}{A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).}
 
-\item{max_iter}{A numeric scalar specifying the maximum number of iterations (20 by default).}
+\item{max_iter}{A numeric scalar specifying the maximum number of iterations (5 by default).}
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }

@@ -7,29 +7,57 @@
 #' @param df_complete A data frame containing covariates prefixed with "X.".
 #' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
 #' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.
+#' @param Var_X_delta_Mu String of covariates values for X-axis for Delta_mu.
+#' @param Var_Y_delta_Mu String of covariates values for Y-axis for Delta_mu.
+#' @param Var_X_delta_Nu String of covariates values for X-axis for Delta_nu.
+#' @param Var_Y_delta_Nu String of covariates values for x-axis for Delta_nu.
+#' @param root.path Path to the folder where images are to be saved.
 #'
 #' @return Saves a plot to "figures/synthetic_setting.pdf".
 #' @export
-synthetic_setting_plot <- function(df_complete, delta_Mu, delta_Nu) {
+synthetic_setting_plot <- function(df_complete, delta_Mu, delta_Nu,  
+                                   Var_X_delta_Mu = "X.1", Var_Y_delta_Mu = "X.2", Var_X_delta_Nu = "X.1", Var_Y_delta_Nu = "X.2", 
+                                   root.path) {
   `%>%` <- magrittr::`%>%`
-  df_complete$sign_delta_Mu <- as.factor(
-    sign(
-      delta_Mu(df_complete %>% dplyr::select(dplyr::starts_with("X.")))
-    )
-  )
+
+  #df_complete$sign_delta_Mu <- as.factor(
+  #  sign(
+  #    delta_Mu(df_complete %>% dplyr::select(dplyr::starts_with("X.")))
+  #  )
+  #)
+  df_complete$delta_Mu <- delta_Mu(
+    df_complete %>% dplyr::select(dplyr::starts_with("X.")))
+  
   df_complete$delta_Nu <- delta_Nu(
-    df_complete %>% dplyr::select(dplyr::starts_with("X."))
-  )
-  plot_Y_sign <- ggplot2::ggplot(df_complete, ggplot2::aes(x = df_complete$X.1, y = df_complete$X.2, color = df_complete$sign_delta_Mu)) +
-    ggplot2::geom_point(alpha = 0.5)
-  p_plot <- ggplot2::ggplot(df_complete, ggplot2::aes(x = df_complete$X.1, y = df_complete$X.2, color = (df_complete$delta_Nu))) +
+    df_complete %>% dplyr::select(dplyr::starts_with("X.")))
+  
+  #plot_Y_sign <- ggplot2::ggplot(df_complete, ggplot2::aes(x = df_complete$X.1, y = df_complete$X.2, color = df_complete$sign_delta_Mu)) +
+  #  ggplot2::geom_point(alpha = 0.5)
+  
+  plot_Y <- ggplot2::ggplot(df_complete, ggplot2::aes_string(x = Var_X_delta_Mu, y = Var_Y_delta_Mu, color = "delta_Mu")) +
     ggplot2::geom_point(alpha = 0.5) +
-    ggplot2::scale_color_gradient(low = "blue", high = "green")
+    ggplot2::scale_color_gradientn(
+      limits = c(-1, 1),
+      colours = heat.colors(3),   # Optional: define color extremes
+      oob = scales::squish          # Optional: handle out-of-bounds gracefully
+    ) +
+    ggplot2::labs(title = "Delta Mu", color = "Delta Mu")
+  
+  p_plot <- ggplot2::ggplot(df_complete, ggplot2::aes_string(x = Var_X_delta_Nu, y = Var_Y_delta_Nu, color = "delta_Nu")) +
+    ggplot2::geom_point(alpha = 0.5) +
+    ggplot2::scale_color_gradientn(
+      limits = c(0, 1),
+      colours = topo.colors(3),  # Optional
+      oob = scales::squish
+    ) +
+    ggplot2::labs(title = "Delta Nu", color = "Delta Nu")
+  
   combined_plot <- gridExtra::grid.arrange(
-    plot_Y_sign, p_plot,
+    #plot_Y_sign, 
+    plot_Y, p_plot,
     ncol = 1
   )
-  ggplot2::ggsave(file.path("figures", "synthetic_setting.pdf"), combined_plot)
+  ggplot2::ggsave(file.path(root.path, "Images", "synthetic_setting.pdf"), combined_plot)
 }
 
 #' Plot Evolution of Objective Terms Across Lambda Values

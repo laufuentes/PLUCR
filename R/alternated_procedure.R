@@ -105,7 +105,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param tol A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).
-#' @param max_iter A numeric scalar specifying the maximum number of iterations (20 by default).
+#' @param max_iter A numeric scalar specifying the maximum number of iterations (5 by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #'
 #' @return A list containing:
@@ -128,7 +128,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' #                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
 #'
 #' @export
-Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=20,  root.path){
+Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=5,  root.path){
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X){nu0(rep(1,nrow(X)),X)-nu0(rep(0,nrow(X)),X)}
   reason <- ""

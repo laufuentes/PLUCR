@@ -4,7 +4,16 @@
 \alias{synthetic_setting_plot}
 \title{Plot Synthetic Data Setting}
 \usage{
-synthetic_setting_plot(df_complete, delta_Mu, delta_Nu)
+synthetic_setting_plot(
+  df_complete,
+  delta_Mu,
+  delta_Nu,
+  Var_X_delta_Mu = "X.1",
+  Var_Y_delta_Mu = "X.2",
+  Var_X_delta_Nu = "X.1",
+  Var_Y_delta_Nu = "X.2",
+  root.path
+)
 }
 \arguments{
 \item{df_complete}{A data frame containing covariates prefixed with "X.".}
@@ -12,6 +21,16 @@ synthetic_setting_plot(df_complete, delta_Mu, delta_Nu)
 \item{delta_Mu}{A function that computes the treatment effect (mu difference) from covariates.}
 
 \item{delta_Nu}{A function that computes the selection effect (nu difference) from covariates.}
+
+\item{Var_X_delta_Mu}{String of covariates values for X-axis for Delta_mu.}
+
+\item{Var_Y_delta_Mu}{String of covariates values for Y-axis for Delta_mu.}
+
+\item{Var_X_delta_Nu}{String of covariates values for X-axis for Delta_nu.}
+
+\item{Var_Y_delta_Nu}{String of covariates values for x-axis for Delta_nu.}
+
+\item{root.path}{Path to the folder where images are to be saved.}
 }
 \value{
 Saves a plot to "figures/synthetic_setting.pdf".

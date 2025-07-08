@@ -34,8 +34,8 @@ h_Y_complicated <- function(X, A) {
   a <- -5
   c <- 0.5
   d <- 0.6
-  parabolic_boundary_value <- X[,2] - (a * (X[,1] - c)^2 + d)
-  return(A  * (-1) * parabolic_boundary_value)
+  parab_val <- X[,2] - (a * (X[,1] - c)^2 + d)
+  return(-2 * A * parab_val)
 }
 
 #' h_Y_tree: Tree Treatment Effect on Y Component Function
@@ -92,7 +92,7 @@ data_gen <- function(n,seed=NA){
   # U <- runif(n)
   # Xi.0 <- as.integer(U < p.Xi0)
   # Xi.1 <- as.integer(U < p.Xi1)
-  Xi.0 <- stats::rbinom(n,1,0.05)
+  Xi.0 <- stats::rbinom(n,1,0.25)
   p1 <- expit(4*(X[,2]-1/2))
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
   df_complete <- data.frame(X=X,Treatment,y1=Y.1,y0=Y.0,Xi.1=Xi.1,Xi.0=Xi.0)
@@ -128,7 +128,7 @@ data_gen_complicated <- function(n,seed=NA){
   Y.0 <- 0.05 * expit(epsilon_Y) + 
     0.95 * expit(h_Y_complicated(X,rep(-1,n)))
   
-  Xi.0 <- rbinom(n,1,0.05)
+  Xi.0 <- rbinom(n,1,0.1)
   d <- sqrt((X[,1]- 0.5)^2 + (X[,2] - 0.5)^2)
   # Treatment effect is large inside the circle (radius ~ 0.3), low outside
   p1 <- expit(20 * (d - 0.3))
@@ -167,10 +167,10 @@ data_gen_tree <- function(n,seed=NA){
   Y.0 <- 0.05 * expit(epsilon_Y) + 
     0.95 * expit(h_Y_tree(X,rep(-1,n)))
   
-  Xi.0 <- stats::rbinom(n,1,0.05)
+  Xi.0 <- stats::rbinom(n,1,0.1)
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   # Treatment effect is large inside the circle (radius ~ 0.3), low outside
-  p1 <- ifelse(in_square, 0.95, 0.15)
+  p1 <- ifelse(in_square, 0.85, 0.35)
   Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n,1,p1))
   df_complete <- data.frame(X=X,Treatment,y1=Y.1,y0=Y.0,Xi.1=Xi.1,Xi.0=Xi.0)
   df_obs<- data.frame(X=X,Treatment,Y=ifelse(Treatment==1,Y.1,Y.0),Xi=ifelse(Treatment==1,Xi.1,Xi.0))
@@ -240,8 +240,8 @@ delta_mu_tree <- function(X){
 #' delta_nu(X)
 #' @export
 delta_nu <- function(X){
-  p0 <- 0.05
-  p1 <- 0.05 + 0.95*expit(4*(X[,2]-1/2))
+  p0 <- 0.25
+  p1 <- 0.25 + 0.75*expit(4*(X[,2]-1/2))
   return(p1-p0)
 }
 
@@ -260,7 +260,7 @@ delta_nu_complicated <- function(X){
   p0 <- 0.05
   d <- sqrt((X[,1]- 0.5)^2 + (X[,2] - 0.5)^2)
   # Treatment effect is large inside the circle (radius ~ 0.3), low outside
-  p1 <- 0.05+ 0.95*expit(20 * (d - 0.3))
+  p1 <- 0.1+ 0.9*expit(20 * (d - 0.3))
   return(p1-p0)
 }
 
@@ -276,8 +276,8 @@ delta_nu_complicated <- function(X){
 #' delta_nu(X)
 #' @export
 delta_nu_tree <- function(X){
-  p0 <- 0.05
+  p0 <- 0.1
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
-  p1 <- 0.05+ 0.95*ifelse(in_square, 0.95, 0.15)
+  p1 <- 0.1+ 0.9*ifelse(in_square, 0.85, 0.35)
   return(p1-p0)
 }
