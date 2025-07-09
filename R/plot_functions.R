@@ -185,82 +185,82 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
 }
 
 
-#' Visualize the evolution of the correction term for mu and nu. 
-#' 
-#' Plots the correction terms for mu and nu over iterations of the alternated procedure 
-#' 
-#' @param intermediate_result File from Intermediate folder gathering results from alternated procedure. 
-#' @param root.path Path to the folder where images are to be saved.
-#' @param name A string to add to the end of filename. 
-#' 
-#' @return A message indicating that the image was saved.
-#' @export
-iterative_bias_plot <- function(intermediate_result, root.path, name){
+# Visualize the evolution of the correction term for mu and nu. 
+# 
+# Plots the correction terms for mu and nu over iterations of the alternated procedure 
+# 
+#@param intermediate_result File from Intermediate folder gathering results from alternated procedure. 
+#@param root.path Path to the folder where images are to be saved.
+#@param name A string to add to the end of filename. 
+# 
+#@return A message indicating that the image was saved.
+#@export
+#iterative_bias_plot <- function(intermediate_result, root.path, name){
+#  
+#  bias_evol <- data.frame(
+#    iterations = seq(1, length(intermediate_result$correction_term_mu), by = 1),
+#    mu_correction_term = t(intermediate_result$correction_term_mu),
+#    nu_correction_term = t(intermediate_result$correction_term_nu)
+#  )
   
-  bias_evol <- data.frame(
-    iterations = seq(1, length(intermediate_result$correction_term_mu), by = 1),
-    mu_correction_term = t(intermediate_result$correction_term_mu),
-    nu_correction_term = t(intermediate_result$correction_term_nu)
-  )
+#  bias_evol_long <- bias_evol %>%
+#    pivot_longer(
+#      cols = c("mu_correction_term", "nu_correction_term"), 
+#     names_to = "bias_type", 
+#      values_to = "bias")
   
-  bias_evol_long <- bias_evol %>%
-    pivot_longer(
-      cols = c("mu_correction_term", "nu_correction_term"), 
-      names_to = "bias_type", 
-      values_to = "bias")
+#  bias_plot <- ggplot(bias_evol_long, aes(x = iterations, y = bias, color=bias_type)) +
+#    geom_line() +
+#    geom_point() +
+#   theme_minimal()
   
-  bias_plot <- ggplot(bias_evol_long, aes(x = iterations, y = bias, color=bias_type)) +
-    geom_line() +
-    geom_point() +
-    theme_minimal()
+# ggsave(bias_plot, filename = file.path(root.path, "Images",paste0("Iterative_bias_",name,".pdf")))
   
-  ggsave(bias_plot, filename = file.path(root.path, "Images",paste0("Iterative_bias_",name,".pdf")))
+#  term1_df <- as.data.frame(intermediate_result$term1)  # samples x iterations
+# term2_df <- as.data.frame(intermediate_result$term2)
   
-  term1_df <- as.data.frame(intermediate_result$term1)  # samples x iterations
-  term2_df <- as.data.frame(intermediate_result$term2)
+#  term1_stats <- data.frame(
+#    iterations = 1:ncol(term1_df),
+#    mean = colMeans(term1_df),
+#    variance = apply(term1_df, 2, var),
+#    term = "term1"
+#  )
   
-  term1_stats <- data.frame(
-    iterations = 1:ncol(term1_df),
-    mean = colMeans(term1_df),
-    variance = apply(term1_df, 2, var),
-    term = "term1"
-  )
+#  term2_stats <- data.frame(
+#    iterations = 1:ncol(term2_df),
+#    mean = colMeans(term2_df),
+#    variance = apply(term2_df, 2, var),
+#    term = "term2"
+#  )
   
-  term2_stats <- data.frame(
-    iterations = 1:ncol(term2_df),
-    mean = colMeans(term2_df),
-    variance = apply(term2_df, 2, var),
-    term = "term2"
-  )
-  
-  mean_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = mean)) +
-    geom_line(color = "blue") + geom_point(color = "blue") +
-    labs(title = "Mean of term1 over iterations") +
-    theme_minimal()
+#  mean_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = mean)) +
+#    geom_line(color = "blue") + geom_point(color = "blue") +
+#    labs(title = "Mean of term1 over iterations") +
+#    theme_minimal()
   
   # term1 variance plot
-  var_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = variance)) +
-    geom_line(color = "blue") + geom_point(color = "blue") +
-    labs(title = "Variance of term1 over iterations") +
-    theme_minimal()
+#  var_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = variance)) +
+#    geom_line(color = "blue") + geom_point(color = "blue") +
+#    labs(title = "Variance of term1 over iterations") +
+#    theme_minimal()
   
   # term2 mean plot
-  mean_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = mean)) +
-    geom_line(color = "red") + geom_point(color = "red") +
-    labs(title = "Mean of term2 over iterations") +
-    theme_minimal()
+#  mean_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = mean)) +
+#    geom_line(color = "red") + geom_point(color = "red") +
+#    labs(title = "Mean of term2 over iterations") +
+#    theme_minimal()
   
   # term2 variance plot
-  var_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = variance)) +
-    geom_line(color = "red") + geom_point(color = "red") +
-    labs(title = "Variance of term2 over iterations") +
-    theme_minimal()
+#  var_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = variance)) +
+#    geom_line(color = "red") + geom_point(color = "red") +
+#    labs(title = "Variance of term2 over iterations") +
+#    theme_minimal()
   
-  wrap_plots(list(mean_plot_term1, mean_plot_term2,var_plot_term1,var_plot_term2), ncol = 2) 
-  ggsave(filename = file.path(root.path, "Images", paste0("Bias_terms_", name, ".pdf")), width = 19, height = 10)
+# wrap_plots(list(mean_plot_term1, mean_plot_term2,var_plot_term1,var_plot_term2), ncol = 2) 
+#  ggsave(filename = file.path(root.path, "Images", paste0("Bias_terms_", name, ".pdf")), width = 19, height = 10)
   
-  return("Images saved")
-}
+#  return("Images saved")
+#}
 
 #' Visualize the evolution of the RMSE and maximum RSE between consecutive iterations.  
 #' 
@@ -354,7 +354,6 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
       geom_point(alpha = 0.6) + 
       geom_abline(intercept = 0, slope = 1, color = "red") +
       labs(
-        title = "Comparison of ORA with T-Learner and Corrected",
         subtitle = sprintf("RMSE: T-Learner = %.3f, Corrected = %.3f", rmse_tlearner, rmse_corr),
         x = "Oracle",
         y = "Estimated",
@@ -368,8 +367,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
     
     p_density <- ggplot(df_long, aes(x = value, color = method, fill = method)) +
       geom_density(alpha = 0.3) +
-      labs(title = "Density Plot of sigma_beta Outputs",
-           x = "sigma_beta Value",
+      labs(x = "sigma_beta Value",
            y = "Density") +
       theme_minimal()
     density_plots <- append(density_plots, list(p_density))
@@ -378,7 +376,6 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
       stat_ecdf(geom = "step", direction = "hv") +  # 'hv' makes it ECQF-like
       coord_flip() +  # Flip axes to show quantile function (x = quantile)
       labs(
-        title = "Empirical Quantile Function (ECQF)",
         x = "Quantile",
         y = "Value",
         color = "Method"
@@ -386,14 +383,18 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
       theme_minimal()
     ecdf_plots <- append(ecdf_plots, list(p_ecdf))
   }
-  wrap_plots(qq_plots, ncol = 5)
-  ggsave(filename = file.path(root.path,"Images",paste0("psi_evol_",name,".pdf")), width = 19, height = 10)
+  full_qq <- wrap_plots(qq_plots, ncol = 5) +
+    plot_annotation(title = "QQ Plot: Oracle vs Estimated psi over Iterations")
+  ggsave(filename = file.path(root.path, "Images", paste0("psi_evol_", name, ".pdf")), plot = full_qq, width = 19, height = 10)
   
-  wrap_plots(density_plots, ncol = 5)
-  ggsave(filename = file.path(root.path,"Images",paste0("sigma_psi_density_",name,".pdf")), width = 19, height = 10)
+  full_density <- wrap_plots(density_plots, ncol = 5) +
+    plot_annotation(title = "Density Plot of sigma_beta Outputs")
+  ggsave(filename = file.path(root.path, "Images", paste0("sigma_psi_density_", name, ".pdf")), plot = full_density, width = 19, height = 10)
   
-  wrap_plots(ecdf_plots, ncol = 5)
-  ggsave(filename = file.path(root.path,"Images",paste0("sigma_psi_ecdf_",name,".pdf")), width = 19, height = 10)
+  full_ecdf <- wrap_plots(ecdf_plots, ncol = 5) +
+    plot_annotation(title = "Empirical Quantile Function (ECQF) of sigma_beta")
+  ggsave(filename = file.path(root.path, "Images", paste0("sigma_psi_ecdf_", name, ".pdf")), plot = full_ecdf, width = 19, height = 10)
+  
   return("Images saved")
 }
 
