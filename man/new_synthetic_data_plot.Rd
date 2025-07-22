@@ -2,21 +2,26 @@
 % Please edit documentation in R/plot_functions.R
 \name{new_synthetic_data_plot}
 \alias{new_synthetic_data_plot}
-\title{Plot Optimal Policy Across Discrete Lambda Values}
+\title{Plot Synthetic Data Setting}
 \usage{
-new_synthetic_data_plot(delta_Mu, delta_Nu, B = 100)
+new_synthetic_data_plot(delta_Mu, delta_Nu, B = 100, root.path, name)
+}
+\arguments{
+\item{delta_Mu}{A function that computes the treatment effect (mu difference) from covariates.}
+
+\item{delta_Nu}{A function that computes the selection effect (nu difference) from covariates.}
+
+\item{B}{Integer, number of Monte Carlo repetitions (1e4 by default).}
+
+\item{root.path}{Path to the folder where images are to be saved.}
+
+\item{name}{A string to add to the end of filename.}
+}
+\value{
+Saves a plot to "figures/synthetic_setting.pdf".
 }
 \description{
-Generates multiple plots of treatment assignment probability for a range of lambda values
-and combines them with a shared legend. Also saves plots for the initial and optimal lambdas.
-}
-\details{
-param results A list or data frame containing \code{optimal_x}, \code{lambda}, \code{beta}, etc.
-param idx_opt The index of the optimal lambda in the results.
-param df A data frame with covariates, including X.1 and X.2.
-param type_simu A string used to name the output folder (e.g., "oracular", "estimated").
-param centered Logical; if TRUE, uses centered sigma transformation.
-
-return Saves plots in "figures/<type_simu>/".
-export
+Generates and saves a two-panel plot:
+one showing the sign of the treatment effect (\code{delta_Mu}) and the other
+visualizing the magnitude of selection effect (\code{delta_Nu}) across covariates X.1 and X.2.
 }

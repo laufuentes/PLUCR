@@ -1,65 +1,3 @@
-#' Plot Synthetic Data Setting
-#'
-#' Generates and saves a two-panel plot:
-#' one showing the sign of the treatment effect (`delta_Mu`) and the other
-#' visualizing the magnitude of selection effect (`delta_Nu`) across covariates X.1 and X.2.
-#'
-#' @param df_complete A data frame containing covariates prefixed with "X.".
-#' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
-#' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.
-#' @param Var_X_delta_Mu String of covariates values for X-axis for Delta_mu.
-#' @param Var_Y_delta_Mu String of covariates values for Y-axis for Delta_mu.
-#' @param Var_X_delta_Nu String of covariates values for X-axis for Delta_nu.
-#' @param Var_Y_delta_Nu String of covariates values for x-axis for Delta_nu.
-#' @param root.path Path to the folder where images are to be saved.
-#'
-#' @return Saves a plot to "figures/synthetic_setting.pdf".
-#' @export
-synthetic_setting_plot <- function(df_complete, delta_Mu, delta_Nu,  
-                                   Var_X_delta_Mu = "X.1", Var_Y_delta_Mu = "X.2", Var_X_delta_Nu = "X.1", Var_Y_delta_Nu = "X.2", 
-                                   root.path) {
-  `%>%` <- magrittr::`%>%`
-
-  #df_complete$sign_delta_Mu <- as.factor(
-  #  sign(
-  #    delta_Mu(df_complete %>% dplyr::select(dplyr::starts_with("X.")))
-  #  )
-  #)
-  df_complete$delta_Mu <- delta_Mu(
-    df_complete %>% dplyr::select(dplyr::starts_with("X.")))
-  
-  df_complete$delta_Nu <- delta_Nu(
-    df_complete %>% dplyr::select(dplyr::starts_with("X.")))
-  
-  #plot_Y_sign <- ggplot2::ggplot(df_complete, ggplot2::aes(x = df_complete$X.1, y = df_complete$X.2, color = df_complete$sign_delta_Mu)) +
-  #  ggplot2::geom_point(alpha = 0.5)
-  
-  plot_Y <- ggplot2::ggplot(df_complete, ggplot2::aes_string(x = Var_X_delta_Mu, y = Var_Y_delta_Mu, color = "delta_Mu")) +
-    ggplot2::geom_point(alpha = 0.5) +
-    ggplot2::scale_color_gradientn(
-      limits = c(-1, 1),
-      colours = heat.colors(3),   # Optional: define color extremes
-      oob = scales::squish          # Optional: handle out-of-bounds gracefully
-    ) +
-    ggplot2::labs(title = "Delta Mu", color = "Delta Mu")
-  
-  p_plot <- ggplot2::ggplot(df_complete, ggplot2::aes_string(x = Var_X_delta_Nu, y = Var_Y_delta_Nu, color = "delta_Nu")) +
-    ggplot2::geom_point(alpha = 0.5) +
-    ggplot2::scale_color_gradientn(
-      limits = c(0, 1),
-      colours = topo.colors(3),  # Optional
-      oob = scales::squish
-    ) +
-    ggplot2::labs(title = "Delta Nu", color = "Delta Nu")
-  
-  combined_plot <- gridExtra::grid.arrange(
-    #plot_Y_sign, 
-    plot_Y, p_plot,
-    ncol = 1
-  )
-  ggplot2::ggsave(file.path(root.path, "Images", "synthetic_setting.pdf"), combined_plot)
-}
-
 #' Plot Evolution of Objective Terms Across Lambda Values
 #'
 #' Visualizes how risk, constraint, and overall objective evolve with respect to different lambda values.
@@ -156,6 +94,7 @@ visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var
 #' @return A message indicating that the image was saved.
 #' @export
 plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
+  `%>%`<- magrittr::`%>%`
   pred1 <- Var_learner(rep(1,nrow(X)),X)
   pred0 <- Var_learner(rep(0,nrow(X)),X)
   
@@ -184,84 +123,6 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
   return("Image saved")
 }
 
-
-# Visualize the evolution of the correction term for mu and nu. 
-# 
-# Plots the correction terms for mu and nu over iterations of the alternated procedure 
-# 
-#@param intermediate_result File from Intermediate folder gathering results from alternated procedure. 
-#@param root.path Path to the folder where images are to be saved.
-#@param name A string to add to the end of filename. 
-# 
-#@return A message indicating that the image was saved.
-#@export
-#iterative_bias_plot <- function(intermediate_result, root.path, name){
-#  
-#  bias_evol <- data.frame(
-#    iterations = seq(1, length(intermediate_result$correction_term_mu), by = 1),
-#    mu_correction_term = t(intermediate_result$correction_term_mu),
-#    nu_correction_term = t(intermediate_result$correction_term_nu)
-#  )
-  
-#  bias_evol_long <- bias_evol %>%
-#    pivot_longer(
-#      cols = c("mu_correction_term", "nu_correction_term"), 
-#     names_to = "bias_type", 
-#      values_to = "bias")
-  
-#  bias_plot <- ggplot(bias_evol_long, aes(x = iterations, y = bias, color=bias_type)) +
-#    geom_line() +
-#    geom_point() +
-#   theme_minimal()
-  
-# ggsave(bias_plot, filename = file.path(root.path, "Images",paste0("Iterative_bias_",name,".pdf")))
-  
-#  term1_df <- as.data.frame(intermediate_result$term1)  # samples x iterations
-# term2_df <- as.data.frame(intermediate_result$term2)
-  
-#  term1_stats <- data.frame(
-#    iterations = 1:ncol(term1_df),
-#    mean = colMeans(term1_df),
-#    variance = apply(term1_df, 2, var),
-#    term = "term1"
-#  )
-  
-#  term2_stats <- data.frame(
-#    iterations = 1:ncol(term2_df),
-#    mean = colMeans(term2_df),
-#    variance = apply(term2_df, 2, var),
-#    term = "term2"
-#  )
-  
-#  mean_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = mean)) +
-#    geom_line(color = "blue") + geom_point(color = "blue") +
-#    labs(title = "Mean of term1 over iterations") +
-#    theme_minimal()
-  
-  # term1 variance plot
-#  var_plot_term1 <- ggplot(term1_stats, aes(x = iterations, y = variance)) +
-#    geom_line(color = "blue") + geom_point(color = "blue") +
-#    labs(title = "Variance of term1 over iterations") +
-#    theme_minimal()
-  
-  # term2 mean plot
-#  mean_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = mean)) +
-#    geom_line(color = "red") + geom_point(color = "red") +
-#    labs(title = "Mean of term2 over iterations") +
-#    theme_minimal()
-  
-  # term2 variance plot
-#  var_plot_term2 <- ggplot(term2_stats, aes(x = iterations, y = variance)) +
-#    geom_line(color = "red") + geom_point(color = "red") +
-#    labs(title = "Variance of term2 over iterations") +
-#    theme_minimal()
-  
-# wrap_plots(list(mean_plot_term1, mean_plot_term2,var_plot_term1,var_plot_term2), ncol = 2) 
-#  ggsave(filename = file.path(root.path, "Images", paste0("Bias_terms_", name, ".pdf")), width = 19, height = 10)
-  
-#  return("Images saved")
-#}
-
 #' Visualize the evolution of the RMSE and maximum RSE between consecutive iterations.  
 #' 
 #' Plots the evolution of the RMSE and RSE between iterative optimal solutions psi.  
@@ -273,6 +134,7 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
 #' @return A message indicating that the image was saved.
 #' @export
 iterative_consecutive_metrics_plot <- function(intermediate_result, root.path, name){
+  `%>%`<- magrittr::`%>%`
   psi_collection <- intermediate_result$psi_collection
   rmse_values <- numeric(ncol(psi_collection) - 1)
   max_rse_values <- numeric(ncol(psi_collection) - 1)
@@ -289,24 +151,24 @@ iterative_consecutive_metrics_plot <- function(intermediate_result, root.path, n
     rmse_values = rmse_values, 
     max_rse_values = max_rse_values)
   
-  rmse_plot <- ggplot(df, aes(x = iteration, y = rmse_values)) +
-    geom_line(color = "steelblue") +
-    geom_point(color = "darkred") +
-    labs(title = "RMSE Between Consecutive psi solutions",
+  rmse_plot <- ggplot2::ggplot(df, aes(x = iteration, y = rmse_values)) +
+    ggplot2::geom_line(color = "steelblue") +
+    ggplot2::geom_point(color = "darkred") +
+    ggplot2::labs(title = "RMSE Between Consecutive psi solutions",
       x = "Iteration",
       y = "RMSE") +
-    theme_minimal()
+    ggplot2::theme_minimal()
   
-  max_rse_plot <- ggplot(df, aes(x = iteration, y = max_rse_values)) +
-    geom_line(color = "steelblue") +
-    geom_point(color = "darkred") +
-    labs(title = "Max RSE Between Consecutive psi solutions",
+  max_rse_plot <- ggplot2::ggplot(df, aes(x = iteration, y = max_rse_values)) +
+    ggplot2::geom_line(color = "steelblue") +
+    ggplot2::geom_point(color = "darkred") +
+    ggplot2::labs(title = "Max RSE Between Consecutive psi solutions",
          x = "Iteration",
          y = "Max RSE") +
-    theme_minimal()
+    ggplot2::theme_minimal()
   
-  ggsave(rmse_plot, filename = file.path(root.path, "Images",paste0("Iterative_RMSE_", name,".pdf")))
-  ggsave(max_rse_plot, filename = file.path(root.path, "Images",paste0("Iterative_Max_RSE_", name,".pdf")))
+  ggplot2::ggsave(rmse_plot, filename = file.path(root.path, "Images",paste0("Iterative_RMSE_", name,".pdf")))
+  ggplot2::ggsave(max_rse_plot, filename = file.path(root.path, "Images",paste0("Iterative_Max_RSE_", name,".pdf")))
   return("Images saved")
 }
 
@@ -327,6 +189,7 @@ iterative_consecutive_metrics_plot <- function(intermediate_result, root.path, n
 iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_test, 
                                     beta=0.05, centered=FALSE, 
                                     root.path, name){
+  `%>%`<- magrittr::`%>%`
   qq_plots <- NULL
   density_plots <- NULL
   ecdf_plots <- NULL
@@ -336,7 +199,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
     theta_corr <- intermediate_result$theta_collection[[i]]
     current_psi <- make_psi(theta_corr)(X_test)
     
-    df <- tibble(ora=PLUCR::sigma_beta(make_psi(theta_opt)(X_test), beta= 0.05, centered=centered),
+    df <- tibble::tibble(ora=PLUCR::sigma_beta(make_psi(theta_opt)(X_test), beta= 0.05, centered=centered),
                  tlearner=PLUCR::sigma_beta(make_psi(theta_t)(X_test), beta=0.05, centered=centered),
                  corr=PLUCR::sigma_beta(current_psi, beta=0.05, centered=centered))
     
@@ -398,40 +261,21 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
   return("Images saved")
 }
 
-#' Plot Optimal Policy Across Discrete Lambda Values
+#' Plot Synthetic Data Setting
 #'
-#' Generates multiple plots of treatment assignment probability for a range of lambda values
-#' and combines them with a shared legend. Also saves plots for the initial and optimal lambdas.
+#' Generates and saves a two-panel plot:
+#' one showing the sign of the treatment effect (`delta_Mu`) and the other
+#' visualizing the magnitude of selection effect (`delta_Nu`) across covariates X.1 and X.2.
 #'
-#' param results A list or data frame containing `optimal_x`, `lambda`, `beta`, etc.
-#' param idx_opt The index of the optimal lambda in the results.
-#' param df A data frame with covariates, including X.1 and X.2.
-#' param type_simu A string used to name the output folder (e.g., "oracular", "estimated").
-#' param centered Logical; if TRUE, uses centered sigma transformation.
-#'
-#' return Saves plots in "figures/<type_simu>/".
-#' export
-#geom_points_fct <- function(results, idx_opt, df, type_simu, centered){
-#  lambda_discr <- which(results$beta==results$beta[idx_opt])[as.integer(seq(1, length(which(results$beta==results$beta[idx_opt])), length.out=10))]
-#  
-#  plots <- lapply(lambda_discr, function(x) gamma_plot_funct(results$optimal_x[[x]], results$lambda[[x]], results$beta[[x]], df, centered))
-#  plots_no_legend <- lapply(plots, function(p) p + ggplot2::theme(legend.position = "none"))
-  
-#  legend <- cowplot::get_legend(plots[[1]])
-#  combined_plots <- cowplot::plot_grid(plotlist = plots_no_legend, ncol = 5, nrow = 2, align = "hv")
-#  final_plot <- cowplot::plot_grid(combined_plots, legend, ncol=1, rel_heights = c(5,2))
-  # Display the final plot
-#  print(final_plot)
-#  ggplot2::ggsave(file.path("figures",type_simu,"optimal_solution_multiple_lambdas.pdf"),final_plot, width = 10, height = 6)
-  
-#  plot_none<-gamma_plot_funct(results$optimal_x[[1]], results$lambda[[1]], results$beta[[1]], df, centered)+ggplot2::theme(legend.position = "none")
-#  plot_max <- gamma_plot_funct(results$optimal_x[[idx_opt]], results$lambda[[idx_opt]], results$beta[[idx_opt]], df, centered)+ggplot2::theme(legend.position = "none")
-
-#  opt_plots <- cowplot::plot_grid(plot_none,plot_max, ncol=2)
-#  ggplot2::ggsave(file.path("figures",type_simu,"optimal_solution_optimal_lambda.pdf"),opt_plots, width = 8, height = 4)
-#}
-
-new_synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2){
+#' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
+#' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.
+#' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
+#' @param root.path Path to the folder where images are to be saved.
+#' @param name A string to add to the end of filename. 
+#' @return Saves a plot to "figures/synthetic_setting.pdf".
+#' @export
+new_synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
+  `%>%`<- magrittr::`%>%`
   # Add proper xlab and ylab for representation
   vars_mu <- attr(delta_Mu, "vars")
   vars_nu <- attr(delta_Nu, "vars")
@@ -451,20 +295,20 @@ new_synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2){
     }
     return(delta_Nu(mat))
   } 
-  df <- expand_grid(x=seq(0,1,length.out=B), 
+  df <- tidyr::expand_grid(x=seq(0,1,length.out=B), 
                     y=seq(0,1,length.out=B))
   df$delta_mu<-my_delta_Mu(df)
   df$delta_nu<-my_delta_Nu(df)
   df <- df %>% 
-    pivot_longer(cols = starts_with("delta"), 
+    tidyr::pivot_longer(cols = starts_with("delta"), 
                  names_to = 'What', 
                  values_to = 'Values')
-  ggplot(df)+
-    geom_raster(aes(x=x,y=y,fill=Values))+
-    facet_grid(~What)+ 
-    scale_fill_viridis_c(option = "magma")
+  ggplot2::ggplot(df)+
+    ggplot2::geom_raster(ggplot2::aes(x=x,y=y,fill=Values))+
+    ggplot2::facet_grid(~What)+ 
+    ggplot2::scale_fill_viridis_c(option = "magma")
   
-  #ggplot2::ggsave(file.path("root.path", "Images", "Synthetic_data_plot.pdf")) 
+  ggplot2::ggsave(file.path("root.path", "Images", paste0("Synthetic_data_plot_",name,".pdf")))
 }
 
 

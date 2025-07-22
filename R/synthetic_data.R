@@ -277,7 +277,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
   
   X <- matrix(stats::runif(n*ncov,0,1),n,ncov)
   if(scenario_mu=="Linear"){
-    delta_Mu <- delta_mu_simple
+    delta_Mu <- delta_mu_linear
     mod_Y <- model_Y_linear
     p.s <- expit(4*(X[,2]-1/2))
   }else if(scenario_mu=="Threshold"){

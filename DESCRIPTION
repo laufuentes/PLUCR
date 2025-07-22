@@ -22,7 +22,8 @@ Imports:
     glmnet, 
     randomForest,
     patchwork, 
-    R.utils
+    R.utils, 
+    tidyr
 Suggests: 
     knitr,
     rmarkdown
