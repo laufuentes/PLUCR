@@ -135,16 +135,21 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
 #' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
+#' @param ncov Number of baseline covariates (at least 2L and 10L by default).
+#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
+#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
 #' @param seed Integer or NA (NA by default).
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, seed=NA){
+V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L, 
+                scenario_mu=c("Linear", "Threshold", "Mix"), 
+                scenario_nu=c("Linear", "Threshold", "Mix"), seed=NA){
   `%>%`<- magrittr::`%>%`
-  df <- data_gen(B, seed=seed)[[1]]
+  df <- generate_data(B, seed=seed)[[1]]
   X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
-  y1 <- df$y1
-  y0 <- df$y0
+  y1 <- df$Y.1
+  y0 <- df$Y.0
   
   psi_X <- psi(X)
   sigma_psi <-sigma_beta(psi_X, beta, centered)

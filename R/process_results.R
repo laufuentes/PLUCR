@@ -84,6 +84,25 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   return(list(results, upper_bound_sn)) # Return the updated results for this index
 }
 
+
+oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov, scenario_mu, scenario_nu, lambda, alpha,  beta, centered) {
+  psi<- make_psi(theta)
+  # Compute optimal policy value and its lower bound
+  Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
+                      scenario_mu=scenario_mu, scenario_nu=scenario_nu) 
+  
+  # Extract the policy for the current index
+  results <- data.frame(
+    lambda = lambda,
+    beta = beta,
+    risk = R_p(psi=psi, X, delta_Mu),
+    constraint = S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu),
+    obj = Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered),
+    policy_value= Value_policy)
+  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value")
+  return(results) # Return the updated results for this index
+}
+
 #' Select Optimal Beta and Lambda Combination
 #'
 #' This function loads intermediate results corresponding to lambda-optimal solutions for each beta value.

@@ -70,6 +70,7 @@ model_Y_mix <- function(X, A) {
 #' model_Xi_linear(X, A)
 #' @export
 model_Xi_linear <- function(X,A){
+  n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,0.25)
   p1 <- expit(4*(X[,2]-1/2))
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
@@ -90,6 +91,7 @@ model_Xi_linear <- function(X,A){
 #' model_Xi_linear(X, A)
 #' @export
 model_Xi_threshold <- function(X,A){
+  n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,0.1)
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   p1 <- ifelse(in_square, 0.85, 0.35)
@@ -110,14 +112,6 @@ model_Xi_threshold <- function(X,A){
 #' A <- rep(1, 10)
 #' model_Xi_linear(X, A)
 #' @export
-#model_Xi_mix<- function(X,A){
-#  Xi.0 <- rbinom(n,1,0.1)
-#  d <- sqrt((X[,1]- 0.5)^2 + (X[,2] - 0.5)^2)
-#  p1 <- expit(20 * (d - 0.3))
-#  Xi.1<- ifelse(Xi.0==1,1,stats::rbinom(n,1,p1))
-#  return(ifelse(A==1, Xi.1, Xi.0))
-#}
-
 model_Xi_mix <- function(X, A) {
   n <- nrow(X)
   threshold <- 0.3

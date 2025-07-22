@@ -4,7 +4,17 @@
 \alias{V_p}
 \title{Oracular Approximation of Value Function}
 \usage{
-V_p(psi, beta = 0.05, centered = FALSE, alpha = 0.1, B = 10000, seed = NA)
+V_p(
+  psi,
+  beta = 0.05,
+  centered = FALSE,
+  alpha = 0.1,
+  B = 10000,
+  ncov = 10L,
+  scenario_mu = c("Linear", "Threshold", "Mix"),
+  scenario_nu = c("Linear", "Threshold", "Mix"),
+  seed = NA
+)
 }
 \arguments{
 \item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
@@ -16,6 +26,12 @@ V_p(psi, beta = 0.05, centered = FALSE, alpha = 0.1, B = 10000, seed = NA)
 \item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
 
 \item{B}{Integer, number of Monte Carlo repetitions (1e4 by default).}
+
+\item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
+
+\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").}
+
+\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").}
 
 \item{seed}{Integer or NA (NA by default).}
 }
