@@ -134,7 +134,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
   reason <- ""
   H <- HX(A,X,prop_score)
   
-  theta <- FW(X, Delta_mu, Delta_nu, lambda, alpha, beta, centered, precision, verbose=TRUE)
+  theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, lambda=lambda, alpha=alpha, beta=beta, centered=centered, precision=precision, verbose=TRUE)
   psi<- make_psi(theta)
   psi_X <- psi(X)
   sigma_psi_X <- sigma_beta(psi_X,beta, centered)
@@ -216,7 +216,7 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_collection,HX(rep(1,nrow(X)),X,prop_score)) - 
         update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
     
-    theta <- FW(X, Delta_mu, Delta_nu, lambda, alpha, beta, centered, precision, verbose=TRUE)
+    theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, lambda=lambda, alpha=alpha, beta=beta, centered=centered, precision=precision, verbose=TRUE)
     psi<- make_psi(theta)
     new_psi <- psi(X)
     sigma_psi_X <- sigma_beta(new_psi,beta, centered)

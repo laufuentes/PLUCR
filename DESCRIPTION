@@ -21,7 +21,8 @@ Imports:
     SuperLearner, 
     glmnet, 
     randomForest,
-    patchwork
+    patchwork, 
+    R.utils
 Suggests: 
     knitr,
     rmarkdown

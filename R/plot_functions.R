@@ -430,3 +430,42 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
 #  opt_plots <- cowplot::plot_grid(plot_none,plot_max, ncol=2)
 #  ggplot2::ggsave(file.path("figures",type_simu,"optimal_solution_optimal_lambda.pdf"),opt_plots, width = 8, height = 4)
 #}
+
+new_synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2){
+  # Add proper xlab and ylab for representation
+  vars_mu <- attr(delta_Mu, "vars")
+  vars_nu <- attr(delta_Nu, "vars")
+  my_delta_Mu <- function(df){
+    df <- as.matrix(df)
+    mat <- matrix(0, nrow=nrow(df), ncol = max(vars_mu))
+    for(i in 1:2){
+      mat[,vars_mu[i]]<- df[,i]
+    }
+    return(delta_Mu(mat))
+  } 
+  my_delta_Nu <- function(df){
+    df <- as.matrix(df)
+    mat <- matrix(0, nrow=nrow(df), ncol = max(vars_nu))
+    for(i in 1:2){
+      mat[,vars_nu[i]]<- df[,i]
+    }
+    return(delta_Nu(mat))
+  } 
+  df <- expand_grid(x=seq(0,1,length.out=B), 
+                    y=seq(0,1,length.out=B))
+  df$delta_mu<-my_delta_Mu(df)
+  df$delta_nu<-my_delta_Nu(df)
+  df <- df %>% 
+    pivot_longer(cols = starts_with("delta"), 
+                 names_to = 'What', 
+                 values_to = 'Values')
+  ggplot(df)+
+    geom_raster(aes(x=x,y=y,fill=Values))+
+    facet_grid(~What)+ 
+    scale_fill_viridis_c(option = "magma")
+  
+  #ggplot2::ggsave(file.path("root.path", "Images", "Synthetic_data_plot.pdf")) 
+}
+
+
+
