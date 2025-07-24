@@ -128,7 +128,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #'
 #' @export
 Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=5){#root.path
-  tol <- R.utils::Arguments$getIntegers(tol, c(0.01, 0.1))
+  tol <- R.utils::Arguments$getNumerics(tol, c(0.01, 0.1))
   max_iter <- R.utils::Arguments$getIntegers(max_iter, c(2, 10))
   
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
