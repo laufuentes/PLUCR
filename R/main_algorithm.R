@@ -30,7 +30,7 @@ main_algorithm <- function(X, A, Y, Xi,
     dir.create(root.path, recursive = TRUE)
   }
   # Subdirectories to check
-  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat", "Folds", "Images", "Intermediate", "Evaluation", "Theta_opt")
+  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat", "Folds", "Images", "Evaluation", "Theta_opt")
   
   for (subdir in subdirs) {
     subdir_path <- file.path(root.path, subdir)
@@ -98,8 +98,7 @@ main_algorithm <- function(X, A, Y, Xi,
   out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
                                         X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
                                         lambda=0, alpha=alpha, precision=precision, beta=0.05, centered=centered, 
-                                        tol=tol, max_iter=max_iter,
-                                        root.path=file.path(root.path,"Intermediate",paste0(0.05,"_",0)))
+                                        tol=tol, max_iter=max_iter) #root.path=file.path(root.path,"Intermediate",paste0(0.05,"_",0))
   
   ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
   theta_0 <- out$theta_collection[[length(out$theta_collection)]]
@@ -116,11 +115,9 @@ main_algorithm <- function(X, A, Y, Xi,
         beta_0 <- beta
         max_policy_value <- res_0[[1]]$lwr_bound_policy_value
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-        #psi_0 <- make_psi(theta_opt)
-        #sigma_beta_0 <- sigma_beta(psi_0(X), beta = beta_0, centered = FALSE)
+        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(iteration,"_",beta,"_",0,".rds")))
         combinations <- rbind(combinations, c(beta_0, 0))
-        saved <- TRUE
-      }
+        saved <- TRUE}
     }else{
       if(res_0[[1]]$constraint<min_constraint_lambda0){
         min_constraint_lambda0 <- res_0[[1]]$constraint
@@ -144,21 +141,18 @@ main_algorithm <- function(X, A, Y, Xi,
         out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
                                               X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
                                               lambda=lambda, alpha=alpha, precision=precision, beta=beta, centered=centered, 
-                                              tol=tol, max_iter=max_iter, file.path(root.path,"Intermediate",paste0(beta,"_",lambda)))
+                                              tol=tol, max_iter=max_iter) # file.path(root.path,"Intermediate",paste0(beta,"_",lambda))
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
         if (!saved && res[[1]]$constraint < 0) {
+          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
-          #psi_opt <- make_psi(theta_opt)
-          #sigma_beta_opt <- sigma_beta(psi_opt(X),beta=beta,centered = FALSE)
           combinations <- rbind(combinations, c(beta, lambda))
         }
         if(res[[2]]<0){
           break
-          #remove the folder intermediate results? 
         }
       }
     }
