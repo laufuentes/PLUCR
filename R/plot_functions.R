@@ -308,7 +308,7 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
     ggplot2::facet_grid(~What)+ 
     ggplot2::scale_fill_viridis_c(option = "magma")
   
-  ggplot2::ggsave(file.path("root.path", "Images", paste0("Synthetic_data_plot_",name,".pdf")))
+  ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")))
 }
 
 

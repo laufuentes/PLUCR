@@ -46,6 +46,10 @@ devtools::install_github("laufuentes/PLUCR")
 ```{r, eval=FALSE}
 library(PLUCR)
 library(SuperLearner)
+library(grf)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 ```
 
 We generate synthetic observational data using the built-in `data_gen()` function. This function also produces the complete data structure (which is typically unavailable in real-world applications and used here for evaluation purposes only).
@@ -108,7 +112,7 @@ We now define the parameters to be passed to `main_algorithm()`. These include t
 # - SL.xgboost: gradient boosting
 SL.library <- c("SL.mean", "SL.glm", "SL.ranger", "SL.grf", "SL.xgboost")
 
-# Root directory where output files and intermediate results will be saved
+# Insert a root directory where output files, results and images will be saved
 root.path <- "~/results"
 
 # An increasing sequence of non-negative numeric scalars controlling 
