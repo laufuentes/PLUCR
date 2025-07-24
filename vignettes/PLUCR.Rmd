@@ -39,7 +39,7 @@ This section demonstrates a basic example of how to use the `PLUCR` package. We 
 You can install the development version from your local source:
 
 ```{r,eval=FALSE}
-devtools::install("path/to/PLUCR_package")
+devtools::install_github("laufuentes/PLUCR")
 ```
 
 ## 2.2. Load required packages and data
@@ -52,13 +52,28 @@ We generate synthetic observational data using the built-in `data_gen()` functio
 
 ```{r, eval=FALSE}
 n <- 2000  # Sample size
-exp <- PLUCR::data_gen(n, seed=2025) 
+ncov <- 8L # Number of covariates
+scenario_mu <- "Linear"
+scenario_nu <- "Linear"
+
+# Generate synthetic scenario
+exp <- PLUCR::generate_data(n, 
+                            ncov, 
+                            scenario_mu = scenario_mu, 
+                            scenario_nu = scenario_nu, 
+                            seed=2025) 
 
 # # Complete data (not available in real settings)
 df_complete <- exp[[1]] 
 
 # # Observational data (to be used for training)
 df_obs <- exp[[2]]
+
+# # Oracular delta mu function (treatment effect over Y conditionned on X) 
+delta_mu <- exp[[3]]
+
+# # Oracular delta mu function (treatment effect over Y conditionned on X) 
+delta_nu <- exp[[4]]
 ```
 
 ## 2.3. Prepare Variables and Function parameters
@@ -94,7 +109,7 @@ We now define the parameters to be passed to `main_algorithm()`. These include t
 SL.library <- c("SL.mean", "SL.glm", "SL.ranger", "SL.grf", "SL.xgboost")
 
 # Root directory where output files and intermediate results will be saved
-root.path <- "results"
+root.path <- "~/results"
 
 # An increasing sequence of non-negative numeric scalars controlling 
 # the penalty for violating the constraint (seq(1,8, by=1) by default).
@@ -111,6 +126,13 @@ alpha.tolerance <- 0.15
 # Optimization precision: controls granularity of the policy search
 # Smaller values lead to finer approximations but require more computation
 optimization.precision <- 0.05
+
+# Tolerance parameter for Optimization-Estimation procedure
+# Smaller values lead to finer approximations but require more computation
+Opt.Est.tolerance <- 0.025
+
+# Optimization Estimation procedure maximum of iterations
+Opt.Est.Maximum.Iterations <- 5
 ```
 
 ## 2.4. Run the main algorithm 
@@ -127,15 +149,23 @@ The output includes both:
 - A constrained-optimal policy (that respects the adverse event constraint).
 ```{r, eval=FALSE}
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
-                                Lambdas = Lambda_candidates, alpha=alpha.tolerance, 
+                                Lambdas = Lambda_candidates,
+                                alpha=alpha.tolerance, 
                                 Betas= Beta_candidates, 
                                 precision=optimization.precision,
-                                SL.library= SL.library, root.path=root.path)
+                                SL.library= SL.library, 
+                                tol= Opt.Est.tolerance, 
+                                max_iter=Opt.Est.Maximum.Iterations, 
+                                root.path=root.path)
 ```
 
 # 3. Play with results 
-[complete]
+The function `synthetic_data_plot()` provides a visualization of the treatment effect for primary outcomes and adverse events. 
+```{r, eval=FALSE}
+fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, delta_Nu=delta_nu, root.path=root.path, name="Linear-Linear")
 
+print(fig)
+```
 
 # Appendix. Understanding the Algorithm Internally
 

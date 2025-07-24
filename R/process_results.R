@@ -84,8 +84,29 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   return(list(results, upper_bound_sn)) # Return the updated results for this index
 }
 
-
-oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov, scenario_mu, scenario_nu, lambda, alpha,  beta, centered) {
+#' Oracular evaluation of a policy
+#'
+#' This function evaluates the optimal policy derived from \code{theta}. This enables the approximation of the objective 
+#' functions: risk, constraint, and the main objective and policy value. 
+#'
+#' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
+#' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
+#' @param ncov Number of baseline covariates (at least 2L and 10L by default).
+#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
+#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
+#' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
+#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
+#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#'
+#' @return A vector of optimized policy parameters (`theta`) trained across folds.
+#' @export
+oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov=10L, 
+                                     scenario_mu=c("Linear", "Threshold", "Mix"), 
+                                     scenario_nu=c("Linear", "Threshold", "Mix"), 
+                                     lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   psi<- make_psi(theta)
   # Compute optimal policy value and its lower bound
   Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 

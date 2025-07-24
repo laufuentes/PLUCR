@@ -146,7 +146,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L,
                 scenario_mu=c("Linear", "Threshold", "Mix"), 
                 scenario_nu=c("Linear", "Threshold", "Mix"), seed=NA){
   `%>%`<- magrittr::`%>%`
-  df <- generate_data(B, seed=seed)[[1]]
+  df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
   X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
   y1 <- df$Y.1
   y0 <- df$Y.0

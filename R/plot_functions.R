@@ -261,7 +261,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
   return("Images saved")
 }
 
-#' Plot Synthetic Data Setting
+#' synthetic_data_plot:: Plot Synthetic Data Setting
 #'
 #' Generates and saves a two-panel plot:
 #' one showing the sign of the treatment effect (`delta_Mu`) and the other
@@ -274,7 +274,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
 #' @param name A string to add to the end of filename. 
 #' @return Saves a plot to "figures/synthetic_setting.pdf".
 #' @export
-new_synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
+synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   `%>%`<- magrittr::`%>%`
   # Add proper xlab and ylab for representation
   vars_mu <- attr(delta_Mu, "vars")

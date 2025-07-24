@@ -16,14 +16,14 @@
 #' @param V Number of folds inside the SuperLearner (2L by default).
 #' @param SL.library Vector of libraries for training Super Learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default).
 #' @param tol A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).
-#' @param max_iter A numeric scalar specifying the maximum number of iterations (20 by default).
+#' @param max_iter A numeric scalar specifying the maximum number of iterations (5 by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #' @export
 main_algorithm <- function(X, A, Y, Xi, 
                            Lambdas=seq(1, 8, by=1), alpha=0.1, precision=0.05,
                            B=c(0.05, 0.1, 0.25, 0.5), centered=FALSE,
                            Jfold=3, V=2L, SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"), 
-                           tol=0.025, max_iter=20, root.path){
+                           tol=0.025, max_iter=5, root.path){
   # Check whether the root.path exists and contains proper folder to save data
   if (!dir.exists(root.path)) {
     warning(sprintf("The directory '%s' does not exist. Creating it...", root.path))
@@ -95,10 +95,11 @@ main_algorithm <- function(X, A, Y, Xi,
   min_constraint_lambda0 <- Inf
   max_policy_value <- -Inf
   beta_0 <- NULL
-  out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
-                                        X_train, A_train, Y_train, Xi_train, 
-                                        lambda=0, alpha, precision, beta=0.05, centered, 
-                                        file.path(root.path,"Intermediate",paste0(0.05,"_",0)))
+  out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
+                                        X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                        lambda=0, alpha=alpha, precision=precision, beta=0.05, centered=centered, 
+                                        tol=tol, max_iter=max_iter,
+                                        root.path=file.path(root.path,"Intermediate",paste0(0.05,"_",0)))
   
   ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
   theta_0 <- out$theta_collection[[length(out$theta_collection)]]
@@ -140,9 +141,10 @@ main_algorithm <- function(X, A, Y, Xi,
       saved <- FALSE
       for (lambda in Lambdas){
         # Policy optimization
-        out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
-                                              X_train, A_train, Y_train, Xi_train, 
-                                              lambda, alpha, precision, beta, centered, file.path(root.path,"Intermediate",paste0(beta,"_",lambda)))
+        out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
+                                              X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                              lambda=lambda, alpha=alpha, precision=precision, beta=beta, centered=centered, 
+                                              tol=tol, max_iter=max_iter, file.path(root.path,"Intermediate",paste0(beta,"_",lambda)))
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
@@ -156,6 +158,7 @@ main_algorithm <- function(X, A, Y, Xi,
         }
         if(res[[2]]<0){
           break
+          #remove the folder intermediate results? 
         }
       }
     }

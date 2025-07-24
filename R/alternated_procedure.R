@@ -106,7 +106,6 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param tol A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).
 #' @param max_iter A numeric scalar specifying the maximum number of iterations (5 by default).
-#' @param root.path Path to the folder where all results are to be saved.
 #'
 #' @return A list containing:
 #' \item{iter}{The number of completed iterations.}
@@ -128,7 +127,10 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' #                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
 #'
 #' @export
-Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=5,  root.path){
+Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=5){#root.path
+  tol <- R.utils::Arguments$getIntegers(tol, c(0.01, 0.1))
+  max_iter <- R.utils::Arguments$getIntegers(max_iter, c(2, 10))
+  
   Delta_mu <- function(X){mu0(rep(1,nrow(X)),X)-mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X){nu0(rep(1,nrow(X)),X)-nu0(rep(0,nrow(X)),X)}
   reason <- ""
@@ -229,14 +231,14 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     
     psi_X <- new_psi
     
-    step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
-    step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
+    #step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
+    #step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
     
-    saveRDS(out, file = step_file_current)
+    #saveRDS(out, file = step_file_current)
     
-    if (file.exists(step_file_prev)) {
-      file.remove(step_file_prev)
-      cat("Deleted previous step file:", step_file_prev, "\n")}
+    #if (file.exists(step_file_prev)) {
+    #  file.remove(step_file_prev)
+    #  cat("Deleted previous step file:", step_file_prev, "\n")}
   }
   if(reason==""){
     if(!k<max_iter){
