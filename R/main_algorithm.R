@@ -30,7 +30,7 @@ main_algorithm <- function(X, A, Y, Xi,
     dir.create(root.path, recursive = TRUE)
   }
   # Subdirectories to check
-  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat", "Folds", "Images", "Evaluation", "Theta_opt")
+  subdirs <- c("Mu.hat", "Nu.hat", "PS.hat", "Folds", "Images", "Intermediate", "Evaluation", "Theta_opt")
   
   for (subdir in subdirs) {
     subdir_path <- file.path(root.path, subdir)
@@ -105,6 +105,7 @@ main_algorithm <- function(X, A, Y, Xi,
   attr(theta_0, "lambda") <- 0 
   for (beta in B){
     res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=0, alpha,  beta, centered)
+    saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
     saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
     
     # Loop to check constraint satisfaction
@@ -147,6 +148,7 @@ main_algorithm <- function(X, A, Y, Xi,
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
         if (!saved && res[[1]]$constraint < 0) {
           saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
+          saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))

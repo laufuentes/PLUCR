@@ -15,7 +15,7 @@ logit <- qlogis
 #' h_Y(X, A)
 #' @export
 model_Y_linear <- function(X,A){
-  return(2*(1- X[,1]-X[,2])*A)
+  return(2*A*(1- X[,1]-X[,2]))
 }
 
 #' model_Y_threshold: Thresholded Treatment Effect on Y Component Function
@@ -50,8 +50,8 @@ model_Y_threshold <- function(X, A) {
 #' model_Y_mix(X, A)
 #' @export
 model_Y_mix <- function(X, A) {
-  threshold <- 0.4
-  linear_pred <- 0.5 * X[,1] + 0.8 * X[,2]
+  threshold <- 0.3
+  linear_pred <- -(1- X[,1]-X[,2])
   effect <- ifelse(X[,1] < threshold & X[,2] < threshold,-3, linear_pred)
   return(-2 * A * effect)
 }
@@ -120,13 +120,13 @@ model_Xi_mix <- function(X, A) {
   d <- sqrt((X[,1] - 0.5)^2 + (X[,2] - 0.5)^2)
   
   # Linear predictor outside the circle
-  linear_pred <- 0.5 * X[,1] + 0.8 * X[,2]
+  linear_pred <- 4*(X[,2]-1/2)
   
   # Strong effect inside the circular region
   effect <- ifelse(d < threshold, -3, linear_pred)
   
   # Convert to probability with expit (to stay in [0,1])
-  prob <- 1 / (1 + exp(-effect))
+  prob <- expit(effect)
   
   # Simulate binary potential outcomes
   Xi.0 <- rbinom(n, 1, 0.1)
@@ -241,9 +241,9 @@ delta_nu_mix <- function(X){
   p0 <- 0.1
   threshold <- 0.3
   d <- sqrt((X[,1] - 0.5)^2 + (X[,2] - 0.5)^2)
-  linear_pred <- 0.5 * X[,1] + 0.8 * X[,2]
+  linear_pred <- 4*(X[,2]-1/2)
   effect <- ifelse(d < threshold, -3, linear_pred)
-  p1 <- p0 + (1-p0)*(1 / (1 + exp(-effect)))
+  p1 <- p0 + (1-p0)*expit(effect)
   return(p1-p0)
 }
 attr(delta_nu_mix, "vars")<- c(1, 2)
