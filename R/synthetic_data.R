@@ -316,7 +316,8 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
                             Y.0=Y.0,
                             Xi.1=Xi.1,
                             Xi.0=Xi.0, 
-                            Y=Y, Xi=Xi)
+                            Y=ifelse(Treatment==1,Y.1,Y.0), 
+                            Xi=ifelse(Treatment==1,Xi.1,Xi.0))
   df_obs<- data.frame(X=X,
                       Treatment,
                       Y=ifelse(Treatment==1,Y.1,Y.0),
