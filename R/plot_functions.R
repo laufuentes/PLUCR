@@ -71,7 +71,28 @@ visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var
   
   p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = treat_proba)) +
     ggplot2::geom_point(alpha = 1) +
-    ggplot2::scale_color_continuous(limits = c(0, 1), oob = scales::squish) +
+    visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var_Y_axis, root.path, name) {
+  policy <- sigma_beta(psi_X, beta, centered)
+  
+  df <- data.frame(
+    x = Var_X_axis,
+    y = Var_Y_axis,
+    treat_proba = policy
+  )
+  
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = treat_proba)) +
+    ggplot2::geom_point(alpha = 1) +
+    ggplot2::scale_color_viridis_c(option = "magma", limits = c(0, 1), oob = scales::squish) +
+    ggplot2::labs(
+      title = bquote(lambda == .(lambda) ~ "," ~ beta == .(beta)),
+      color = "Treatment\nProbability"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "right")
+  
+  ggsave(p, filename = file.path(root.path, "Images",paste0("Treatment_assignment_",name,".pdf")))
+  return("Image saved")
+} +
     ggplot2::labs(title = bquote(lambda == .(lambda) ~ "," ~ beta == .(beta))) +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "right")
@@ -289,7 +310,6 @@ plot_metric_comparison <- function(data,
   # Basic grouped bar plot
   plot <- ggplot2::ggplot(data_long, aes(x = metric, y = value, fill = method)) +
     ggplot2::geom_col(position = position_dodge(width = 0.7), width = 0.6, alpha = 0.8) +
-    ggplot2::scale_fill_viridis_c(option = "magma")+
     ggplot2::labs(
       title = "Comparison of Methods",
       x = "Metric",
@@ -299,7 +319,7 @@ plot_metric_comparison <- function(data,
     ggplot2::theme(legend.title = element_blank())
   
   # Save the plot
-  filename <- paste0("Comparison_", techniques, ".pdf")
+  filename <- paste0("Comparison_techniques.pdf")
   ggplot2::ggsave(plot, filename = file.path(root.path, "Images", filename), width = 6, height = 4)
   
   return(plot)

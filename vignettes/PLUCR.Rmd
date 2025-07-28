@@ -48,7 +48,7 @@ library(tidyr)
 library(ggplot2)
 ```
 
-We generate synthetic observational data using the built-in `data_gen()` function. This function also produces the complete data structure (which is typically unavailable in real-world applications and used here for evaluation purposes only).
+We generate synthetic observational data using the built-in `generate_data()` function. This function also produces the complete data structure (which is typically unavailable in real-world applications and used here for evaluation purposes only) as well as the oracular treatment effect functions `delta_mu()` and `delta_nu()`.
 
 ```{r, eval=FALSE}
 n <- 3000  # Sample size
@@ -121,7 +121,7 @@ Beta_candidates <- c(0.05, 0.1, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.15 means the policy may increase adverse event probability by up to 15%
-alpha.tolerance <- 0.15
+alpha.tolerance <- 0.2
 
 # Optimization precision: controls granularity of the policy search
 # Smaller values lead to finer approximations but require more computation
@@ -158,11 +158,11 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 max_iter=Opt.Est.Maximum.Iterations, 
                                 root.path=root.path)
 
-if(length(output)>1){
+if(is.list(output)){
   theta_0 <- output[[1]]
   theta_final <- output[[2]]
 }else{
-  theta_final <- output[[2]]
+  theta_final <- output
 }
 ```
 
@@ -198,10 +198,14 @@ prop_score_test <- function(a,x){ps.hat.nj(a,x,3)}
 
 naive_output <- naive_approach_algorithm(X, A, Y, Xi, folds, mu0_train, mu0_test, nu0_train, nu0_test, 
                                          prop_score_train, prop_score_test, 
-                                         alpha = alpha.tolerance, precision=optimization.precision
+                                         alpha = alpha.tolerance, precision=optimization.precision,
                                          root.path = root.path)
 
-theta_naive <- naive_output[[2]]
+if(is.list(naive_output)){
+ theta_naive <- naive_output[[2]] 
+}else{
+  theta_naive <- naive_output[[1]]
+}
 eval_naive <- process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test, Xi=Xi_test, 
                               mu0=mu0_test, nu0=nu0_test, prop_score=prop_score_test, 
                               lambda = attr(theta_naive, "lambda"), alpha = alpha.tolerance,
@@ -210,17 +214,23 @@ eval_naive <- process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test, X
 
 
 ```{r, eval=FALSE}
-oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, folds=folds, Lambdas = Lambda_candidates,
+oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
+                                               folds=folds,
                                                delta_Mu=delta_mu, delta_Nu= delta_nu, 
                                                alpha = alpha.tolerance, precision = optimization.precision, 
                                                scenario_mu=scenario_mu, scenario_nu=scenario_nu, 
                                                root.path = root.path)
 
-theta_oracular <- oracular_output[[2]]
-eval_oracular <- oracular_process_results(theta=theta_oracular, X=X_test,  delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                       scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
-                                       lambda = attr(theta_oracular, "lambda"), alpha = alpha.tolerance,
-                                       beta= attr(theta_oracular, "beta"))
+if(is.list(oracular_output)){
+ theta_oracular <- oracular_output[[2]] 
+}else{
+  theta_oracular <- oracular_output[[1]]
+}
+eval_oracular <- oracular_process_results(theta=theta_oracular, X=X_test,  
+                                          delta_Mu = delta_mu, delta_Nu = delta_nu, 
+                                          scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
+                                          lambda = attr(theta_oracular, "lambda"), 
+                                          alpha = alpha.tolerance, beta= attr(theta_oracular, "beta"))
 ```
 
 # 3. Play with results 
@@ -268,11 +278,11 @@ eval_final <- readRDS(file.path(root.path, "Evaluation", paste0(attr(theta_final
 data <- tibble(
   method = c("Theta_0", "Theta_naive", "Theta_final", "Theta_oracular"),
   policy_value = c(eval_0$policy_value, eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$policy_value)
+  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$constraint)
 )
 
 # Call the function
-plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), techniques = data$method)
+plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), techniques = data$method, root.path = root.path)
 ```
 
 

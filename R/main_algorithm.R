@@ -125,7 +125,7 @@ main_algorithm <- function(X, A, Y, Xi,
     }
     ##### If your constraint was already satified with lambda=0 return
     if(res_0[[2]]<0){
-      #/!\warning()
+      warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
       return(theta_0)
     }
   }
