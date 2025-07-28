@@ -18,7 +18,7 @@ synthetic_data_plot(delta_Mu, delta_Nu, B = 100, root.path, name)
 \item{name}{A string to add to the end of filename.}
 }
 \value{
-Saves a plot to "figures/synthetic_setting.pdf".
+Saves a plot to "Images/synthetic_setting.pdf".
 }
 \description{
 Generates and saves a two-panel plot:

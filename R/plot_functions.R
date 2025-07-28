@@ -123,54 +123,6 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
   return("Image saved")
 }
 
-#' Visualize the evolution of the RMSE and maximum RSE between consecutive iterations.  
-#' 
-#' Plots the evolution of the RMSE and RSE between iterative optimal solutions psi.  
-#' 
-#' @param intermediate_result File from Intermediate folder gathering results from alternated procedure. 
-#' @param root.path Path to the folder where images are to be saved.
-#' @param name A string to add to the end of filename. 
-#' 
-#' @return A message indicating that the image was saved.
-#' @export
-iterative_consecutive_metrics_plot <- function(intermediate_result, root.path, name){
-  `%>%`<- magrittr::`%>%`
-  psi_collection <- intermediate_result$psi_collection
-  rmse_values <- numeric(ncol(psi_collection) - 1)
-  max_rse_values <- numeric(ncol(psi_collection) - 1)
-  
-  for (i in seq_along(rmse_values)) {
-    prev_psi <- psi_collection[,i]
-    current_psi <- psi_collection[,i + 1]
-    rmse_values[i] <- sqrt(mean((prev_psi - current_psi)^2))
-    max_rse_values[i] <- max(sqrt((prev_psi - current_psi)^2))
-  } 
-  
-  df <- tibble(
-    iteration = 1:length(rmse_values),
-    rmse_values = rmse_values, 
-    max_rse_values = max_rse_values)
-  
-  rmse_plot <- ggplot2::ggplot(df, aes(x = iteration, y = rmse_values)) +
-    ggplot2::geom_line(color = "steelblue") +
-    ggplot2::geom_point(color = "darkred") +
-    ggplot2::labs(title = "RMSE Between Consecutive psi solutions",
-      x = "Iteration",
-      y = "RMSE") +
-    ggplot2::theme_minimal()
-  
-  max_rse_plot <- ggplot2::ggplot(df, aes(x = iteration, y = max_rse_values)) +
-    ggplot2::geom_line(color = "steelblue") +
-    ggplot2::geom_point(color = "darkred") +
-    ggplot2::labs(title = "Max RSE Between Consecutive psi solutions",
-         x = "Iteration",
-         y = "Max RSE") +
-    ggplot2::theme_minimal()
-  
-  ggplot2::ggsave(rmse_plot, filename = file.path(root.path, "Images",paste0("Iterative_RMSE_", name,".pdf")))
-  ggplot2::ggsave(max_rse_plot, filename = file.path(root.path, "Images",paste0("Iterative_Max_RSE_", name,".pdf")))
-  return("Images saved")
-}
 
 #' Visualize the evolution of the solutions psi obtained iteratively.  
 #' 
@@ -272,7 +224,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
 #' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
 #' @param root.path Path to the folder where images are to be saved.
 #' @param name A string to add to the end of filename. 
-#' @return Saves a plot to "figures/synthetic_setting.pdf".
+#' @return Saves a plot to "Images/synthetic_setting.pdf".
 #' @export
 synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   `%>%`<- magrittr::`%>%`
@@ -311,5 +263,44 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")))
 }
 
-
-
+#' synthetic_data_plot:: Plot Synthetic Data Setting
+#'
+#' Generates and saves a two-panel plot:
+#' one showing the sign of the treatment effect (`delta_Mu`) and the other
+#' visualizing the magnitude of selection effect (`delta_Nu`) across covariates X.1 and X.2.
+#' 
+#' @param data description
+#' @param metrics A vector containing the metrics to be represented. 
+#' @param techniques 
+#' @param root.path Path to the folder where images are to be saved.
+#' @return Saves a plot to "Images/"Comparison_", techniques, ".pdf".
+#' @export
+#' 
+plot_metric_comparison <- function(data, 
+                                   metrics = c("policy_value", "constraint"),
+                                   techniques = NULL,
+                                   root.path) {
+  # Pivot to long format: one row per (method, metric)
+  data_long <- data %>%
+    pivot_longer(cols = all_of(metrics), 
+                 names_to = "metric", 
+                 values_to = "value")
+  
+  # Basic grouped bar plot
+  plot <- ggplot2::ggplot(data_long, aes(x = metric, y = value, fill = method)) +
+    ggplot2::geom_col(position = position_dodge(width = 0.7), width = 0.6, alpha = 0.8) +
+    ggplot2::scale_fill_viridis_c(option = "magma")+
+    ggplot2::labs(
+      title = "Comparison of Methods",
+      x = "Metric",
+      y = "Value"
+    ) +
+    ggplot2::theme_minimal(base_size = 14) +
+    ggplot2::theme(legend.title = element_blank())
+  
+  # Save the plot
+  filename <- paste0("Comparison_", techniques, ".pdf")
+  ggplot2::ggsave(plot, filename = file.path(root.path, "Images", filename), width = 6, height = 4)
+  
+  return(plot)
+}

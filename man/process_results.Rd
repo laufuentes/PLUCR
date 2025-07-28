@@ -14,9 +14,9 @@ process_results(
   nu0,
   prop_score,
   lambda,
-  alpha,
-  beta,
-  centered
+  alpha = 0.1,
+  beta = 0.05,
+  centered = FALSE
 )
 }
 \arguments{

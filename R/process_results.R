@@ -20,7 +20,7 @@
 #'
 #' @return A vector of optimized policy parameters (`theta`) trained across folds.
 #' @export
-process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, alpha,  beta, centered) {
+process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   # Correct estimators
   offset_mu <- qlogis(mu0(A,X))
   offset_nu <- qlogis(nu0(A,X))
