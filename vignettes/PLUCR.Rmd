@@ -55,10 +55,10 @@ library(ggplot2)
 We generate synthetic observational data using the built-in `data_gen()` function. This function also produces the complete data structure (which is typically unavailable in real-world applications and used here for evaluation purposes only).
 
 ```{r, eval=FALSE}
-n <- 2000  # Sample size
-ncov <- 8L # Number of covariates
-scenario_mu <- "Linear"
-scenario_nu <- "Linear"
+n <- 3000  # Sample size
+ncov <- 10L # Number of covariates
+scenario_mu <- "Threshold"
+scenario_nu <- "Threshold"
 
 # Generate synthetic scenario
 exp <- PLUCR::generate_data(n, 
@@ -155,9 +155,9 @@ The output includes both:
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                 Lambdas = Lambda_candidates,
                                 alpha=alpha.tolerance, 
-                                Betas= Beta_candidates, 
+                                B= Beta_candidates, 
                                 precision=optimization.precision,
-                                SL.library= SL.library, 
+                                SL.library = SL.library, 
                                 tol= Opt.Est.tolerance, 
                                 max_iter=Opt.Est.Maximum.Iterations, 
                                 root.path=root.path)
@@ -170,6 +170,8 @@ fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, delta_Nu=delta_nu, root.pat
 
 print(fig)
 ```
+
+
 
 # Appendix. Understanding the Algorithm Internally
 

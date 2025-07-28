@@ -14,7 +14,7 @@ main_algorithm(
   precision = 0.05,
   B = c(0.05, 0.1, 0.25, 0.5),
   centered = FALSE,
-  Jfold = 3,
+  Jfold = 3L,
   V = 2L,
   SL.library = c("SL.mean", "SL.glm", "SL.ranger", "SL.grf"),
   tol = 0.025,

@@ -22,7 +22,7 @@
 main_algorithm <- function(X, A, Y, Xi, 
                            Lambdas=seq(1, 8, by=1), alpha=0.1, precision=0.05,
                            B=c(0.05, 0.1, 0.25, 0.5), centered=FALSE,
-                           Jfold=3, V=2L, SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"), 
+                           Jfold=3L, V=2L, SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"), 
                            tol=0.025, max_iter=5, root.path){
   # Check whether the root.path exists and contains proper folder to save data
   if (!dir.exists(root.path)) {
@@ -46,7 +46,7 @@ main_algorithm <- function(X, A, Y, Xi,
   folds <- SuperLearner::CVFolds(n, 
                                  id = NULL,
                                  Y = Y,
-                                 cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+                                 cvControl = SuperLearner::SuperLearner.CV.control(V = Jfold, shuffle = TRUE))
   saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) #Save primary outcome model
   # Check data
   checks<- PLUCR::check_data(Y, Xi, A, X, folds) 
@@ -116,7 +116,7 @@ main_algorithm <- function(X, A, Y, Xi,
         beta_0 <- beta
         max_policy_value <- res_0[[1]]$lwr_bound_policy_value
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(iteration,"_",beta,"_",0,".rds")))
+        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
         combinations <- rbind(combinations, c(beta_0, 0))
         saved <- TRUE}
     }else{
@@ -159,9 +159,26 @@ main_algorithm <- function(X, A, Y, Xi,
       }
     }
     optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+    files_del <- file.path(root.path,"Intermediate")
+    unlink(files_del, recursive = TRUE)
     theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
-  
+    
     attr(theta_final, "lambda") <- optimal_combination$lambda 
     attr(theta_final, "beta") <- optimal_combination$beta
+    
+    psi_values <- make_psi(theta_final)(X_test)
+    optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
+    
+    # Calculate proportion over 0.5
+    prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
+    if(prop_0.50<0.1){
+      warning(sprintf(
+        paste(
+          "Only %.1f%% of the test set has an optimal treatment probability above 0.5.",
+          "This may indicate that your tolerance for adverse events (alpha) is too strict.",
+          "Consider relaxing it if treatment is being under-assigned."), 
+        100 * prop_over_0.50))
+    }
+    
   return(list(theta_0,theta_final))
 }
