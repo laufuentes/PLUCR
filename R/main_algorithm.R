@@ -171,7 +171,7 @@ main_algorithm <- function(X, A, Y, Xi,
     
     # Calculate proportion over 0.5
     prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
-    if(prop_0.50<0.1){
+    if(prop_over_0.50<0.1){
       warning(sprintf(
         paste(
           "Only %.1f%% of the test set has an optimal treatment probability above 0.5.",

@@ -18,10 +18,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(PLUCR)
-```
-
 # 1. Introduction
 
 The `PLUCR` package provides tools for estimating treatment policies that maximize a primary clinical outcome while controlling for the occurrence of adverse events. This dual-objective framework is particularly relevant in medical or decision-making settings where benefits must be balanced against potential harms.
@@ -171,7 +167,7 @@ fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, delta_Nu=delta_nu, root.pat
 print(fig)
 ```
 
-
+However, we can 
 
 # Appendix. Understanding the Algorithm Internally
 
