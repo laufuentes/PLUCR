@@ -71,17 +71,6 @@ visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var
   
   p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = treat_proba)) +
     ggplot2::geom_point(alpha = 1) +
-    visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var_Y_axis, root.path, name) {
-  policy <- sigma_beta(psi_X, beta, centered)
-  
-  df <- data.frame(
-    x = Var_X_axis,
-    y = Var_Y_axis,
-    treat_proba = policy
-  )
-  
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = treat_proba)) +
-    ggplot2::geom_point(alpha = 1) +
     ggplot2::scale_color_viridis_c(option = "magma", limits = c(0, 1), oob = scales::squish) +
     ggplot2::labs(
       title = bquote(lambda == .(lambda) ~ "," ~ beta == .(beta)),
@@ -92,14 +81,7 @@ visual_treatment_plot <- function(psi_X, lambda, beta, centered, Var_X_axis, Var
   
   ggsave(p, filename = file.path(root.path, "Images",paste0("Treatment_assignment_",name,".pdf")))
   return("Image saved")
-} +
-    ggplot2::labs(title = bquote(lambda == .(lambda) ~ "," ~ beta == .(beta))) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(legend.position = "right")
-  
-  ggsave(p, filename = file.path(root.path, "Images",paste0("Treatment_assignment_",name,".pdf")))
-  return("Image saved")
-}
+} 
 
 #' Visualize the true value versus the estimated version. 
 #' 

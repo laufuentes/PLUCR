@@ -243,11 +243,13 @@ print(fig)
 
 However, we can visualize both treatment rules using variables that might ensure a proper visualization. 
 ```{r, eval=FALSE}
-PLUCR::visual_treatment_plot(make_psi(theta_0)(X), 
+if(is.list(output)){
+ PLUCR::visual_treatment_plot(make_psi(theta_0)(X), 
                               lambda = attr(theta_0, "lambda"), 
                               beta = attr(theta_0, "beta"), 
                               centered = FALSE, Var_X_axis = df_obs$X.3, Var_Y_axis = df_obs$X.4,
-                              root.path = root.path, name = "Initial")
+                              root.path = root.path, name = "Initial") 
+}
 
  PLUCR::visual_treatment_plot(make_psi(theta_naive)(X), 
                               lambda = attr(theta_naive, "lambda"), 
@@ -275,11 +277,18 @@ eval_0 <- readRDS(file.path(root.path, "Evaluation", paste0(attr(theta_0, "beta"
 eval_final <- readRDS(file.path(root.path, "Evaluation", paste0(attr(theta_final, "beta"), "_", attr(theta_final, "lambda"), ".rds")))
 
 
-data <- tibble(
+if(is.list(output)){
+  data <- tibble(
   method = c("Theta_0", "Theta_naive", "Theta_final", "Theta_oracular"),
   policy_value = c(eval_0$policy_value, eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$constraint)
+  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$constraint))
+}else{
+  data <- tibble(
+  method = c("Theta_naive", "Theta_final", "Theta_oracular"),
+  policy_value = c(eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
+  constraint = c(eval_naive$constraint, eval_final$constraint, eval_oracular$constraint)
 )
+}
 
 # Call the function
 plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), techniques = data$method, root.path = root.path)
