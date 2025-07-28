@@ -2,7 +2,7 @@
 % Please edit documentation in R/alternated_procedure.R
 \name{update_mu}
 \alias{update_mu}
-\title{Update Mu via Augmented Covariate Adjustment}
+\title{Update mu via augmented covariate adjustment}
 \usage{
 update_mu(A, X, mu0, epsilon1, theta_collection, prop_score)
 }

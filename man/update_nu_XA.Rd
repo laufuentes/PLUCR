@@ -2,7 +2,7 @@
 % Please edit documentation in R/alternated_procedure.R
 \name{update_nu_XA}
 \alias{update_nu_XA}
-\title{Update Nu via Augmented Covariate Adjustment for fixed X}
+\title{Update nu via augmented covariate adjustment for fixed X}
 \usage{
 update_nu_XA(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA)
 }

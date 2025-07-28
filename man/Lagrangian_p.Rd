@@ -2,7 +2,7 @@
 % Please edit documentation in R/objective_functions.R
 \name{Lagrangian_p}
 \alias{Lagrangian_p}
-\title{Objective Function taking the form of a Lagrangian}
+\title{Objective function taking the form of a Lagrangian}
 \usage{
 Lagrangian_p(
   psi,

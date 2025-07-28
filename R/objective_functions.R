@@ -1,4 +1,4 @@
-#' Risk Function for Conditional Average Treatment Effect (CATE)
+#' Risk function for Conditional Average Treatment Effect (CATE)
 #'
 #' Computes the risk function \eqn{R_p} for estimating the Conditional Average Treatment Effect (CATE).  
 #' The function minimizes the squared error between \code{psi(X)} and \code{delta_Y(X)}.
@@ -14,7 +14,7 @@ R_p <- function(psi, X, delta_Mu){
     return(out)
 }
 
-#' Constraint Function
+#' Constraint function
 #'
 #' Computes the constraint function \eqn{S_p}, which ensures that the learned policy satisfies a constraint. 
 #' This function enforces a limit on the expected impact of treatment via \code{delta_Z}.
@@ -34,7 +34,7 @@ S_p <- function(psi, X, beta, alpha, centered, delta_Nu){
     return(out)
 }
 
-#' Objective Function taking the form of a Lagrangian
+#' Objective function taking the form of a Lagrangian
 #'
 #' Computes the objective function, which balances the risk function \code{R_p}  
 #' and the constraint function \code{S_p} using a parameter \code{lambda}.
@@ -55,7 +55,7 @@ Lagrangian_p <- function(psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, beta=0.0
     return(out)
 }
 
-#' Gradient of the Objective Function
+#' Gradient of the objective function
 #'
 #' Computes the gradient of the objective function with respect to \code{psi} at X.  
 #' The gradient is used in optimization algorithms like Stochastic Gradient Descent (SGD).

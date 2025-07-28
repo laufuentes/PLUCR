@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{delta_mu_threshold}
 \alias{delta_mu_threshold}
-\title{delta_mu_threhsold: Thresholded-shaped Conditional Average Treatment Effect Estimator for Y}
+\title{Thresholded-shaped Conditional Average Treatment Effect estimator for Y}
 \usage{
 delta_mu_threshold(X)
 }

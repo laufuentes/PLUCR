@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{visual_treatment_plot}
 \alias{visual_treatment_plot}
-\title{Visualize Treatment Assignment Probability}
+\title{Visualize treatment assignment probability}
 \usage{
 visual_treatment_plot(
   psi_X,

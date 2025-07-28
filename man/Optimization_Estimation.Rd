@@ -2,7 +2,7 @@
 % Please edit documentation in R/alternated_procedure.R
 \name{Optimization_Estimation}
 \alias{Optimization_Estimation}
-\title{Iterative Optimization Procedure}
+\title{Iterative optimization procedure}
 \usage{
 Optimization_Estimation(
   mu0,

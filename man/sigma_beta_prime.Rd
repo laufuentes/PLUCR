@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{sigma_beta_prime}
 \alias{sigma_beta_prime}
-\title{Derivative of Link Function}
+\title{Derivative of link function}
 \usage{
 sigma_beta_prime(t, beta = 0.05, centered = FALSE)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{model_Y_linear}
 \alias{model_Y_linear}
-\title{model_Y_linear: Treatment Effect on Y Component Function}
+\title{Linear treatment effect on Y component function}
 \usage{
 model_Y_linear(X, A)
 }

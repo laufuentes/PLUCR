@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{generate_data}
 \alias{generate_data}
-\title{generate_data: Synthetic Data Generator}
+\title{Synthetic data generator and functions generator}
 \usage{
 generate_data(
   n,

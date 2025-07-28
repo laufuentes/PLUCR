@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{plot_metric_comparison}
 \alias{plot_metric_comparison}
-\title{synthetic_data_plot:: Plot Synthetic Data Setting}
+\title{Plot metric values for comparison}
 \usage{
 plot_metric_comparison(
   data,
@@ -12,19 +12,24 @@ plot_metric_comparison(
 )
 }
 \arguments{
-\item{data}{description}
-
 \item{metrics}{A vector containing the metrics to be represented.}
 
-\item{techniques}{}
+\item{techniques}{A vector containing the names of the techniques to be represented.}
 
 \item{root.path}{Path to the folder where images are to be saved.}
 }
 \value{
-Saves a plot to "Images/"Comparison_", techniques, ".pdf".
+Saves a plot to "Images/"Comparison_techniques.pdf".
 }
 \description{
-Generates and saves a two-panel plot:
-one showing the sign of the treatment effect (\code{delta_Mu}) and the other
-visualizing the magnitude of selection effect (\code{delta_Nu}) across covariates X.1 and X.2.
+Creates a comparison plot of different metrics across different treatment rule estimation methods.
+}
+\details{
+The function takes a data frame with method names and corresponding policy values, constraints, etc. (typically including \code{Theta_0}, \code{Theta_naive}, \code{Theta_final}, and \code{Theta_oracular}) and generates a visual comparison (e.g., bar plot or point plot).
+
+#' @param data A tibble or data frame with two columns:
+\describe{
+\item{method}{A character vector indicating the estimation method (e.g., "Theta_0", "Theta_naive", etc.).}
+\item{metric1}{A numeric vector containing the corresponding metric1 values for each method.}
+\item{metric2}{A numeric vector containing the corresponding metric2 values for each method.}}
 }

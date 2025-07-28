@@ -2,7 +2,7 @@
 % Please edit documentation in R/other_approaches.R
 \name{naive_approach_algorithm}
 \alias{naive_approach_algorithm}
-\title{naive_approach_algorithm:: Naive approach main algorithm}
+\title{Naive approach main algorithm}
 \usage{
 naive_approach_algorithm(
   X,
@@ -58,8 +58,9 @@ naive_approach_algorithm(
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
 \description{
-This function runs the whole algorithm for the naive approach. It first checks the data, and
-whether folders exist. Then proceed onto the grid search over lambda and beta, looking for the
-the minimal lambda that satisfies the constraint for each beta and then, the combination that maximizes
-the estimated policy value.
+Learning an optimal treatment policy under constraints.
+This function begins by validating and preprocessing the input data, and assumes that the nuisance components mu0, nu0, and prop_score (train and test),
+have already been estimated. Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm.
+The procedure includes an inner grid search over candidate values of \code{lambda} and \code{beta} to identify the policy
+that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 }

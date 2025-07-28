@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{delta_nu_linear}
 \alias{delta_nu_linear}
-\title{delta_nu_linear: Conditional Average Treatment Effect Estimator for Xi}
+\title{Linear-shaped Conditional Average Treatment Effect estimator for Xi}
 \usage{
 delta_nu_linear(X)
 }

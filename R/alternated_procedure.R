@@ -1,4 +1,4 @@
-#' Update Mu via Augmented Covariate Adjustment for fixed X
+#' Update mu via augmented covariate adjustment for fixed X
 #'
 #' Computes updated Mu predictions by adding the bias correction for fixed 
 #' \code{psi_collection} scaled by coefficients \code{epsilon1_collection},
@@ -17,7 +17,7 @@ update_mu_XA <- function(offset_mu_XA, epsilon1, psi_collection, H_XA){
   return(out)
 }
 
-#' Update Nu via Augmented Covariate Adjustment for fixed X
+#' Update nu via augmented covariate adjustment for fixed X
 #'
 #' Computes updated Nu predictions by adding the bias correction for fixed 
 #' \code{sigma_psi_collection} scaled by coefficients \code{epsilon2_collection},
@@ -36,7 +36,7 @@ update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
   return(out)
 }
 
-#' Update Mu via Augmented Covariate Adjustment
+#' Update mu via augmented covariate adjustment
 #'
 #' Computes updated Mu predictions by adding the bias correction for all previous solutions at X 
 #' \code{psi(X)} scaled by coefficients \code{epsilon1_collection},
@@ -60,7 +60,7 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
   return(out)
 }
 
-#' Update Nu via Augmented Covariate Adjustment
+#' Update nu via augmented covariate adjustment
 #'
 #' Computes updated Nu predictions by adding the bias correction for all previous solutions at X 
 #' \code{sigma_beta(psi(X),beta,centered)} scaled by coefficients \code{epsilon2_collection},
@@ -86,7 +86,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
   return(out)
 }
 
-#' Iterative Optimization Procedure
+#' Iterative optimization procedure
 #' 
 #' This function performs an iterative optimization routine to correct and minimize the objective function. 
 #' It iteratively finds a solution and corrects the objective function for such optimal solution, until 

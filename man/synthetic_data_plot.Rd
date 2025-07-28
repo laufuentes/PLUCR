@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{synthetic_data_plot}
 \alias{synthetic_data_plot}
-\title{synthetic_data_plot:: Plot Synthetic Data Setting}
+\title{Plot synthetic data setting}
 \usage{
 synthetic_data_plot(delta_Mu, delta_Nu, B = 100, root.path, name)
 }

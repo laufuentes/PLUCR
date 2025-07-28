@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{HX}
 \alias{HX}
-\title{Compute the Inverse Propensity Score Weight}
+\title{Compute the Inverse Propensity Score Weight (IPW)}
 \usage{
 HX(A, X, prop_score)
 }

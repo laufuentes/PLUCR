@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{delta_nu_threshold}
 \alias{delta_nu_threshold}
-\title{delta_nu_threshold: Conditional Average Treatment Effect Estimator for Xi}
+\title{Thresholded Conditional Average Treatment Effect estimator for Xi}
 \usage{
 delta_nu_threshold(X)
 }

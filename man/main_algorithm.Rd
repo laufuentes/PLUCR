@@ -54,6 +54,10 @@ main_algorithm(
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
 \description{
-This function runs the whole algorithm. It first checks the data, then computes the nuisance parameters using SuperLearner librarie.
-Then proceed onto the
+Executes the full estimation pipeline for learning an optimal treatment policy under constraints.
+This function performs the complete procedure implemented in the PLUCR framework.
+It begins by validating and preprocessing the input data, followed by estimating nuisance parameters using the \code{SuperLearner} ensemble library.
+Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm.
+The procedure includes an inner grid search over candidate values of \code{lambda} and \code{beta} to identify the policy
+that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 }

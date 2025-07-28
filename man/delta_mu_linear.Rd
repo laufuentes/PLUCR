@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{delta_mu_linear}
 \alias{delta_mu_linear}
-\title{delta_mu_linear: Conditional Average Treatment Effect Estimator for Y}
+\title{Linear-shaped Conditional Average Treatment Effect estimator for Y}
 \usage{
 delta_mu_linear(X)
 }

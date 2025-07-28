@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{delta_mu_mix}
 \alias{delta_mu_mix}
-\title{delta_mu_mix: Mixed conditional Average Treatment Effect Estimator for Y}
+\title{Mixed-shape Conditional Average Treatment Effect estimator for Y}
 \usage{
 delta_mu_mix(X)
 }

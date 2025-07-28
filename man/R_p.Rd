@@ -2,7 +2,7 @@
 % Please edit documentation in R/objective_functions.R
 \name{R_p}
 \alias{R_p}
-\title{Risk Function for Conditional Average Treatment Effect (CATE)}
+\title{Risk function for Conditional Average Treatment Effect (CATE)}
 \usage{
 R_p(psi, X, delta_Mu)
 }

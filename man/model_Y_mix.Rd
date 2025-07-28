@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{model_Y_mix}
 \alias{model_Y_mix}
-\title{model_Y_mix: Mixed Treatment Effect on Y Component Function}
+\title{Mixed treatment effect on Y component function}
 \usage{
 model_Y_mix(X, A)
 }

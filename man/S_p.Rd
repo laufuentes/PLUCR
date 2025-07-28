@@ -2,7 +2,7 @@
 % Please edit documentation in R/objective_functions.R
 \name{S_p}
 \alias{S_p}
-\title{Constraint Function}
+\title{Constraint function}
 \usage{
 S_p(psi, X, beta, alpha, centered, delta_Nu)
 }

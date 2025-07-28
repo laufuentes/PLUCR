@@ -2,22 +2,9 @@
 % Please edit documentation in R/optim_functions.R
 \name{FW}
 \alias{FW}
-\alias{FW_X}
-\title{Frank-Wolfe Algorithm}
+\title{Frank-Wolfe algorithm}
 \usage{
 FW(
-  X,
-  delta_Mu,
-  delta_Nu,
-  lambda,
-  alpha = 0.1,
-  beta = 0.05,
-  centered = FALSE,
-  precision = 0.05,
-  verbose = TRUE
-)
-
-FW_X(
   X,
   delta_Mu,
   delta_Nu,

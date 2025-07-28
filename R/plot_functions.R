@@ -1,4 +1,4 @@
-#' Plot Evolution of Objective Terms Across Lambda Values
+#' Plot evolution of objective terms across lambda values
 #'
 #' Visualizes how risk, constraint, and overall objective evolve with respect to different lambda values.
 #' Includes smooth loess trends and confidence intervals.
@@ -45,7 +45,7 @@ lambda_evol <- function(results, type_simu, beta_opt) {
   ggplot2::ggsave(file.path("figures", type_simu, "lambda_evol.pdf"), lambda_evol_plot)
 }
 
-#' Visualize Treatment Assignment Probability
+#' Visualize treatment assignment probability
 #'
 #' Plots the smoothed treatment assignment probability over covariates Var_X_axis and Var_Y_axis
 #'
@@ -216,7 +216,7 @@ iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_t
   return("Images saved")
 }
 
-#' synthetic_data_plot:: Plot Synthetic Data Setting
+#' Plot synthetic data setting
 #'
 #' Generates and saves a two-panel plot:
 #' one showing the sign of the treatment effect (`delta_Mu`) and the other
@@ -266,17 +266,21 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")))
 }
 
-#' synthetic_data_plot:: Plot Synthetic Data Setting
+#' Plot metric values for comparison
 #'
-#' Generates and saves a two-panel plot:
-#' one showing the sign of the treatment effect (`delta_Mu`) and the other
-#' visualizing the magnitude of selection effect (`delta_Nu`) across covariates X.1 and X.2.
-#' 
-#' @param data description
+#' Creates a comparison plot of different metrics across different treatment rule estimation methods.
+#'
+#' The function takes a data frame with method names and corresponding policy values, constraints, etc. (typically including `Theta_0`, `Theta_naive`, `Theta_final`, and `Theta_oracular`) and generates a visual comparison (e.g., bar plot or point plot).
+#'
+#' #' @param data A tibble or data frame with two columns:
+#' \describe{
+#'   \item{method}{A character vector indicating the estimation method (e.g., "Theta_0", "Theta_naive", etc.).}
+#'   \item{metric1}{A numeric vector containing the corresponding metric1 values for each method.}
+#'   \item{metric2}{A numeric vector containing the corresponding metric2 values for each method.}}
 #' @param metrics A vector containing the metrics to be represented. 
-#' @param techniques 
+#' @param techniques A vector containing the names of the techniques to be represented. 
 #' @param root.path Path to the folder where images are to be saved.
-#' @return Saves a plot to "Images/"Comparison_", techniques, ".pdf".
+#' @return Saves a plot to "Images/"Comparison_techniques.pdf".
 #' @export
 #' 
 plot_metric_comparison <- function(data, 

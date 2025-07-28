@@ -2,8 +2,7 @@
 % Please edit documentation in R/optim_functions.R
 \name{SGD}
 \alias{SGD}
-\alias{SGD_X}
-\title{Stochastic Gradient Descent (SGD)}
+\title{Stochastic Gradient Descent (SGD) algorithm}
 \usage{
 SGD(
   theta_current,
@@ -20,23 +19,6 @@ SGD(
   tol = 0.001,
   lr = 0.01,
   verbose = FALSE
-)
-
-SGD_X(
-  theta_current,
-  psi_X,
-  X,
-  delta_Mu_X,
-  delta_Nu_X,
-  lambda,
-  alpha = 0.1,
-  beta = 0.05,
-  centered = FALSE,
-  batch_prop = 1/5,
-  max_iter = 1000,
-  tol = 0.001,
-  lr = 0.01,
-  verbose
 )
 }
 \arguments{

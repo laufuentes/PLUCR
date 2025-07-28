@@ -2,7 +2,7 @@
 % Please edit documentation in R/alternated_procedure.R
 \name{update_mu_XA}
 \alias{update_mu_XA}
-\title{Update Mu via Augmented Covariate Adjustment for fixed X}
+\title{Update mu via augmented covariate adjustment for fixed X}
 \usage{
 update_mu_XA(offset_mu_XA, epsilon1, psi_collection, H_XA)
 }

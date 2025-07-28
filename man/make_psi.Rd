@@ -2,7 +2,7 @@
 % Please edit documentation in R/optim_functions.R
 \name{make_psi}
 \alias{make_psi}
-\title{Generate Psi Function}
+\title{Generate psi function}
 \usage{
 make_psi(Theta)
 }

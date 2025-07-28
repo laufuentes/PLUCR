@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_functions.R
 \name{lambda_evol}
 \alias{lambda_evol}
-\title{Plot Evolution of Objective Terms Across Lambda Values}
+\title{Plot evolution of objective terms across lambda values}
 \usage{
 lambda_evol(results, type_simu, beta_opt)
 }

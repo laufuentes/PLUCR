@@ -2,7 +2,7 @@
 % Please edit documentation in R/alternated_procedure.R
 \name{update_nu}
 \alias{update_nu}
-\title{Update Nu via Augmented Covariate Adjustment}
+\title{Update nu via augmented covariate adjustment}
 \usage{
 update_nu(
   A,

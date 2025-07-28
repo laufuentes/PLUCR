@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{V_Pn}
 \alias{V_Pn}
-\title{Estimation of Policy Value}
+\title{Estimation of policy value}
 \usage{
 V_Pn(policy, y1, y0)
 }

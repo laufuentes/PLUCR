@@ -2,7 +2,7 @@
 % Please edit documentation in R/other_approaches.R
 \name{oracular_approach_algorithm}
 \alias{oracular_approach_algorithm}
-\title{oracular_approach_algorithm:: Oracular approach main algorithm}
+\title{Oracular approach main algorithm}
 \usage{
 oracular_approach_algorithm(
   X,
@@ -54,8 +54,9 @@ oracular_approach_algorithm(
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
 \description{
-This function runs the whole algorithm using the oracular functions. It first checks the data, and
-whether folders exist. Then proceed onto the grid search over lambda and beta, looking for the
-the minimal lambda that satisfies the real constraint for each beta and then, the combination that maximizes
-the true policy value.
+Learns an optimal treatment policy under constraints using true data structures.
+It begins by validating and preprocessing the input data.
+Subsequently, it approximates the optimal treatment policy via the Frank-Wolfe optimization algorithm.
+The procedure includes an inner grid search over candidate values of \code{lambda} and \code{beta} to identify the policy
+that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 }

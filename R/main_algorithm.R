@@ -1,7 +1,12 @@
 #' Main algorithm
+#'
+#' Executes the full estimation pipeline for learning an optimal treatment policy under constraints.
+#' This function performs the complete procedure implemented in the PLUCR framework. 
+#' It begins by validating and preprocessing the input data, followed by estimating nuisance parameters using the `SuperLearner` ensemble library. 
+#' Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm. 
+#' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
+#' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #' 
-#' This function runs the whole algorithm. It first checks the data, then computes the nuisance parameters using SuperLearner librarie. 
-#' Then proceed onto the 
 #'
 #' @param X A matrix of covariates of size n x d (input data).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).

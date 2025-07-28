@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{model_Y_threshold}
 \alias{model_Y_threshold}
-\title{model_Y_threshold: Thresholded Treatment Effect on Y Component Function}
+\title{Thresholded treatment effect on Y component function}
 \usage{
 model_Y_threshold(X, A)
 }

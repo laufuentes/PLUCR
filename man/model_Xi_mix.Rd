@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{model_Xi_mix}
 \alias{model_Xi_mix}
-\title{model_Xi_threshold: Treatment Effect on Xi Component Function}
+\title{Mixed treatment effect on Xi component function}
 \usage{
 model_Xi_mix(X, A)
 }

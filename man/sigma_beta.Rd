@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{sigma_beta}
 \alias{sigma_beta}
-\title{Link Function}
+\title{Link function}
 \usage{
 sigma_beta(t, beta = 0.05, centered = FALSE)
 }

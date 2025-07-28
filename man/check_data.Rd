@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{check_data}
 \alias{check_data}
-\title{Check Input Data for Validity}
+\title{Check input data for validity}
 \usage{
 check_data(Y, Xi, A, X, folds)
 }

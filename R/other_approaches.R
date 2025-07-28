@@ -1,9 +1,11 @@
-#' naive_approach_algorithm:: Naive approach main algorithm
+#' Naive approach main algorithm
 #' 
-#' This function runs the whole algorithm for the naive approach. It first checks the data, and 
-#' whether folders exist. Then proceed onto the grid search over lambda and beta, looking for the 
-#' the minimal lambda that satisfies the constraint for each beta and then, the combination that maximizes 
-#' the estimated policy value. 
+#' Learning an optimal treatment policy under constraints.
+#' This function begins by validating and preprocessing the input data, and assumes that the nuisance components mu0, nu0, and prop_score (train and test), 
+#' have already been estimated. Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm. 
+#' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
+#' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
+#' 
 #'
 #' @param X A matrix of covariates of size n x d (input data).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
@@ -84,7 +86,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   attr(theta_0, "lambda") <- 0 
   for(beta in B){
     saved <- FALSE
-    res <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
+    res <- naive_process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
     if (!saved && res[[1]]$constraint < 0) {
       combinations <- rbind(combinations, c(beta, 0))
       naive_opt_res <- rbind(naive_opt_res,res[[1]])
@@ -109,7 +111,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                         delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}, 
                         lambda=lambda, beta=beta, precision=precision) 
       
-        res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
+        res <- naive_process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
         if (!saved && res[[1]]$constraint < 0) {
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
@@ -149,12 +151,13 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   return(list(theta_0,theta_final))
 }
 
-#' oracular_approach_algorithm:: Oracular approach main algorithm
+#' Oracular approach main algorithm
 #' 
-#' This function runs the whole algorithm using the oracular functions. It first checks the data, and 
-#' whether folders exist. Then proceed onto the grid search over lambda and beta, looking for the 
-#' the minimal lambda that satisfies the real constraint for each beta and then, the combination that maximizes 
-#' the true policy value. 
+#' Learns an optimal treatment policy under constraints using true data structures.
+#' It begins by validating and preprocessing the input data. 
+#' Subsequently, it approximates the optimal treatment policy via the Frank-Wolfe optimization algorithm. 
+#' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
+#' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #'
 #' @param X A matrix of covariates of size n x d (input data).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).

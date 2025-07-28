@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{V_p}
 \alias{V_p}
-\title{Oracular Approximation of Value Function}
+\title{Oracular approximation of value function}
 \usage{
 V_p(
   psi,

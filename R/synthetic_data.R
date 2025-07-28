@@ -1,7 +1,7 @@
 expit <- plogis
 logit <- qlogis
 
-#' model_Y_linear: Treatment Effect on Y Component Function
+#' Linear treatment effect on Y component function
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
@@ -18,7 +18,7 @@ model_Y_linear <- function(X,A){
   return(2*A*(1- X[,1]-X[,2]))
 }
 
-#' model_Y_threshold: Thresholded Treatment Effect on Y Component Function
+#' Thresholded treatment effect on Y component function
 #'
 #' Computes a thresholded-shaped interaction term between covariates and treatment.
 #'
@@ -36,7 +36,7 @@ model_Y_threshold <- function(X, A) {
   return(A*form)
 }
 
-#' model_Y_mix: Mixed Treatment Effect on Y Component Function
+#' Mixed treatment effect on Y component function
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
@@ -56,7 +56,7 @@ model_Y_mix <- function(X, A) {
   return(-2 * A * effect)
 }
 
-#' model_Xi_linear: Treatment Effect on Xi Component Function
+#' Linear treatment effect on Xi Component Function
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
@@ -77,7 +77,7 @@ model_Xi_linear <- function(X,A){
   return(ifelse(A==1, Xi.1, Xi.0))
 }
 
-#' model_Xi_threshold: Treatment Effect on Xi Component Function
+#' Thresholded treatment effect on Xi component function
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
@@ -99,7 +99,7 @@ model_Xi_threshold <- function(X,A){
   return(ifelse(A==1, Xi.1, Xi.0))
 }
 
-#' model_Xi_threshold: Treatment Effect on Xi Component Function
+#' Mixed treatment effect on Xi component function
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
@@ -135,7 +135,7 @@ model_Xi_mix <- function(X, A) {
   return(ifelse(A == 1, Xi.1, Xi.0))
 }
 
-#' delta_mu_linear: Conditional Average Treatment Effect Estimator for Y
+#' Linear-shaped Conditional Average Treatment Effect estimator for Y
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
@@ -153,7 +153,7 @@ delta_mu_linear <- function(X){
 }
 attr(delta_mu_linear, "vars")<- c(1, 2)
 
-#' delta_mu_threhsold: Thresholded-shaped Conditional Average Treatment Effect Estimator for Y
+#' Thresholded-shaped Conditional Average Treatment Effect estimator for Y
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
@@ -171,7 +171,7 @@ delta_mu_threshold <- function(X){
 }
 attr(delta_mu_threshold, "vars")<- c(1, 2)
 
-#' delta_mu_mix: Mixed conditional Average Treatment Effect Estimator for Y
+#' Mixed-shape Conditional Average Treatment Effect estimator for Y
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
@@ -189,7 +189,7 @@ delta_mu_mix <- function(X){
 }
 attr(delta_mu_mix, "vars")<- c(1, 2)
 
-#' delta_nu_linear: Conditional Average Treatment Effect Estimator for Xi
+#' Linear-shaped Conditional Average Treatment Effect estimator for Xi
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
@@ -207,7 +207,7 @@ delta_nu_linear <- function(X){
 }
 attr(delta_nu_linear, "vars")<- c(1, 2)
 
-#' delta_nu_threshold: Conditional Average Treatment Effect Estimator for Xi
+#' Thresholded Conditional Average Treatment Effect estimator for Xi
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
@@ -226,7 +226,7 @@ delta_nu_threshold <- function(X){
 }
 attr(delta_nu_threshold, "vars")<- c(3, 4)
 
-#' delta_nu_mix: Mixed Conditional Average Treatment Effect Estimator for Xi
+#' Mixed-shaped Conditional Average Treatment Effect estimator for Xi
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
@@ -249,7 +249,7 @@ delta_nu_mix <- function(X){
 attr(delta_nu_mix, "vars")<- c(1, 2)
 
 
-#' generate_data: Synthetic Data Generator
+#' Synthetic data generator and functions generator
 #'
 #' Generates a dataset simulating treatment assignment, covariates, and potential outcomes.
 #'

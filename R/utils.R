@@ -12,7 +12,7 @@ expit <- plogis
 #' @export
 logit <- qlogis
 
-#' Check Input Data for Validity
+#' Check input data for validity
 #'
 #' Performs quality control checks on the input data to ensure it meets expected formats and conditions.
 #'
@@ -79,7 +79,7 @@ check_data <- function(Y, Xi, A, X, folds) {
 }
 
 
-#' Link Function
+#' Link function
 #'
 #' Link function mapping \eqn{[-1,1]} to \eqn{[0,1]}, parametrized    
 #' by \code{beta} with an optional centering.
@@ -101,7 +101,7 @@ sigma_beta <- function(t, beta=0.05, centered=FALSE) {
   return(out)
 }
 
-#' Derivative of Link Function
+#' Derivative of link function
 #'
 #' Computes the derivative of the link function \code{sigma_beta},  
 #' with respect to t.
@@ -124,7 +124,7 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 }
 
 
-#' Oracular Approximation of Value Function
+#' Oracular approximation of value function
 #'
 #' Computes the expected outcome under a policy determined by the previously optimized \code{psi(X)}.  
 #' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  
@@ -161,7 +161,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L,
   return(out)
 }
 
-#' Estimation of Policy Value
+#' Estimation of policy value
 #'
 #' Computes the expected outcome under a policy determined by the previously optimized \code{psi(X)}.  
 #' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  
@@ -183,7 +183,7 @@ V_Pn <- function(policy, y1, y0){
 }
 
 
-#' Compute the Inverse Propensity Score Weight
+#' Compute the Inverse Propensity Score Weight (IPW)
 #'
 #' This function computes the inverse propensity score weight based on treatment assignment and a propensity score model.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/synthetic_data.R
 \name{model_Xi_threshold}
 \alias{model_Xi_threshold}
-\title{model_Xi_threshold: Treatment Effect on Xi Component Function}
+\title{Thresholded treatment effect on Xi component function}
 \usage{
 model_Xi_threshold(X, A)
 }

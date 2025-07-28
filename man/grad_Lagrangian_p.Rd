@@ -3,7 +3,7 @@
 \name{grad_Lagrangian_p}
 \alias{grad_Lagrangian_p}
 \alias{grad_Lagrangian_p_X}
-\title{Gradient of the Objective Function}
+\title{Gradient of the objective function}
 \usage{
 grad_Lagrangian_p(
   psi,
