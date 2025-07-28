@@ -379,16 +379,15 @@ Before estimating nuisance functions and optimizing the policy, the algorithm pe
 
 - Creates 3 cross-validation folds to enable cross-fitting. 
 ```{r, eval=FALSE}
-n <- nrow(X)
-
-# Folds for cross-validation 
-folds <- SuperLearner::CVFolds(n, 
-                               id = NULL,
-                               Y = Y,
-                               cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, 
-                                                                                 shuffle =TRUE))
-# Check data
-checks<- PLUCR::check_data(Y, Xi, A, X, folds)
+ n <- nrow(X)
+  # Folds for cross-validation 
+  folds <- SuperLearner::CVFolds(n, 
+                                 id = NULL,
+                                 Y = Y,
+                                 cvControl = SuperLearner::SuperLearner.CV.control(V = Jfold, 
+                                                                                   shuffle = TRUE))
+  saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) 
+  checks<- PLUCR::check_data(Y, Xi, A, X, folds)
 ```
 
 ## Step 1: Estimate and Save Nuisance Parameters
@@ -492,65 +491,72 @@ Whether with $\lambda = 0$ or $\lambda > 0$, the procedure iterates as follows:
 # Start by testing the unconstrained case with lambda = 0
 saved <- FALSE  # Flag to track whether a valid result has already been saved
 combinations <- NULL  # Matrix to store (beta, lambda) pairs that satisfy the constraint
-beta <- 0.05  # Arbitrary beta value since constraint is not evaluated yet
+beta_0 <- NULL  # Arbitrary beta value since constraint is not evaluated yet
 lambda <- 0
 
 # Run optimization with lambda = 0 (no constraint)
-out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
-                                        X_train, A_train, Y_train, Xi_train, 
-                                        lambda=0, alpha, precision, beta, centered, 
-                                        file.path(root.path,"Intermediate",paste0(0,"_",beta)))
+out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
+                                        X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                        lambda=0, alpha=alpha, precision=precision, beta=0.05,
+                                        centered=centered, 
+                                        tol=tol, max_iter=max_iter)
 
 # Extract the final policy from the iteration  
 theta_0 <- out$theta_collection[[length(out$theta_collection)]]
-# Evaluate the policy on the test data
-res_0 <- process_results(theta_0, 
-                         X_test, A_test, Y_test, Xi_test, 
-                         mu0_test, nu0_test, prop_score_test, 
-                         lambda=0, alpha,  beta, centered)
-# Save the evaluation results
-saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
-  
-# If the constraint is satisfied, save the corresponding policy and mark as saved
-if (!saved && res_0[[1]]$constraint < 0) {
-    saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-    psi_0 <- make_psi(theta_opt)
-    sigma_beta_0 <- sigma_beta(psi_0(X), beta=0.05, centered = FALSE)
-    combinations <- rbind(combinations, c(beta, lambda))
-    saved <- TRUE
-}
-# If the upper bound of the constraint's CI is below zero, stop here
-if(res_0[[2]]<0){
-    print(theta_0)
-}else{
-    # Begin training over the grid: find for each beta value the optimal lambda
-    for (beta in Betas){
+attr(theta_0, "lambda") <- 0  # Save the lambda as an attribute 
+
+# Evaluate the policy on the test data for all possible betas
+for (beta in B){
+    res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, 
+                             mu0_test, nu0_test, prop_score_test, lambda=0, 
+                             alpha,  beta, centered)
+    # Loop to check constraint satisfaction
+    if (res_0[[1]]$constraint < 0) {
+      min_constraint_lambda0 <- res_0[[1]]$constraint
+      
+      if (res_0[[1]]$lwr_bound_policy_value > max_policy_value) {
+        beta_0 <- beta
+        max_policy_value <- res_0[[1]]$lwr_bound_policy_value
+        saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
+        saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
+        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
+        combinations <- rbind(combinations, c(beta_0, 0))
+        saved <- TRUE}
+    }else{
+      if(res_0[[1]]$constraint<min_constraint_lambda0){
+        min_constraint_lambda0 <- res_0[[1]]$constraint
+        beta_0 <- beta
+      }
+  }
+    if(res_0[[2]]<0){
+      warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
+      attr(theta_0, "beta") <- beta_0
+      return(theta_0)
+    }
+  }
+  attr(theta_0, "beta") <- beta_0 # Save the beta as an attribute 
+
+  # Begin training over the grid: find for each beta value the optimal lambda
+ for (beta in B){
       saved <- FALSE
       for (lambda in Lambdas){
        # Run alternated procedure for each beta and lambda combination 
-        out <- PLUCR::Optimization_Estimation(mu0_train, nu0_train, prop_score_train, 
-                                              X_train, A_train, Y_train, Xi_train, 
-                                              lambda, alpha, precision, beta, centered,
-                                              file.path(root.path,"Intermediate", 
-                                                        paste0(lambda,"_",beta)))
+         out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
+                                              X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                              lambda=lambda, alpha=alpha, precision=precision, 
+                                              beta=beta, centered=centered, 
+                                              tol=tol, max_iter=max_iter)
         # Extract final policy
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
-         # Evaluate the policy on test set
-        res <- process_results(theta_opt, 
-                               X_test, A_test, Y_test, Xi_test, 
-                               mu0_test, nu0_test, prop_score_test, 
-                               lambda, alpha, beta, centered)
-        # Save evaluation results
-        saveRDS(res[[1]], file=file.path(root.path, "Evaluation", 
-                                         paste0(lambda,"_",beta,".rds")))
-        
-        # If constraint is satisfied for the first time, save the optimal policy
+        ### Evaluating 
+        res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, 
+                               mu0_test, nu0_test, prop_score_test, lambda, 
+                               alpha,  beta, centered)
         if (!saved && res[[1]]$constraint < 0) {
-          saveRDS(theta_opt, 
-                  file = file.path(root.path, "Theta_opt", paste0(lambda, "_", beta, ".rds")))
+          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
+          saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
+          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
-          psi_opt <- make_psi(theta_opt)
-          sigma_beta_opt <- sigma_beta(psi_opt(X), beta=0.05, centered = FALSE)
           combinations <- rbind(combinations, c(beta, lambda))
         }
         # Stop search if constraint's upper CI bound is negative
@@ -558,17 +564,35 @@ if(res_0[[2]]<0){
           break
         }
       }
-    }
-  # Load all lambda-optimal results and select the (beta, lambda) combination 
-  # that maximizes the policy value
-  optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+ }
+# Select the optimal combination (beta, lambda)
+optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+
+# Delete all intermediate results
+files_del <- file.path(root.path,"Intermediate")
+unlink(files_del, recursive = TRUE)
+
+# Load the corresponding theta for the optimal (beta, lambda) combination
+theta_final <- readRDS(file = file.path(root.path, "Theta_opt", 
+                                            paste0(optimal_combination$beta, "_",
+                                                   optimal_combination$lambda, ".rds"))) 
+# Save the optimal combiation (lambda, beta) as an attribute 
+attr(theta_final, "lambda") <- optimal_combination$lambda 
+attr(theta_final, "beta") <- optimal_combination$beta
+    
+# Compute the optimal treatment probabilities with sigma_beta
+psi_values <- make_psi(theta_final)(X_test)
+optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
+    
+# Calculate proportion over 0.5 and warn the user if the treatment probabilities are too low.
+prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
+if(prop_over_0.50<0.1){
+  warning(sprintf(
+        paste("Only %.1f%% of the test set has an optimal treatment probability above 0.5.",
+          "This may indicate that your tolerance for adverse events (alpha) is too strict.",
+          "Consider relaxing it if treatment is being under-assigned."), 100 * prop_over_0.50))
+}
   
-  # Load the corresponding theta for the optimal (beta, lambda) combination
-  theta_final <- readRDS(file = file.path(root.path, 
-                                          "Theta_opt", 
-                                          paste0(optimal_combination$beta, "_", 
-                                                 optimal_combination$lambda, ".rds"))) 
-  }
 print(list(theta_0, theta_final))
 ```
 

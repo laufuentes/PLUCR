@@ -162,11 +162,15 @@ main_algorithm <- function(X, A, Y, Xi,
         }
       }
     }
+  # Select the optimal combination (beta, lambda)
     optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+    # Delete all intermediate results
     files_del <- file.path(root.path,"Intermediate")
     unlink(files_del, recursive = TRUE)
+    # Load the corresponding theta for the optimal (beta, lambda) combination
     theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
     
+    # Save the optimal combiation (lambda, beta) as an attribute
     attr(theta_final, "lambda") <- optimal_combination$lambda 
     attr(theta_final, "beta") <- optimal_combination$beta
     
