@@ -294,7 +294,7 @@ The function `synthetic_data_plot()` function provides an initial visualization 
 fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, 
                                   delta_Nu=delta_nu, 
                                   root.path=root.path, 
-                                  name="Threshold-Threshold")
+                                  name=paste0(scenario_mu,"-", scenario_nu))
 
 print(fig)
 ```
@@ -568,6 +568,8 @@ for (beta in B){
         beta_0 <- beta
         max_policy_value <- res_0[[1]]$lwr_bound_policy_value
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
+         attr(theta_0, "lambda") <- lambda
+          attr(theta_0, "beta") <- beta
         saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
         saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
         combinations <- rbind(combinations, c(beta_0, 0))
@@ -610,6 +612,8 @@ for (beta in B){
                                       paste0(beta,"_",lambda,".rds")))
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", 
                                               paste0(beta, "_", lambda, ".rds")))
+          attr(theta_opt, "lambda") <- lambda
+          attr(theta_opt, "beta") <- beta
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
         }
@@ -620,11 +624,24 @@ for (beta in B){
       }
  }
 # Select the optimal combination (beta, lambda)
-optimal_combination <- get_opt_beta_lambda(combinations,root.path)
-
-# Delete all intermediate results
 files_del <- file.path(root.path,"Intermediate")
 unlink(files_del, recursive = TRUE)
+  
+# Select the optimal combination (beta, lambda)
+optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+beta <- optimal_combination$beta
+lambda <- optimal_combination$lambda
+theta_keep <- paste0(beta, "_", lambda, ".rds")
+
+# Delete unwanted files in Theta_opt
+theta_files <- list.files(file.path(root.path, "Theta_opt"))
+theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
+file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
+
+# Delete unwanted files in Evaluation
+eval_files <- list.files(file.path(root.path, "Evaluation"))
+eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
+file.remove(file.path(root.path,"Evaluation", eval_to_delete))
 
 # Load the corresponding theta for the optimal (beta, lambda) combination
 theta_final <- readRDS(file = file.path(root.path, "Theta_opt", 

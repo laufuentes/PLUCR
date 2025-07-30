@@ -186,16 +186,16 @@ main_algorithm <- function(X, A, Y, Xi,
   eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
   file.remove(file.path(root.path,"Evaluation", eval_to_delete))
     
-    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds"))) 
+  theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds"))) 
     
-    psi_values <- make_psi(theta_final)(X_test)
-    optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
+  psi_values <- make_psi(theta_final)(X_test)
+  optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
     
-    # Calculate proportion over 0.5
-    prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
-    if(prop_over_0.50<0.1){
-      warning(sprintf(
-        paste(
+  # Calculate proportion over 0.5
+  prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
+  if(prop_over_0.50<0.1){
+    warning(sprintf(
+      paste(
           "Only %.1f%% of the test set has an optimal treatment probability above 0.5.",
           "This may indicate that your tolerance for adverse events (alpha) is too strict.",
           "Consider relaxing it if treatment is being under-assigned."), 
