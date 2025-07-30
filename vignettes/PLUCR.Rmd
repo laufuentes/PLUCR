@@ -133,6 +133,10 @@ Opt.Est.tolerance <- 0.025
 
 # Optimization Estimation procedure maximum of iterations
 Opt.Est.Maximum.Iterations <- 5
+
+# Parameter indicating whether to center the treatement policy to ensure that 
+# probability of treatment assignment for null treatment effect is 0.5. 
+centered <- FALSE
 ```
 
 ## 2.4. Run the main algorithm 
@@ -153,6 +157,7 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 alpha=alpha.tolerance, 
                                 B= Beta_candidates, 
                                 precision=optimization.precision,
+                                centered=centered,
                                 SL.library = SL.library, 
                                 tol= Opt.Est.tolerance, 
                                 max_iter=Opt.Est.Maximum.Iterations, 
@@ -164,6 +169,16 @@ if(is.list(output)){
 }else{
   theta_final <- output
 }
+```
+
+The main function returns a list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps, as follows:
+
+```{r, eval=FALSE}
+# First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). 
+psi_final <- PLUCR::make_psi(theta_final)
+
+# Obtain the optimal treatment rule by applying `sigma_beta` to the optimal `beta` associated to `theta_final`
+optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(psi_final, "beta"))
 ```
 
 ## 2.5. Other results 
@@ -187,9 +202,9 @@ folds <- readRDS(file.path(root.path,"Folds","folds.rds"))
 # Primary outcome model
 mu.hat.nj <- readRDS(file.path(root.path,"Mu.hat","mu.hat.nj.rds")) 
 # Adverse event model
-nu.hat.nj <- readRDS(file.path(root.path,"Nu.hat","nu.hat.nj.rds")) #Save adverse events outcome model
+nu.hat.nj <- readRDS(file.path(root.path,"Nu.hat","nu.hat.nj.rds")) 
 # Propensity score model 
-ps.hat.nj <- readRDS(file.path(root.path,"PS.hat","ps.hat.nj.rds")) #Save propensity score outcome model
+ps.hat.nj <- readRDS(file.path(root.path,"PS.hat","ps.hat.nj.rds"))
   
 # Split data into training and testing set
 # The training set will be used to train the treatment rule
@@ -213,9 +228,13 @@ nu0_test <- function(a,x){nu.hat.nj(a,x,3)}
 prop_score_test <- function(a,x){ps.hat.nj(a,x,3)}
 
 # Run the naive approach algorithm 
-naive_output <- naive_approach_algorithm(X, A, Y, Xi, folds, mu0_train, mu0_test, nu0_train, nu0_test, 
+naive_output <- naive_approach_algorithm(X, A, Y, Xi, folds, 
+                                         mu0_train, mu0_test, 
+                                         nu0_train, nu0_test, 
                                          prop_score_train, prop_score_test, 
-                                         alpha = alpha.tolerance, precision=optimization.precision,
+                                         alpha = alpha.tolerance, 
+                                         centered=centered,
+                                         precision=optimization.precision,
                                          root.path = root.path)
 
 if(is.list(naive_output)){
@@ -248,7 +267,8 @@ This approach serves as a theoretical upper bound on performance and offers a me
 oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                                folds=folds,
                                                delta_Mu=delta_mu, delta_Nu= delta_nu, 
-                                               alpha = alpha.tolerance, precision = optimization.precision, 
+                                               alpha = alpha.tolerance, centered=centered,
+                                               precision = optimization.precision, 
                                                scenario_mu=scenario_mu, scenario_nu=scenario_nu, 
                                                root.path = root.path)
 
@@ -259,9 +279,11 @@ if(is.list(oracular_output)){
 }
 eval_oracular <- oracular_process_results(theta=theta_oracular, X=X_test,  
                                           delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
+                                          scenario_mu = scenario_mu, 
+                                          scenario_nu = scenario_nu, 
                                           lambda = attr(theta_oracular, "lambda"), 
-                                          alpha = alpha.tolerance, beta= attr(theta_oracular, "beta"))
+                                          alpha = alpha.tolerance, 
+                                          beta= attr(theta_oracular, "beta"))
 ```
 
 # 3. Play with results 
@@ -269,7 +291,10 @@ eval_oracular <- oracular_process_results(theta=theta_oracular, X=X_test,
 The function `synthetic_data_plot()` function provides an initial visualization of the treatment effects for both the primary outcome and the adverse event across the covariate space.
 
 ```{r, eval=FALSE}
-fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, delta_Nu=delta_nu, root.path=root.path, name="Threshold-Threshold")
+fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, 
+                                  delta_Nu=delta_nu, 
+                                  root.path=root.path, 
+                                  name="Threshold-Threshold")
 
 print(fig)
 ```
@@ -281,52 +306,70 @@ if(is.list(output)){
  PLUCR::visual_treatment_plot(make_psi(theta_0)(X), 
                               lambda = attr(theta_0, "lambda"), 
                               beta = attr(theta_0, "beta"), 
-                              centered = FALSE, Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              centered = centered, 
+                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
                               root.path = root.path, name = "Initial") 
 }
 
  PLUCR::visual_treatment_plot(make_psi(theta_naive)(X), 
                               lambda = attr(theta_naive, "lambda"), 
                               beta = attr(theta_naive, "beta"), 
-                              centered = FALSE, Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              centered = centered, 
+                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
                               root.path = root.path, name = "Naive")
  
  PLUCR::visual_treatment_plot(make_psi(theta_final)(X), 
                               lambda = attr(theta_final, "lambda"), 
                               beta = attr(theta_final, "beta"), 
-                              centered = FALSE, Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              centered = centered, 
+                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
                               root.path = root.path, name = "Final")
  
  PLUCR::visual_treatment_plot(make_psi(theta_oracular)(X), 
                               lambda = attr(theta_oracular, "lambda"), 
                               beta = attr(theta_oracular, "beta"), 
-                              centered = FALSE, Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              centered = centered, 
+                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
                               root.path = root.path, name = "Oracular")
 ```
 
 Finally, we compare treatment recommendations across approaches by evaluating their estimated policy values and associated constraint violations.
 
 ```{r, eval=FALSE}
-eval_0 <- readRDS(file.path(root.path, "Evaluation", paste0(attr(theta_0, "beta"), "_", attr(theta_0, "lambda"), ".rds")))
+eval_0 <- readRDS(file.path(root.path, "Evaluation", 
+                            paste0(attr(theta_0, "beta"), "_", 
+                                   attr(theta_0, "lambda"), ".rds")))
 
-eval_final <- readRDS(file.path(root.path, "Evaluation", paste0(attr(theta_final, "beta"), "_", attr(theta_final, "lambda"), ".rds")))
+eval_final <- readRDS(file.path(root.path, "Evaluation", 
+                                paste0(attr(theta_final, "beta"), "_", 
+                                       attr(theta_final, "lambda"), ".rds")))
 
 
 if(is.list(output)){
   data <- tibble(
   method = c("Theta_0", "Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_0$policy_value, eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$constraint))
+  policy_value = c(eval_0$policy_value, 
+                   eval_naive$policy_value, 
+                   eval_final$policy_value, 
+                   eval_oracular$policy_value),
+  constraint = c(eval_0$constraint, 
+                 eval_naive$constraint, 
+                 eval_final$constraint, 
+                 eval_oracular$constraint))
 }else{
   data <- tibble(
   method = c("Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_naive$constraint, eval_final$constraint, eval_oracular$constraint)
-)
+  policy_value = c(eval_naive$policy_value, 
+                   eval_final$policy_value, 
+                   eval_oracular$policy_value),
+  constraint = c(eval_naive$constraint, 
+                 eval_final$constraint, 
+                 eval_oracular$constraint))
 }
 
 # Call the function
-plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), techniques = data$method, root.path = root.path)
+plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), 
+                       techniques = data$method, root.path = root.path)
 ```
 
  If working in a simulated setting with access to the true data-generating mechanisms, we can also compare their true (oracle) values.
@@ -334,15 +377,19 @@ plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), t
 ```{r, eval=FALSE}
 eval_final <- oracular_process_results(theta=theta_final, X=X_test,  
                                           delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
+                                          scenario_mu = scenario_mu, 
+                                          scenario_nu = scenario_nu, 
                                           lambda = attr(theta_final, "lambda"), 
-                                          alpha = alpha.tolerance, beta= attr(theta_final, "beta"))
+                                          alpha = alpha.tolerance, 
+                                          beta= attr(theta_final, "beta"))
 
 eval_naive <- oracular_process_results(theta=theta_naive, X=X_test,  
                                           delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
+                                          scenario_mu = scenario_mu, 
+                                          scenario_nu = scenario_nu, 
                                           lambda = attr(theta_naive, "lambda"), 
-                                          alpha = alpha.tolerance, beta= attr(theta_naive, "beta"))
+                                          alpha = alpha.tolerance, 
+                                          beta= attr(theta_naive, "beta"))
 
 if(is.list(output)){
   eval_0 <- oracular_process_results(theta=theta_0, X=X_test,  
@@ -352,18 +399,21 @@ if(is.list(output)){
                                           alpha = alpha.tolerance, beta= attr(theta_0, "beta"))
   
 data <- tibble( method = c("Theta_0", "Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_0$policy_value, eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, eval_oracular$constraint))
+  policy_value = c(eval_0$policy_value, eval_naive$policy_value, 
+                   eval_final$policy_value, eval_oracular$policy_value),
+  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, 
+                 eval_oracular$constraint))
 }else{
   data <- tibble(
   method = c("Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_naive$policy_value, eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_naive$constraint, eval_final$constraint, eval_oracular$constraint)
-)
+  policy_value = c(eval_naive$policy_value, eval_final$policy_value, 
+                   eval_oracular$policy_value),
+  constraint = c(eval_naive$constraint, eval_final$constraint, eval_oracular$constraint))
 }
 
 # Call the function
-plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), techniques = data$method, root.path = root.path)
+plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), 
+                       techniques = data$method, root.path = root.path)
 ```
 
 # Appendix. Understanding the Algorithm Internally
@@ -495,11 +545,11 @@ beta_0 <- NULL  # Arbitrary beta value since constraint is not evaluated yet
 lambda <- 0
 
 # Run optimization with lambda = 0 (no constraint)
-out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
-                                        X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
-                                        lambda=0, alpha=alpha, precision=precision, beta=0.05,
-                                        centered=centered, 
-                                        tol=tol, max_iter=max_iter)
+out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
+                                      prop_score=prop_score_train, 
+                                      X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                      lambda=0, alpha=alpha, precision=precision, beta=0.05,
+                                      centered=centered, tol=tol, max_iter=max_iter)
 
 # Extract the final policy from the iteration  
 theta_0 <- out$theta_collection[[length(out$theta_collection)]]
@@ -541,11 +591,12 @@ for (beta in B){
       saved <- FALSE
       for (lambda in Lambdas){
        # Run alternated procedure for each beta and lambda combination 
-         out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
-                                              X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
-                                              lambda=lambda, alpha=alpha, precision=precision, 
-                                              beta=beta, centered=centered, 
-                                              tol=tol, max_iter=max_iter)
+         out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
+                                               prop_score=prop_score_train, 
+                                               X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
+                                               lambda=lambda, alpha=alpha, precision=precision, 
+                                               beta=beta, centered=centered, 
+                                               tol=tol, max_iter=max_iter)
         # Extract final policy
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
@@ -553,9 +604,12 @@ for (beta in B){
                                mu0_test, nu0_test, prop_score_test, lambda, 
                                alpha,  beta, centered)
         if (!saved && res[[1]]$constraint < 0) {
-          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
-          saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
-          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
+          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", 
+                                           paste0(beta, "_", lambda,".rds")))
+          saveRDS(out, file=file.path(root.path,"Intermediate",
+                                      paste0(beta,"_",lambda,".rds")))
+          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", 
+                                              paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
         }

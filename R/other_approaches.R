@@ -24,6 +24,8 @@
 #' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param root.path Path to the folder where all results are to be saved.
+#' 
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
 naive_approach_algorithm <- function(X, A, Y, Xi, folds, 
                                      mu0_train, mu0_test, 
@@ -174,6 +176,8 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
 #' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param root.path Path to the folder where all results are to be saved.
+#' 
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
 oracular_approach_algorithm <- function(X, A, Y, Xi, folds, 
                                      delta_Mu, delta_Nu, scenario_mu, scenario_nu, 

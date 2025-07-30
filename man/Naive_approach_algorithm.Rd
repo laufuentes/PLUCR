@@ -57,6 +57,9 @@ naive_approach_algorithm(
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
+\value{
+A list of matrices (\code{theta_0} and \code{theta_final}), or \code{theta_0} alone. These matrices are used to construct the optimal treatment rule in two steps. First, build \code{psi} using the \code{make_psi} function and evaluate it at \code{X} (i.e., \code{psi(X)}). Then, obtain the optimal treatment rule by applying \code{sigma_beta} to the selected \code{beta} attribute (\code{sigma_beta(psi(X), beta)}).
+}
 \description{
 Learning an optimal treatment policy under constraints.
 This function begins by validating and preprocessing the input data, and assumes that the nuisance components mu0, nu0, and prop_score (train and test),

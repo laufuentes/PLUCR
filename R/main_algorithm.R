@@ -23,6 +23,8 @@
 #' @param tol A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).
 #' @param max_iter A numeric scalar specifying the maximum number of iterations (5 by default).
 #' @param root.path Path to the folder where all results are to be saved.
+#' 
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
 main_algorithm <- function(X, A, Y, Xi, 
                            Lambdas=seq(1, 8, by=1), alpha=0.1, precision=0.05,
@@ -153,6 +155,8 @@ main_algorithm <- function(X, A, Y, Xi,
         if (!saved && res[[1]]$constraint < 0) {
           saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
           saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
+          attr(theta_opt, "lambda") <- lambda
+          attr(theta_opt, "beta") <- beta
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
@@ -162,17 +166,27 @@ main_algorithm <- function(X, A, Y, Xi,
         }
       }
     }
+  # Delete all intermediate results
+  files_del <- file.path(root.path,"Intermediate")
+  unlink(files_del, recursive = TRUE)
+  
   # Select the optimal combination (beta, lambda)
-    optimal_combination <- get_opt_beta_lambda(combinations,root.path)
-    # Delete all intermediate results
-    files_del <- file.path(root.path,"Intermediate")
-    unlink(files_del, recursive = TRUE)
-    # Load the corresponding theta for the optimal (beta, lambda) combination
-    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(optimal_combination$beta, "_", optimal_combination$lambda, ".rds"))) 
+  optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+  beta <- optimal_combination$beta
+  lambda <- optimal_combination$lambda
+  theta_keep <- paste0(beta, "_", lambda, ".rds")
+
+  # Delete unwanted files in Theta_opt
+  theta_files <- list.files(file.path(root.path, "Theta_opt"))
+  theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
+  file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
+
+  # Delete unwanted files in Evaluation
+  eval_files <- list.files(file.path(root.path, "Evaluation"))
+  eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
+  file.remove(file.path(root.path,"Evaluation", eval_to_delete))
     
-    # Save the optimal combiation (lambda, beta) as an attribute
-    attr(theta_final, "lambda") <- optimal_combination$lambda 
-    attr(theta_final, "beta") <- optimal_combination$beta
+    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds"))) 
     
     psi_values <- make_psi(theta_final)(X_test)
     optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
