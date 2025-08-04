@@ -52,12 +52,13 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   
   # Compute optimal policy value and its lower bound
   pi_X <- rbinom(nrow(X),1, prob= sigma_psi_X) # binary policy
-  V_pn <- V_Pn(pi_X, mu1_X, mu0_X) # estimated policy value 
+  epsilon_model <- epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + 
+                                                   ifelse(pi_X == A, HX(pi_X, X, prop_score),0), family = gaussian())
+  V_pn<- mean(plogis(qlogis(mu0(pi_X,X)) 
+                     + coef(epsilon_model) * ifelse(pi_X==A,HX(pi_X,X,prop_score),0))
+    )
   
-  mu_AX <- update_mu_XA(qlogis(mu0(A,X)), epsilon1, pi_X, H_XA) # mu(A,X)
-  mu_pi_X <- update_mu_XA(qlogis(mu0(pi_X,X)), epsilon1, pi_X, HX(pi_X,X,prop_score)) # mu(pi(X),X)
-  
-  Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu_AX + mu_pi_X)-V_pn) #varphi
+  Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi_X,X))-V_pn) #varphi
   upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
   
   # Extract the policy for the current index

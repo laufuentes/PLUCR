@@ -124,15 +124,9 @@ Beta_candidates <- c(0.05, 0.1, 0.25, 0.5)
 alpha.tolerance <- 0.2
 
 # Optimization precision: controls granularity of the policy search
-# Smaller values lead to finer approximations but require more computation
-optimization.precision <- 0.05
-
-# Tolerance parameter for Optimization-Estimation procedure
-# Smaller values lead to finer approximations but require more computation
-Opt.Est.tolerance <- 0.025
-
-# Optimization Estimation procedure maximum of iterations
-Opt.Est.Maximum.Iterations <- 5
+# Smaller values lead to finer approximations but require more computation 
+# (set to 0.025 by default) 
+optimization.precision <- 0.05 
 
 # Parameter indicating whether to center the treatement policy to ensure that 
 # probability of treatment assignment for null treatment effect is 0.5. 
@@ -159,8 +153,6 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 precision=optimization.precision,
                                 centered=centered,
                                 SL.library = SL.library, 
-                                tol= Opt.Est.tolerance, 
-                                max_iter=Opt.Est.Maximum.Iterations, 
                                 root.path=root.path)
 
 if(is.list(output)){
