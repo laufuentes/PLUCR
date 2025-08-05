@@ -120,7 +120,7 @@ main_algorithm <- function(X, A, Y, Xi,
         beta_0 <- beta
         max_policy_value <- res_0[[1]]$lwr_bound_policy_value
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-        saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
+        #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
         saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
         combinations <- rbind(combinations, c(beta_0, 0))
         saved <- TRUE}
@@ -154,7 +154,7 @@ main_algorithm <- function(X, A, Y, Xi,
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
         if (!saved && res[[1]]$constraint < 0) {
           saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
-          saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
+          #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
           attr(theta_opt, "lambda") <- lambda
           attr(theta_opt, "beta") <- beta
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
@@ -167,8 +167,8 @@ main_algorithm <- function(X, A, Y, Xi,
       }
     }
   # Delete all intermediate results
-  files_del <- file.path(root.path,"Intermediate")
-  unlink(files_del, recursive = TRUE)
+  #files_del <- file.path(root.path,"Intermediate")
+  #unlink(files_del, recursive = TRUE)
   
   # Select the optimal combination (beta, lambda)
   optimal_combination <- get_opt_beta_lambda(combinations,root.path)

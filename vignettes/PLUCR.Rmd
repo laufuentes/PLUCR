@@ -20,15 +20,15 @@ knitr::opts_chunk$set(
 
 # 1. Introduction
 
-The `PLUCR` package provides tools for estimating treatment policies that maximize a primary clinical outcome while controlling for the occurrence of adverse events. This dual-objective framework is particularly relevant in medical or decision-making settings where benefits must be balanced against potential harms.
+The `PLUCR` package provides tools for estimating treatment probabilities that maximize a primary clinical outcome while controlling for the occurrence of adverse events. This dual-objective framework is particularly relevant in medical or decision-making settings where benefits must be balanced against potential harms.
 
-Many existing methods derive treatment policies based on the sign of the Conditional Average Treatment Effect (CATE). In this setup, individuals with a positive CATE are assigned treatment, as it is expected to be beneficial; those with a non-positive CATE are not treated. While effective in simple settings, this strategy becomes inadequate when multiple outcomes must be considered — particularly when adverse events are ignored.
+Many existing methods derive treatment policies based on the sign of the Conditional Average Treatment Effect (CATE). In this setup, individuals with a positive CATE are assigned treatment, as it is expected to be beneficial; those with a non-positive CATE are not treated. While effective in simple settings, this strategy becomes inadequate when multiple outcomes must be considered, particularly when adverse events are ignored.
 
-`PLUCR` addresses this limitation by framing the policy learning task as a constrained optimization problem. The goal is to learn a policy that not only improves the primary outcome but also respects pre-specified constraints on adverse effects. The method implemented in `PLUCR` estimates treatment policies by adapting the Conditional Average Treatment Effect (CATE) to ensure compliance with a predefined constraint on adverse events. This is achieved through an iterative procedure that alternates between optimizing the policy and correcting its estimator, ultimately leading to a constrained-optimal policy.
+`PLUCR` addresses this limitation by framing the policy learning task as a constrained optimization problem. The goal is to learn a probability that not only improves the primary outcome but also respects pre-specified constraints on adverse effects. The method implemented in `PLUCR` estimates treatment probabilities by adapting the Conditional Average Treatment Effect (CATE) to ensure compliance with a predefined constraint on adverse events. This is achieved through an iterative procedure that alternates between optimizing the policy and correcting its estimator, ultimately leading to a constrained-optimal policy.
 
 # 2. Getting started 
 
-This section demonstrates a basic example of how to use the `PLUCR` package. We begin by generating a synthetic dataset and applying the main function, `main_algorithm()`, to learn an optimal policy under adverse event constraints.
+This section demonstrates a basic example of how to use the `PLUCR` package. We begin by generating a synthetic data set and applying the main function, `main_algorithm()`, to learn an optimal policy under adverse event constraints.
 
 ## 2.1. Installation
 
@@ -78,7 +78,7 @@ delta_nu <- exp[[4]]
 
 ## 2.3. Prepare Variables and Function parameters
 
-In this step, we extract the necessary variables from the observational dataset and define the parameters required by the `main_algorithm()` function. This includes specifying the covariates, treatment indicator, outcomes, and adverse events.
+In this step, we extract the necessary variables from the observational data set and define the parameters required by the `main_algorithm()` function. This includes specifying the covariates, treatment indicator, outcomes, and adverse events.
 
 ```{r,eval=FALSE}
 # Covariates matrix 
@@ -123,12 +123,12 @@ Beta_candidates <- c(0.05, 0.1, 0.25, 0.5)
 # Example: 0.2 means the policy may increase adverse event probability by up to 20%
 alpha.tolerance <- 0.2
 
-# Optimization precision: controls granularity of the policy search
-# Smaller values lead to finer approximations but require more computation 
-# (set to 0.025 by default) 
-optimization.precision <- 0.05 
+# Optimization precision: Controls the granularity of the policy search.
+# Smaller values lead to finer approximations but require more computation (default is 0.025).
+# For a quick toy example, you may prefer using 0.05 instead.
+optimization.precision <- 0.025 
 
-# Parameter indicating whether to center the treatement policy to ensure that 
+# Parameter indicating whether to center the treatment policy to ensure that 
 # probability of treatment assignment for null treatment effect is 0.5. 
 centered <- FALSE
 ```
@@ -136,7 +136,7 @@ centered <- FALSE
 ## 2.4. Run the main algorithm 
 With all variables and parameters defined, we now apply the `main_algorithm()` from the `PLUCR` package. This function executes the full estimation pipeline, consisting of the following steps:
 
-1- Estimation of nuisance components using the `SuperLearner` esemble framework
+1- Estimation of nuisance components using the `SuperLearner` ensemble framework
 
 2- Learning a treatment policy that maximizes the estimated policy value while enforcing the estimated constraint on the probability of adverse events. This is accomplished through an alternating optimization procedure that corrects the baseline estimator of the objective function.
 
@@ -170,7 +170,7 @@ The main function returns a list of matrices (`theta_0` and `theta_final`), or `
 psi_final <- PLUCR::make_psi(theta_final)
 
 # Obtain the optimal treatment rule by applying `sigma_beta` to the optimal `beta` associated to `theta_final`
-optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(psi_final, "beta"))
+optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(theta_final, "beta"))
 ```
 
 ## 2.5. Other results 
@@ -328,9 +328,7 @@ if(is.list(output)){
 Finally, we compare treatment recommendations across approaches by evaluating their estimated policy values and associated constraint violations.
 
 ```{r, eval=FALSE}
-eval_0 <- readRDS(file.path(root.path, "Evaluation", 
-                            paste0(attr(theta_0, "beta"), "_", 
-                                   attr(theta_0, "lambda"), ".rds")))
+eval_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=attr(theta_0, "lambda"), alpha.tolerance,  beta=attr(theta_0, "beta"), centered)[[1]]
 
 eval_final <- readRDS(file.path(root.path, "Evaluation", 
                                 paste0(attr(theta_final, "beta"), "_", 
@@ -364,49 +362,10 @@ plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(),
                        techniques = data$method, root.path = root.path)
 ```
 
- If working in a simulated setting with access to the true data-generating mechanisms, we can also compare their true (oracle) values.
+In a simulated setting where the true data-generating mechanisms are known, we can evaluate the oracle performance of each parameter value, `theta_naive`, `theta_0`, and `theta_final`, by computing their corresponding outcomes using the `oracular_process_results()` function, as demonstrated for `theta_oracular`.
+ 
 
-```{r, eval=FALSE}
-eval_final <- oracular_process_results(theta=theta_final, X=X_test,  
-                                          delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, 
-                                          scenario_nu = scenario_nu, 
-                                          lambda = attr(theta_final, "lambda"), 
-                                          alpha = alpha.tolerance, 
-                                          beta= attr(theta_final, "beta"))
-
-eval_naive <- oracular_process_results(theta=theta_naive, X=X_test,  
-                                          delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, 
-                                          scenario_nu = scenario_nu, 
-                                          lambda = attr(theta_naive, "lambda"), 
-                                          alpha = alpha.tolerance, 
-                                          beta= attr(theta_naive, "beta"))
-
-if(is.list(output)){
-  eval_0 <- oracular_process_results(theta=theta_0, X=X_test,  
-                                          delta_Mu = delta_mu, delta_Nu = delta_nu, 
-                                          scenario_mu = scenario_mu, scenario_nu = scenario_nu, 
-                                          lambda = attr(theta_0, "lambda"), 
-                                          alpha = alpha.tolerance, beta= attr(theta_0, "beta"))
-  
-data <- tibble( method = c("Theta_0", "Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_0$policy_value, eval_naive$policy_value, 
-                   eval_final$policy_value, eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, eval_naive$constraint, eval_final$constraint, 
-                 eval_oracular$constraint))
-}else{
-  data <- tibble(
-  method = c("Theta_naive", "Theta_final", "Theta_oracular"),
-  policy_value = c(eval_naive$policy_value, eval_final$policy_value, 
-                   eval_oracular$policy_value),
-  constraint = c(eval_naive$constraint, eval_final$constraint, eval_oracular$constraint))
-}
-
-# Call the function
-plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), 
-                       techniques = data$method, root.path = root.path)
-```
+Several binary treatment decisions can be derived from a single treatment probability recommendation. For instance, one may draw individual treatment assignments from a Bernoulli distribution with conditional mean given by the learned treatment probabilities. Alternatively, a decision threshold can be introduced, above which patients are assigned treatment and below which they are not. 
 
 # Appendix. Understanding the Algorithm Internally
 
