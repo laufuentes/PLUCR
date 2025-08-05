@@ -45,18 +45,16 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
       update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
   Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
-      update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
-  
-  mu1_X <- update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score))
-  mu0_X <- update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score))
+      update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score))}
   
   # Compute optimal policy value and its lower bound
   pi_X <- rbinom(nrow(X),1, prob= sigma_psi_X) # binary policy
-  epsilon_model <- epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + 
-                                                   ifelse(pi_X == A, HX(pi_X, X, prop_score),0), family = gaussian())
-  V_pn<- mean(plogis(qlogis(mu0(pi_X,X)) 
-                     + coef(epsilon_model) * ifelse(pi_X==A,HX(pi_X,X,prop_score),0))
-    )
+  epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + ifelse(pi_X == A, HX(pi_X, X, prop_score), 0),
+    family = gaussian())
+  
+  V_pn <- mean(mu0(pi_X, X) + 
+                 coef(epsilon_model) * ifelse(pi_X == A, HX(pi_X, X, prop_score), 0))
+  
   
   Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi_X,X))-V_pn) #varphi
   upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
