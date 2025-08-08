@@ -119,6 +119,7 @@ main_algorithm <- function(X, A, Y, Xi,
       if (res_0[[1]]$lwr_bound_policy_value > max_policy_value) {
         beta_0 <- beta
         max_policy_value <- res_0[[1]]$lwr_bound_policy_value
+        attr(theta_0, "beta")<- beta
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
         #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
         saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
@@ -133,7 +134,15 @@ main_algorithm <- function(X, A, Y, Xi,
     ##### If your constraint was already satified with lambda=0 return
     if(res_0[[2]]<0){
       warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
-      attr(theta_0, "beta") <- beta_0
+      optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+      beta <- optimal_combination$beta
+      theta_keep <- paste0(beta, "_", 0, ".rds")
+      theta_files <- list.files(file.path(root.path, "Theta_opt"))
+      theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
+      file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
+      eval_files <- list.files(file.path(root.path, "Evaluation"))
+      eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
+      file.remove(file.path(root.path,"Evaluation", eval_to_delete))
       return(theta_0)
     }
   }
