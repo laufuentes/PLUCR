@@ -15,7 +15,7 @@ model_Y_mix(X, A)
 A numeric vector with the transformed values based on covariates and treatment.
 }
 \description{
-Computes a linear interaction term between covariates and treatment.
+Computes a mix of a linear and threshold shaped interaction term between covariates and treatment.
 }
 \examples{
 X <- matrix(runif(10*2), 10, 2)

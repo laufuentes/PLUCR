@@ -20,5 +20,5 @@ Computes a threshold-based interaction term between covariates and treatment.
 \examples{
 X <- matrix(runif(10*2), 10, 2)
 A <- rep(1, 10)
-model_Xi_linear(X, A)
+model_Xi_mix(X, A)
 }

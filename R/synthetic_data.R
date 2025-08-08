@@ -12,7 +12,7 @@ logit <- qlogis
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' A <- rep(1, 10)
-#' h_Y(X, A)
+#' model_Y_linear(X, A)
 #' @export
 model_Y_linear <- function(X,A){
   return(2*A*(1- X[,1]-X[,2]))
@@ -38,7 +38,7 @@ model_Y_threshold <- function(X, A) {
 
 #' Mixed treatment effect on Y component function
 #'
-#' Computes a linear interaction term between covariates and treatment.
+#' Computes a mix of a linear and threshold shaped interaction term between covariates and treatment.
 #'
 #' @param X A matrix of covariates of size n x d (input data).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
@@ -54,6 +54,40 @@ model_Y_mix <- function(X, A) {
   linear_pred <- -(1- X[,1]-X[,2])
   effect <- ifelse(X[,1] < threshold & X[,2] < threshold,-3, linear_pred)
   return(-2 * A * effect)
+}
+
+#' No treatment effect on Y component function
+#'
+#' Computes a null treatment effect for everyone 
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
+#'
+#' @return A numeric vector with the transformed values based on covariates and treatment.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' A <- rep(1, 10)
+#' model_Y_null_TE(X, A)
+#' @export
+model_Y_null<- function(X,A){
+  return(0)
+}
+
+#' Constant treatment effect on Y component function
+#'
+#' Computes a null treatment effect for everyone 
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
+#'
+#' @return A numeric vector with the transformed values based on covariates and treatment.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' A <- rep(1, 10)
+#' model_Y_constant_TE(X, A)
+#' @export
+model_Y_constant<- function(X, A) {
+  return(A*2)
 }
 
 #' Linear treatment effect on Xi Component Function
@@ -88,7 +122,7 @@ model_Xi_linear <- function(X,A){
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' A <- rep(1, 10)
-#' model_Xi_linear(X, A)
+#' model_Xi_threshold(X, A)
 #' @export
 model_Xi_threshold <- function(X,A){
   n <- nrow(X)
@@ -110,7 +144,7 @@ model_Xi_threshold <- function(X,A){
 #' @examples
 #' X <- matrix(runif(10*2), 10, 2)
 #' A <- rep(1, 10)
-#' model_Xi_linear(X, A)
+#' model_Xi_mix(X, A)
 #' @export
 model_Xi_mix <- function(X, A) {
   n <- nrow(X)
@@ -133,6 +167,26 @@ model_Xi_mix <- function(X, A) {
   Xi.1 <- rbinom(n, 1, prob)
   
   return(ifelse(A == 1, Xi.1, Xi.0))
+}
+#' Low treatment effect on Xi
+#'
+#' Computes a close to zero interaction term between covariates and treatment.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#'
+#' @return A numeric vector with the transformed values based on covariates and treatment.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' A <- rep(1, 10)
+#' model_Xi_satisfied(X, A)
+#' @export
+model_Xi_satisfied <- function(X,A){
+  n <- nrow(X)
+  Xi.0 <- stats::rbinom(n,1,1e-2)
+  p1 <- 4*1e-2
+  Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
+  return(ifelse(A==1, Xi.1, Xi.0))
 }
 
 #' Linear-shaped Conditional Average Treatment Effect estimator for Y
@@ -188,6 +242,43 @@ delta_mu_mix <- function(X){
   return(out)
 }
 attr(delta_mu_mix, "vars")<- c(1, 2)
+
+#' Null Conditional Average Treatment Effect estimator for Y
+#'
+#' Computes the difference in expected Y outcomes under treatment and control.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#'
+#' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' delta_mu_null(X)
+#' @export
+delta_mu_null <- function(X){
+  n <- nrow(X)
+  out <- 0.55*(expit(model_Y_null(X,rep(1,n)))-expit(model_Y_null(X,rep(-1,n))))
+  return(out)
+}
+attr(delta_mu_null, "vars")<- c(1, 2)
+
+#' Constant Conditional Average Treatment Effect estimator for Y
+#'
+#' Computes the difference in expected Y outcomes under treatment and control.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#'
+#' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' delta_mu_null(X)
+#' @export
+delta_mu_constant <- function(X){
+  n <- nrow(X)
+  out <- 0.55*(expit(model_Y_constant(X,rep(1,n)))-expit(model_Y_constant(X,rep(-1,n))))
+  return(out)
+}
+attr(delta_mu_constant, "vars")<- c(1, 2)
+
 
 #' Linear-shaped Conditional Average Treatment Effect estimator for Xi
 #'
@@ -248,6 +339,22 @@ delta_nu_mix <- function(X){
 }
 attr(delta_nu_mix, "vars")<- c(1, 2)
 
+#' Computes the difference in expected outcomes under treatment and control.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#'
+#' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' delta_nu_mix(X)
+#' @export
+delta_nu_satisfied <- function(X){
+  p0 <- 1e-2
+  effect <- 4*1e-2
+  p1 <- p0 + (1-p0)*effect
+  return(p1-p0)
+}
+attr(delta_nu_satisfied, "vars")<- c(1, 2)
 
 #' Synthetic data generator and functions generator
 #'
@@ -267,7 +374,10 @@ attr(delta_nu_mix, "vars")<- c(1, 2)
 #' head(data[[1]])  # complete data
 #' head(data[[2]])  # observed data
 #' @export
-generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix"), scenario_nu=c("Linear", "Threshold", "Mix"), seed=NA){
+generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant"), 
+                          scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied"), baseline_Y =FALSE, 
+                          seed=NA){
+  # ncov <- 5L  
   ncov <- R.utils::Arguments$getIntegers(ncov, c(2, 15))
   scenario_mu <- match.arg(scenario_mu)
   scenario_nu <- match.arg(scenario_nu)
@@ -284,28 +394,46 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
     delta_Mu <- delta_mu_threshold
     mod_Y <- model_Y_threshold
     p.s <- expit(4*(X[,2]-1/2))
-  }else{
+  }else if(scenario_mu=="Mix"){
     delta_Mu <- delta_mu_mix
     mod_Y <- model_Y_mix 
     p.s <- expit(0.5*X[,3]+0.5*ifelse(X[,1]>0.3,1,0))
+  } else if(scenario_mu=="Null"){
+    delta_Mu <- delta_mu_null
+    mod_Y <- model_Y_null 
+    p.s <- expit(4*(X[,5]-1/2))
+  } else{
+    delta_Mu <- delta_mu_constant
+    mod_Y <- model_Y_constant
+    p.s <- expit(4*(X[,5]-1/2))
   }
+  outcome_X <- 3*X[,3] - X[,4]
+  epsilon_Y <- rnorm(n,0,1)  
   Treatment <- stats::rbinom(n,1,p.s)
-  epsilon_Y <- rnorm(n,0,1)
   
-  Y.1 <- 0.05 * expit(epsilon_Y) + 
-    0.95 * expit(mod_Y(X,rep(1,n)))
-  Y.0 <- 0.05 * expit(epsilon_Y) + 
-    0.95 * expit(mod_Y(X,rep(-1,n)))
-  
+  if(scenario_mu %in% c("Linear", "Threshold", "Mix")){
+    Y.1 <- 0.05 * expit(epsilon_Y) + 
+      0.95 * expit(mod_Y(X,rep(1,n)))
+    Y.0 <- 0.05 * expit(epsilon_Y) + 
+      0.95 * expit(mod_Y(X,rep(-1,n)))
+  }else{
+    Y.1 <- 0.05 * expit(epsilon_Y) + 0.55*expit(mod_Y(X,rep(1,n))) +
+      0.35*expit(outcome_X) 
+    Y.0 <- 0.05 * expit(epsilon_Y) + 0.55*expit(mod_Y(X,rep(-1,n))) +
+      0.35*expit(outcome_X)
+  }
   if(scenario_nu=="Linear"){
     delta_Nu <- delta_nu_linear
     mod_Xi <- model_Xi_linear
   }else if(scenario_nu=="Threshold"){
     delta_Nu <- delta_nu_threshold
     mod_Xi <- model_Xi_threshold
-  }else{
+  }else if(scenario_nu=="Mix"){
     delta_Nu <- delta_nu_mix
     mod_Xi <- model_Xi_mix 
+  }else{
+    delta_Nu <- delta_nu_satisfied
+    mod_Xi <- model_Xi_satisfied  
   }
   Xi.0 <- mod_Xi(X, rep(-1,n))
   Xi.1<- mod_Xi(X, rep(1,n))
