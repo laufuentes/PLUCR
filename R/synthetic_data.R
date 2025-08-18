@@ -362,8 +362,9 @@ attr(delta_nu_satisfied, "vars")<- c(1, 2)
 #'
 #' @param n Number of observations to generate.
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
-#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
-#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
+#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Null", "Constant").
+#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix", "Satisfied").
+#' @param is_RCT Logical value indicating whether the scenario is an RCT (FALSE by default). 
 #' @param seed Integer or NA (NA by default).
 #'
 #' @return A list containing two data frames (\code{df_complete} with all potential outcomes and 
@@ -375,7 +376,7 @@ attr(delta_nu_satisfied, "vars")<- c(1, 2)
 #' head(data[[2]])  # observed data
 #' @export
 generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant"), 
-                          scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied"), baseline_Y =FALSE, 
+                          scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied"), is_RCT=FALSE, 
                           seed=NA){
   # ncov <- 5L  
   ncov <- R.utils::Arguments$getIntegers(ncov, c(2, 15))
@@ -406,6 +407,10 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
     delta_Mu <- delta_mu_constant
     mod_Y <- model_Y_constant
     p.s <- expit(4*(X[,5]-1/2))
+  }
+  
+  if(is_RCT){
+    p.s <- rep(0.5, nrow(X))
   }
   outcome_X <- 3*X[,3] - X[,4]
   epsilon_Y <- rnorm(n,0,1)  
@@ -452,3 +457,4 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
                       Xi=ifelse(Treatment==1,Xi.1,Xi.0))
   return(list(df_complete, df_obs, delta_Mu, delta_Nu))
 }
+

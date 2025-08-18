@@ -9,7 +9,7 @@ generate_data(
   ncov = 10L,
   scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Constant"),
   scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied"),
-  baseline_Y = FALSE,
+  is_RCT = FALSE,
   seed = NA
 )
 }
@@ -18,9 +18,11 @@ generate_data(
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
 
-\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").}
+\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Null", "Constant").}
 
-\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").}
+\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix", "Satisfied").}
+
+\item{is_RCT}{Logical value indicating whether the scenario is an RCT (FALSE by default).}
 
 \item{seed}{Integer or NA (NA by default).}
 }
