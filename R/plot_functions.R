@@ -126,96 +126,6 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
   return("Image saved")
 }
 
-
-#' Visualize the evolution of the solutions psi obtained iteratively.  
-#' 
-#' Plot of the density of tje sigma_psi solutions obtained iteratively and the qq plot of the .  
-#' 
-#' @param intermediate_result File from Intermediate folder gathering results from alternated procedure. 
-#' @param theta_opt The real numeric matrix (k x d). Each row is from oracular FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param theta_t An estimated numeric matrix (k x d). Each row is from T-learner FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param X_test A matrix of covariates from test data, of size n_test x d (input data).
-#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
-#' @param root.path Path to the folder where images are to be saved.
-#' @param name A string to add to the end of filename. 
-#' @return A message indicating that the image was saved.
-#' @export
-iterative_psi_evolution <- function(intermediate_result, theta_opt, theta_t, X_test, 
-                                    beta=0.05, centered=FALSE, 
-                                    root.path, name){
-  `%>%`<- magrittr::`%>%`
-  qq_plots <- NULL
-  density_plots <- NULL
-  ecdf_plots <- NULL
-  
-  # intermediate_result$theta_collection[[length(intermediate_result$theta_collection)+1]]<- intermediate_result$last_theta
-  for(i in 1:length(intermediate_result$theta_collection)){
-    theta_corr <- intermediate_result$theta_collection[[i]]
-    current_psi <- make_psi(theta_corr)(X_test)
-    
-    df <- tibble::tibble(ora=PLUCR::sigma_beta(make_psi(theta_opt)(X_test), beta= 0.05, centered=centered),
-                 tlearner=PLUCR::sigma_beta(make_psi(theta_t)(X_test), beta=0.05, centered=centered),
-                 corr=PLUCR::sigma_beta(current_psi, beta=0.05, centered=centered))
-    
-    rmse_tlearner <- sqrt(mean((df$tlearner - df$ora)^2))
-    rmse_corr <- sqrt(mean((df$corr - df$ora)^2))
-    max_rse_tlearner <- max(sqrt((df$tlearner - df$ora)^2))
-    max_rse_corr <- max(sqrt((df$corr - df$ora)^2))
-    
-    df_long_qq <- df %>%
-      mutate(position=round(100 * (ecdf(ora)(ora)))) %>% 
-      group_by(position) %>% slice_sample(n = 1)%>%
-      pivot_longer(cols = c(tlearner, corr), names_to = "method", values_to = "value")
-    
-    p_qq <- ggplot(df_long_qq, aes(x = ora, y = value, color = method)) +
-      geom_point(alpha = 0.6) + 
-      geom_abline(intercept = 0, slope = 1, color = "red") +
-      labs(
-        subtitle = sprintf("RMSE: T-Learner = %.3f, Corrected = %.3f", rmse_tlearner, rmse_corr),
-        x = "Oracle",
-        y = "Estimated",
-        color = "Method") +
-      theme_minimal()
-    
-    qq_plots <- append(qq_plots, list(p_qq))
-    
-    df_long<- df %>%
-      pivot_longer(cols = everything(), names_to = "method", values_to = "value")
-    
-    p_density <- ggplot(df_long, aes(x = value, color = method, fill = method)) +
-      geom_density(alpha = 0.3) +
-      labs(x = "sigma_beta Value",
-           y = "Density") +
-      theme_minimal()
-    density_plots <- append(density_plots, list(p_density))
-    
-    p_ecdf <- ggplot(df_long, aes(x = value, color = method)) +
-      stat_ecdf(geom = "step", direction = "hv") +  # 'hv' makes it ECQF-like
-      coord_flip() +  # Flip axes to show quantile function (x = quantile)
-      labs(
-        x = "Quantile",
-        y = "Value",
-        color = "Method"
-      ) +
-      theme_minimal()
-    ecdf_plots <- append(ecdf_plots, list(p_ecdf))
-  }
-  full_qq <- wrap_plots(qq_plots, ncol = 5) +
-    plot_annotation(title = "QQ Plot: Oracle vs Estimated psi over Iterations")
-  ggsave(filename = file.path(root.path, "Images", paste0("psi_evol_", name, ".pdf")), plot = full_qq, width = 19, height = 10)
-  
-  full_density <- wrap_plots(density_plots, ncol = 5) +
-    plot_annotation(title = "Density Plot of sigma_beta Outputs")
-  ggsave(filename = file.path(root.path, "Images", paste0("sigma_psi_density_", name, ".pdf")), plot = full_density, width = 19, height = 10)
-  
-  full_ecdf <- wrap_plots(ecdf_plots, ncol = 5) +
-    plot_annotation(title = "Empirical Quantile Function (ECQF) of sigma_beta")
-  ggsave(filename = file.path(root.path, "Images", paste0("sigma_psi_ecdf_", name, ".pdf")), plot = full_ecdf, width = 19, height = 10)
-  
-  return("Images saved")
-}
-
 #' Plot synthetic data setting
 #'
 #' Generates and saves a two-panel plot:
@@ -250,20 +160,33 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
     }
     return(delta_Nu(mat))
   } 
+  
+  x_col <- paste0("X", vars_nu[1])
+  y_col <- paste0("X", vars_nu[2])
   df <- tidyr::expand_grid(x=seq(0,1,length.out=B), 
                     y=seq(0,1,length.out=B))
   df$delta_mu<-my_delta_Mu(df)
   df$delta_nu<-my_delta_Nu(df)
-  df <- df %>% 
-    tidyr::pivot_longer(cols = starts_with("delta"), 
-                 names_to = 'What', 
-                 values_to = 'Values')
-  ggplot2::ggplot(df)+
-    ggplot2::geom_raster(ggplot2::aes(x=x,y=y,fill=Values))+
-    ggplot2::facet_grid(~What)+ 
-    ggplot2::scale_fill_viridis_c(option = "magma")
+  df_long <- df %>%
+    tidyr::pivot_longer(
+      cols = starts_with("delta"),
+      names_to = "What",
+      values_to = "Values"
+    )
   
-  ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")))
+  df_long$What <- factor(df_long$What, levels = c("delta_mu", "delta_nu"))
+  
+  # Set the labels as strings that label_parsed can parse
+  levels(df_long$What) <- c("Delta * mu[0](X)", "Delta * nu[0](X)")
+  
+  p<- ggplot(df_long) +
+    geom_raster(aes(x = x, y = y, fill = Values)) +
+    facet_grid(~What, labeller = label_parsed) +  # label_parsed will parse the factor levels
+    scale_fill_viridis_c(option = "magma", limits = c(-1, 1)) +
+    labs(x = "X1", y = "X2") +
+    theme_minimal()
+  
+  ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")), width = 5, height = 4)
 }
 
 #' Plot metric values for comparison

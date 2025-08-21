@@ -15,7 +15,8 @@ logit <- qlogis
 #' model_Y_linear(X, A)
 #' @export
 model_Y_linear <- function(X,A){
-  return(2*A*(1- X[,1]-X[,2]))
+  out <- 2*A*(1- X[,1]-X[,2])
+  return(out)
 }
 
 #' Thresholded treatment effect on Y component function
@@ -33,7 +34,8 @@ model_Y_linear <- function(X,A){
 #' @export
 model_Y_threshold <- function(X, A) {
   form <- ifelse(X[,1]>0.4,0.6,-0.4) + ifelse(X[,2]>0.6, 0.5,-0.5)
-  return(A*form)
+  out <- A*form
+  return(out)
 }
 
 #' Mixed treatment effect on Y component function
@@ -53,7 +55,8 @@ model_Y_mix <- function(X, A) {
   threshold <- 0.3
   linear_pred <- -(1- X[,1]-X[,2])
   effect <- ifelse(X[,1] < threshold & X[,2] < threshold,-3, linear_pred)
-  return(-2 * A * effect)
+  out <- -2 * A * effect
+  return(out)
 }
 
 #' No treatment effect on Y component function
@@ -87,7 +90,8 @@ model_Y_null<- function(X,A){
 #' model_Y_constant_TE(X, A)
 #' @export
 model_Y_constant<- function(X, A) {
-  return(A*2)
+  out <- A*2
+  return(out)
 }
 
 #' Linear treatment effect on Xi Component Function
@@ -108,7 +112,9 @@ model_Xi_linear <- function(X,A){
   Xi.0 <- stats::rbinom(n,1,0.25)
   p1 <- expit(4*(X[,2]-1/2))
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
-  return(ifelse(A==1, Xi.1, Xi.0))
+  
+  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
+  return(Xi.obs)
 }
 
 #' Thresholded treatment effect on Xi component function
@@ -130,7 +136,8 @@ model_Xi_threshold <- function(X,A){
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   p1 <- ifelse(in_square, 0.85, 0.35)
   Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n,1,p1))
-  return(ifelse(A==1, Xi.1, Xi.0))
+  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
+  return(Xi.obs)
 }
 
 #' Mixed treatment effect on Xi component function
@@ -166,7 +173,8 @@ model_Xi_mix <- function(X, A) {
   Xi.0 <- rbinom(n, 1, 0.1)
   Xi.1 <- rbinom(n, 1, prob)
   
-  return(ifelse(A == 1, Xi.1, Xi.0))
+  Xi.obs <- ifelse(A == 1, Xi.1, Xi.0)
+  return(Xi.obs)
 }
 #' Low treatment effect on Xi
 #'
@@ -186,7 +194,8 @@ model_Xi_satisfied <- function(X,A){
   Xi.0 <- stats::rbinom(n,1,1e-2)
   p1 <- 4*1e-2
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
-  return(ifelse(A==1, Xi.1, Xi.0))
+  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
+  return(Xi.obs)
 }
 
 #' Linear-shaped Conditional Average Treatment Effect estimator for Y
@@ -293,8 +302,9 @@ attr(delta_mu_constant, "vars")<- c(1, 2)
 #' @export
 delta_nu_linear <- function(X){
   p0 <- 0.25
-  p1 <- 0.25 + 0.75*expit(4*(X[,2]-1/2))
-  return(p1-p0)
+  p1 <- 0.25 + 0.75*expit(4*(X[,2]-1/2)) 
+  out <- p1-p0
+  return(out)
 }
 attr(delta_nu_linear, "vars")<- c(1, 2)
 
@@ -313,7 +323,8 @@ delta_nu_threshold <- function(X){
   p0 <- 0.1
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   p1 <- 0.1+  0.9*ifelse(in_square, 0.85, 0.35)
-  return(p1-p0)
+  out <- p1-p0
+  return(out)
 }
 attr(delta_nu_threshold, "vars")<- c(3, 4)
 
@@ -352,7 +363,8 @@ delta_nu_satisfied <- function(X){
   p0 <- 1e-2
   effect <- 4*1e-2
   p1 <- p0 + (1-p0)*effect
-  return(p1-p0)
+  out <- p1-p0
+  return(out)
 }
 attr(delta_nu_satisfied, "vars")<- c(1, 2)
 
