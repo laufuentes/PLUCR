@@ -143,10 +143,14 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
 V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L, 
-                scenario_mu=c("Linear", "Threshold", "Mix"), 
-                scenario_nu=c("Linear", "Threshold", "Mix"), seed=NA){
+                scenario_mu=c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"), 
+                scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), seed=NA){
   `%>%`<- magrittr::`%>%`
-  df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
+  if(scenario_mu=="Realistic"){
+    df <- generate_realistic_data(B, ncov=5L, seed=NA)[[1]]
+  }else{
+    df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
+  }
   X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
   y1 <- df$Y.1
   y0 <- df$Y.0
@@ -160,6 +164,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L,
   out <- mean(action * y1 + (1 - action) * y0)
   return(out)
 }
+
 
 #' Estimation of policy value
 #'

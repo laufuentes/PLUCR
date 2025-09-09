@@ -170,13 +170,18 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
 #' @return A vector of optimized policy parameters (`theta`) trained across folds.
 #' @export
 oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov=10L, 
-                                     scenario_mu=c("Linear", "Threshold", "Mix"), 
-                                     scenario_nu=c("Linear", "Threshold", "Mix"), 
+                                     scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant", "Realistic"), 
+                                     scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), 
                                      lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   psi<- make_psi(theta)
   # Compute optimal policy value and its lower bound
-  Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
-                      scenario_mu=scenario_mu, scenario_nu=scenario_nu) 
+  if(scenario_mu=="Realistic"){
+    Value_policy <- V_p_realistic(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
+                        scenario_mu=scenario_mu, scenario_nu=scenario_nu)
+  }else{
+    Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
+                        scenario_mu=scenario_mu, scenario_nu=scenario_nu)
+  }
   
   # Extract the policy for the current index
   results <- data.frame(

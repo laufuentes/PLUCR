@@ -11,8 +11,8 @@ V_p(
   alpha = 0.1,
   B = 10000,
   ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix"),
-  scenario_nu = c("Linear", "Threshold", "Mix"),
+  scenario_mu = c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"),
+  scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),
   seed = NA
 )
 }
