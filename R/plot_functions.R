@@ -189,6 +189,87 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")), width = 5, height = 4)
 }
 
+#' Plot realistic data setting
+#'
+#' Generates and saves a two-panel plot:
+#' one showing the sign of the treatment effect (`delta_Mu`) and the other
+#' visualizing the magnitude of selection effect (`delta_Nu`) across covariates X.1 and X.2.
+#'
+#' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
+#' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.
+#' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
+#' @param root.path Path to the folder where images are to be saved.
+#' @param name A string to add to the end of filename. 
+#' @return Saves a plot to "Images/synthetic_setting.pdf".
+#' @export
+plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
+  `%>%` <- magrittr::`%>%`
+  vars_mu <- attr(delta_Mu, "vars")
+  vars_nu <- attr(delta_Nu, "vars")
+  
+  my_delta_Mu <- function(df) {
+    df <- as.matrix(df)
+    mat <- matrix(0, nrow = nrow(df), ncol = max(vars_mu))
+    for (i in seq_along(vars_mu)) {
+      mat[, vars_mu[i]] <- df[, i]
+    }
+    delta_Mu(mat)
+  }
+  
+  my_delta_Nu <- function(df) {
+    df <- as.matrix(df)
+    mat <- matrix(0, nrow = nrow(df), ncol = max(vars_nu))
+    for (i in seq_along(vars_nu)) {
+      mat[, vars_nu[i]] <- df[, i]
+    }
+    delta_Nu(mat)
+  }
+  
+  # Generate grid for mu (continuous) and nu (binary) separately
+  # vars_mu: continuous ranges
+  x_mu <- as.integer(seq(18, 85, length.out = B))  # for column 1
+  y_mu <- seq(1, 10, length.out = B)   # for column 4 (adjust as needed)
+  
+  # vars_nu: binary ranges
+  x_nu <- c(0,1)  # column 2
+  y_nu <- c(0,1)  # column 3
+  
+  df_mu <- tidyr::expand_grid(x = x_mu, y = y_mu)
+  df_mu$delta_mu <- my_delta_Mu(df_mu)
+  
+  df_nu <- tidyr::expand_grid(x = x_nu, y = y_nu)[-2,]
+  df_nu$delta_nu <- my_delta_Nu(df_nu)
+  
+  # Now column names are the same: x, y, delta_*
+  df_mu_long <- df_mu %>% tidyr::pivot_longer(cols = delta_mu,
+                                              names_to = "What", values_to = "Values")
+  df_nu_long <- df_nu %>% tidyr::pivot_longer(cols = delta_nu,
+                                              names_to = "What", values_to = "Values")
+  
+  df_long <- rbind(df_mu_long, df_nu_long)
+  df_long$What <- factor(df_long$What, levels = c("delta_mu", "delta_nu"))
+  levels(df_long$What) <- c("Delta * mu[0](X)", "Delta * nu[0](X)")
+  
+  # Plot
+  p_mu <- ggplot(df_mu_long) +
+    geom_raster(aes(x = x,y = y,fill = Values))+
+    scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
+    labs(x = "age", y = "X4") +
+    theme(legend.position = "none")
+  
+  p_nu <- ggplot(df_nu_long) +
+    geom_raster(aes(x = x,y = y,fill = Values))+
+    scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
+    labs(x = "sex", y = "is_pregnant") +
+    theme_minimal()
+  
+  p <- gridExtra::grid.arrange(p_mu, p_nu, ncol = 2)
+  
+  ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_", name, ".pdf")), plot = p)
+}
+
+
+
 #' Plot metric values for comparison
 #'
 #' Creates a comparison plot of different metrics across different treatment rule estimation methods.

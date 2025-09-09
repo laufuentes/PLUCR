@@ -470,3 +470,151 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
   return(list(df_complete, df_obs, delta_Mu, delta_Nu))
 }
 
+#' Realistic treatment effect on Y component function
+#'
+#' Computes a realistic interaction term between covariates and treatment.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#'
+#' @return A numeric vector with the transformed values based on covariates and treatment.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' A <- rep(1, 10)
+#' model_Y_linear(X, A)
+#' @export
+model_Y_realistic <- function(X,A){
+  out <- A * (-0.5 + 0.01 * X[,1])
+  return(out)
+}
+
+#' Realistic treatment effect on Xi Component Function
+#'
+#' Computes a realistic interaction term between covariates and treatment.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#'
+#' @return A numeric vector with the transformed values based on covariates and treatment.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' A <- rep(1, 10)
+#' model_Xi_linear(X, A)
+#' @export
+model_Xi_realistic <- function(X,A){
+  n <- nrow(X)
+  sex <- X[,2]
+  is_pregnant <- X[,3]
+  Xi.0 <- Xi.1 <- rep(0, n)
+  Xi.1 <- ifelse(sex==0,0, rbinom(n,1, p=0.35))
+  mask <- ifelse((A == 1) & (is_pregnant == 1),1,0)
+  Xi.1[mask==1] <- 1
+  
+  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
+  return(Xi.obs)
+}
+
+#' Realistic Conditional Average Treatment Effect estimator for Y
+#'
+#' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#'
+#' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' delta_mu(X)
+#' @export
+delta_mu_realistic <- function(X){
+  n <- nrow(X)
+  out <- model_Y_realistic(X,rep(1,n))-model_Y_realistic(X,rep(-1,n))
+  return(out)
+}
+attr(delta_mu_realistic, "vars")<- c(1, 4)
+
+#' Realistic Conditional Average Treatment Effect estimator for Xi
+#'
+#' Computes the difference in expected outcomes under treatment and control.
+#'
+#' @param X A matrix of covariates of size n x d (input data).
+#'
+#' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
+#' @examples
+#' X <- matrix(runif(10*2), 10, 2)
+#' delta_nu(X)
+#' @export
+delta_nu_realistic <- function(X){
+  p0 <- 0
+  p1 <- ifelse(X[,3]==1,1, ifelse(X[,2]==1,0.35,0))
+  out <- p1-p0
+  return(out)
+}
+attr(delta_nu_realistic, "vars")<- c(2, 3)
+
+
+#' Realistic synthetic data generator and functions generator
+#'
+#' Generates a realistic dataset simulating treatment assignment, covariates, and potential outcomes.
+#'
+#' @param n Number of observations to generate.
+#' @param ncov Number of baseline covariates (at least 2L and 10L by default).
+#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Null", "Constant").
+#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix", "Satisfied").
+#' @param is_RCT Logical value indicating whether the scenario is an RCT (FALSE by default). 
+#' @param seed Integer or NA (NA by default).
+#'
+#' @return A list containing two data frames (\code{df_complete} with all potential outcomes and 
+#' treatment assignments and  \code{df_obs} with observed outcomes based on treatment) and the oracular 
+#' functions delta_Mu and delta_Nu. 
+#' @examples
+#' data <- data_gen(100)
+#' head(data[[1]])  # complete data
+#' head(data[[2]])  # observed data
+#' @export
+generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenario_nu="Realistic", 
+                                    is_RCT=FALSE, seed=NA){
+  ncov <- R.utils::Arguments$getIntegers(ncov, c(2, 15))
+  scenario_mu <- match.arg(scenario_mu)
+  scenario_nu <- match.arg(scenario_nu)
+  if(!is.na(seed)){
+    set.seed(seed)
+  }
+  
+  sex <- as.integer(rbinom(n,1, 0.5)) # 1: woman, 0: man
+  age <- round(pmin(pmax(rnorm(n, mean = 55, sd = 15), 18), 85))
+  is_pregnancy_window <- ifelse(age >= 18 & age <= 45 & sex == 1, 1, 0)
+  is_pregnant <- ifelse(is_pregnancy_window==0, 0, rbinom(n, 1, 0.3))
+  
+  X <- matrix(cbind(age, sex, is_pregnant,
+                    matrix(stats::runif(n*(ncov-3),1,10), n, ncov-3)), 
+              n,ncov)
+  delta_Mu <- delta_mu_realistic
+  delta_Nu <- delta_nu_realistic
+  mod_Y <- model_Y_realistic
+  mod_Xi <- model_Xi_realistic
+  p.s <- expit(-0.5 + 0.2 * (age - 55) -0.5 * sex + 0.6 * X[,4])
+  
+  if(is_RCT){
+    p.s <- rep(0.5, nrow(X))
+  }
+  outcome_X <- 2*expit(4*X[,4] - 2*X[,5])
+  epsilon_Y <- rnorm(n,0,1)  
+  Treatment <- stats::rbinom(n,1,p.s)
+  
+  Y.1 <- epsilon_Y + mod_Y(X,rep(1,n)) + outcome_X
+  Y.0 <- epsilon_Y + mod_Y(X,rep(-1,n)) + outcome_X
+  
+  Xi.0 <- model_Xi_realistic(X,rep(-1,n))
+  Xi.1 <- model_Xi_realistic(X, rep(1,n))
+  
+  df_complete <- data.frame(X=X,Treatment, Y.1=Y.1, Y.0=Y.0,
+                            Xi.1=Xi.1, Xi.0=Xi.0, 
+                            Y=ifelse(Treatment==1,Y.1,Y.0), 
+                            Xi=ifelse(Treatment==1,Xi.1,Xi.0))
+  df_obs<- data.frame(X=X,Treatment,
+                      Y=ifelse(Treatment==1,Y.1,Y.0),
+                      Xi=ifelse(Treatment==1,Xi.1,Xi.0))
+  
+  return(list(df_complete, df_obs, delta_Mu, delta_Nu))
+}
+
