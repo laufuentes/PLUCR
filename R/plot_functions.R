@@ -179,11 +179,11 @@ synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
   # Set the labels as strings that label_parsed can parse
   levels(df_long$What) <- c("Delta * mu[0](X)", "Delta * nu[0](X)")
   
-  p<- ggplot(df_long) +
+  p<- ggplot2::ggplot(df_long) +
     geom_raster(aes(x = x, y = y, fill = Values)) +
     facet_grid(~What, labeller = label_parsed) +  # label_parsed will parse the factor levels
     scale_fill_viridis_c(option = "magma", limits = c(-1, 1)) +
-    labs(x = "X1", y = "X2") +
+    labs(x = "X[1]", y = "X[2]") +
     theme_minimal()
   
   ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")), width = 5, height = 4)
@@ -251,13 +251,13 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
   levels(df_long$What) <- c("Delta * mu[0](X)", "Delta * nu[0](X)")
   
   # Plot
-  p_mu <- ggplot(df_mu_long) +
+  p_mu <- ggplot2::ggplot(df_mu_long) +
     geom_raster(aes(x = x,y = y,fill = Values))+
     scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
     labs(x = "age", y = "X4") +
     theme(legend.position = "none")
   
-  p_nu <- ggplot(df_nu_long) +
+  p_nu <- ggplot2::ggplot(df_nu_long) +
     geom_raster(aes(x = x,y = y,fill = Values))+
     scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
     labs(x = "sex", y = "is_pregnant") +

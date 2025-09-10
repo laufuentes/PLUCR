@@ -142,7 +142,7 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e4, ncov=10L, 
+V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, ncov=10L, 
                 scenario_mu=c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"), 
                 scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), seed=NA){
   `%>%`<- magrittr::`%>%`

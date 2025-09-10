@@ -9,7 +9,7 @@ V_p(
   beta = 0.05,
   centered = FALSE,
   alpha = 0.1,
-  B = 10000,
+  B = 1e+06,
   ncov = 10L,
   scenario_mu = c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"),
   scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),

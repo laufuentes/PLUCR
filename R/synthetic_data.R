@@ -484,7 +484,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
 #' model_Y_linear(X, A)
 #' @export
 model_Y_realistic <- function(X,A){
-  out <- A * (-0.5 + 0.01 * X[,1])
+  out <- A * (-4 + 0.1 * X[,1])
   return(out)
 }
 
@@ -527,8 +527,10 @@ model_Xi_realistic <- function(X,A){
 #' @export
 delta_mu_realistic <- function(X){
   n <- nrow(X)
-  out <- model_Y_realistic(X,rep(1,n))-model_Y_realistic(X,rep(-1,n))
-  return(out)
+  out <- (model_Y_realistic(X,rep(1,n)))-(model_Y_realistic(X,rep(-1,n)))
+  # To be in [-1,1]:
+  out_in_range <- 2*((out-min(out))/(max(out)-min(out))) -1
+  return(out_in_range)
 }
 attr(delta_mu_realistic, "vars")<- c(1, 4)
 
@@ -581,7 +583,7 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
   }
   
   sex <- as.integer(rbinom(n,1, 0.5)) # 1: woman, 0: man
-  age <- round(pmin(pmax(rnorm(n, mean = 55, sd = 15), 18), 85))
+  age <- round(runif(n,16,65))
   is_pregnancy_window <- ifelse(age >= 18 & age <= 45 & sex == 1, 1, 0)
   is_pregnant <- ifelse(is_pregnancy_window==0, 0, rbinom(n, 1, 0.3))
   
@@ -617,4 +619,3 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
   
   return(list(df_complete, df_obs, delta_Mu, delta_Nu))
 }
-
