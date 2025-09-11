@@ -227,8 +227,8 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
   
   # Generate grid for mu (continuous) and nu (binary) separately
   # vars_mu: continuous ranges
-  x_mu <- as.integer(seq(18, 85, length.out = B))  # for column 1
-  y_mu <- seq(1, 10, length.out = B)   # for column 4 (adjust as needed)
+  x_mu <- as.integer(seq(16, 65, length.out = B))  # for column 1
+  y_mu <- seq(-4, 7, length.out = B)   # for column 4 (adjust as needed)
   
   # vars_nu: binary ranges
   x_nu <- c(0,1)  # column 2

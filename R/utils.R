@@ -29,7 +29,7 @@ check_data <- function(Y, Xi, A, X, folds) {
   ok <- TRUE
   
   # Check Y values
-  if (!is.numeric(Y) || !all(Y > 0 & Y < 1)) {
+  if (!is.numeric(Y) || !all(Y >= 0 & Y <= 1)) {
     diagnoses <- c(diagnoses, "Y must be numeric and contain values strictly between 0 and 1.")
     warning("Y must be numeric and contain values strictly between 0 and 1.")
     ok <- FALSE
@@ -142,18 +142,20 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, ncov=10L, 
+V_p <- function(psi, beta=0.05, centered=FALSEmake_psi(theta_oracular)(X_test), alpha=0.1, B=1e6, ncov=10L, 
                 scenario_mu=c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"), 
                 scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), seed=NA){
   `%>%`<- magrittr::`%>%`
   if(scenario_mu=="Realistic"){
     df <- generate_realistic_data(B, ncov=5L, seed=NA)[[1]]
+    y1 <- (df$Y.1 - min(df$Y.1))/(max(df$Y.1)-min(df$Y.1))
+    y0 <- (df$Y.0 - min(df$Y.0))/(max(df$Y.0)-min(df$Y.0))
   }else{
     df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
+    y1 <- df$Y.1
+    y0 <- df$Y.0
   }
   X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
-  y1 <- df$Y.1
-  y0 <- df$Y.0
   
   psi_X <- psi(X)
   sigma_psi <-sigma_beta(psi_X, beta, centered)

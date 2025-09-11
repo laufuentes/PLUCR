@@ -527,10 +527,9 @@ model_Xi_realistic <- function(X,A){
 #' @export
 delta_mu_realistic <- function(X){
   n <- nrow(X)
-  out <- (model_Y_realistic(X,rep(1,n)))-(model_Y_realistic(X,rep(-1,n)))
-  # To be in [-1,1]:
-  out_in_range <- 2*((out-min(out))/(max(out)-min(out))) -1
-  return(out_in_range)
+  temp <- (model_Y_realistic(X,rep(1,n)))-(model_Y_realistic(X,rep(-1,n)))
+  out <- temp / (attr(X,"max_Y")- attr(X,"min_Y"))
+  return(out)
 }
 attr(delta_mu_realistic, "vars")<- c(1, 4)
 
@@ -594,22 +593,26 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
   delta_Nu <- delta_nu_realistic
   mod_Y <- model_Y_realistic
   mod_Xi <- model_Xi_realistic
-  p.s <- expit(-0.5 + 0.2 * (age - 55) -0.5 * sex + 0.6 * X[,4])
+  p.s <- expit(-0.5*sex + 0.2 * (X[,5] - 5.5) + 0.6 * (X[,4]-5.5))
   
   if(is_RCT){
     p.s <- rep(0.5, nrow(X))
   }
-  outcome_X <- 2*expit(4*X[,4] - 2*X[,5])
+  outcome_X <- (0.4*X[,4] - 0.2*X[,5])
   epsilon_Y <- rnorm(n,0,1)  
   Treatment <- stats::rbinom(n,1,p.s)
   
-  Y.1 <- epsilon_Y + mod_Y(X,rep(1,n)) + outcome_X
-  Y.0 <- epsilon_Y + mod_Y(X,rep(-1,n)) + outcome_X
+  Y.1 <- 0.5*epsilon_Y + mod_Y(X,rep(1,n)) + outcome_X
+  Y.0 <- 0.5*epsilon_Y + mod_Y(X,rep(-1,n)) + outcome_X
+  delta_Mu <- delta_mu_realistic
+  delta_Nu <- delta_nu_realistic
   
   Xi.0 <- model_Xi_realistic(X,rep(-1,n))
   Xi.1 <- model_Xi_realistic(X, rep(1,n))
   
   df_complete <- data.frame(X=X,Treatment, Y.1=Y.1, Y.0=Y.0,
+                            min_Y=min(c(Y.1,Y.0)), 
+                            max_Y=max(c(Y.1,Y.0)),
                             Xi.1=Xi.1, Xi.0=Xi.0, 
                             Y=ifelse(Treatment==1,Y.1,Y.0), 
                             Xi=ifelse(Treatment==1,Xi.1,Xi.0))

@@ -7,7 +7,7 @@
 V_p(
   psi,
   beta = 0.05,
-  centered = FALSE,
+  centered = FALSEmake_psi(theta_oracular)(X_test),
   alpha = 0.1,
   B = 1e+06,
   ncov = 10L,
