@@ -124,20 +124,17 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
   mu_pi_X <- mu0(pi_X,X)
   
   Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu_AX + mu_pi_X)-V_pn) #varphi
-  upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
+  lower_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
   
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
     beta = beta,
     risk = R_p(psi, X, Delta_mu),
-    constraint = S_p(
-      psi, X,
-      beta, alpha, centered, 
-      Delta_nu),
+    constraint = S_p(psi, X,beta, alpha, centered, Delta_nu),
     obj = Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered),
     policy_value= V_pn,
-    lwr_bound_policy_value = upper_bound_V_pn)
+    lwr_bound_policy_value = lower_bound_V_pn)
   colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value")
   
   # Compute upper bound for constraint
@@ -178,13 +175,25 @@ oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov=10L,
   Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
                         scenario_mu=scenario_mu, scenario_nu=scenario_nu)
   
+  if(scenario_mu=="Realistic"){
+    X_norm <- (X - matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE)) /
+      (matrix(apply(X,2,max), nrow(X), ncol(X), byrow=TRUE) - 
+         matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE))
+    attr(X_norm, "min_Y") <- attr(X, "min_Y")
+    attr(X_norm, "max_Y") <- attr(X, "max_Y")
+    constraint <- mean(sigma_beta(psi(X_norm), beta) * delta_Nu(X)) - alpha
+    obj <- R_p(psi=psi, X, delta_Mu) + lambda*constraint
+  }else{
+    constraint <- S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu)
+    obj <- Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered)
+  }
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
     beta = beta,
     risk = R_p(psi=psi, X, delta_Mu),
-    constraint = S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu),
-    obj = Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered),
+    constraint = constraint,
+    obj = obj,
     policy_value= Value_policy)
   colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value")
   return(results) # Return the updated results for this index

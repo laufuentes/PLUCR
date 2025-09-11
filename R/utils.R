@@ -150,14 +150,20 @@ V_p <- function(psi, beta=0.05, centered=FALSEmake_psi(theta_oracular)(X_test), 
     df <- generate_realistic_data(B, ncov=5L, seed=NA)[[1]]
     y1 <- (df$Y.1 - min(df$Y.1))/(max(df$Y.1)-min(df$Y.1))
     y0 <- (df$Y.0 - min(df$Y.0))/(max(df$Y.0)-min(df$Y.0))
+    X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
+    X_norm <- (X - matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE)) /
+      (matrix(apply(X,2,max), nrow(X), ncol(X), byrow=TRUE) - 
+         matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE))
+    attr(X, "min_Y") <- unique(df_complete$min_Y)
+    attr(X, "max_Y") <- unique(df_complete$max_Y)
+    psi_X <- psi(X_norm)
   }else{
     df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
     y1 <- df$Y.1
     y0 <- df$Y.0
+    X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
+    psi_X <- psi(X)
   }
-  X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
-  
-  psi_X <- psi(X)
   sigma_psi <-sigma_beta(psi_X, beta, centered)
   if(!is.na(seed)){
     set.seed(seed)
