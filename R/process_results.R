@@ -174,26 +174,15 @@ oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov=10L,
   # Compute optimal policy value and its lower bound
   Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
                         scenario_mu=scenario_mu, scenario_nu=scenario_nu)
-  
-  if(scenario_mu=="Realistic"){
-    X_norm <- (X - matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE)) /
-      (matrix(apply(X,2,max), nrow(X), ncol(X), byrow=TRUE) - 
-         matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE))
-    attr(X_norm, "min_Y") <- attr(X, "min_Y")
-    attr(X_norm, "max_Y") <- attr(X, "max_Y")
-    constraint <- mean(sigma_beta(psi(X_norm), beta) * delta_Nu(X)) - alpha
-    obj <- R_p(psi=psi, X, delta_Mu) + lambda*constraint
-  }else{
-    constraint <- S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu)
-    obj <- Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered)
-  }
+
+    
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
     beta = beta,
     risk = R_p(psi=psi, X, delta_Mu),
-    constraint = constraint,
-    obj = obj,
+    constraint = S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu),
+    obj = Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered),
     policy_value= Value_policy)
   colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value")
   return(results) # Return the updated results for this index
