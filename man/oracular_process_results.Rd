@@ -6,9 +6,6 @@
 \usage{
 oracular_process_results(
   theta,
-  X,
-  delta_Mu,
-  delta_Nu,
   ncov = 10L,
   scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Constant", "Realistic"),
   scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),
@@ -20,12 +17,6 @@ oracular_process_results(
 }
 \arguments{
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
-
-\item{X}{A matrix of covariates of size n x d (input data).}
-
-\item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
-
-\item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
 

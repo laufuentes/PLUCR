@@ -153,9 +153,6 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
 #' functions: risk, constraint, and the main objective and policy value. 
 #'
 #' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param X A matrix of covariates of size n x d (input data).
-#' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
-#' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
 #' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
 #' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
@@ -166,16 +163,35 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
 #'
 #' @return A vector of optimized policy parameters (`theta`) trained across folds.
 #' @export
-oracular_process_results <- function(theta, X, delta_Mu, delta_Nu, ncov=10L, 
+oracular_process_results <- function(theta, ncov=10L, 
                                      scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant", "Realistic"), 
                                      scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), 
                                      lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   psi<- make_psi(theta)
+  if(scenario_mu=="Realistic"){
+    exp<- generate_realistic_data(1e6)
+    df_complete <- exp[[1]]
+    df_obs <- exp[[2]]
+    X <- df_obs %>%
+      dplyr::select(starts_with("X."))%>% as.matrix()
+    X_norm <- phi(X)
+    attr(X_norm, "min_Y") <- unique(df_complete$min_Y)
+    attr(X_norm, "max_Y") <- unique(df_complete$max_Y)
+    delta_Mu <- function(x)exp[[3]](phi_inv(x))
+    delta_Nu <- function(x)exp[[4]](phi_inv(x))
+    X <- X_norm
+  }else{
+    exp<- generate_data(n=n,ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu)
+    df_obs <- exp[[2]]
+    X <- df_obs %>%
+      dplyr::select(starts_with("X."))%>% as.matrix()
+    delta_Mu <- exp[[3]]
+    delta_Nu <- exp[[4]]
+  }
   # Compute optimal policy value and its lower bound
   Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov, 
-                        scenario_mu=scenario_mu, scenario_nu=scenario_nu)
-
-    
+                      scenario_mu=scenario_mu, scenario_nu=scenario_nu)
+  
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,

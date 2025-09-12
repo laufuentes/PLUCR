@@ -218,3 +218,66 @@ HX <- function(A, X, prop_score){
 }
 
 
+#' Normalize a Matrix by Column Min-Max Scaling
+#'
+#' This function performs feature-wise min-max normalization on a matrix or data frame. 
+#' Each column is rescaled to the range \[0, 1\] using its minimum and maximum values.
+#' The minimum and maximum values are stored as attributes for later inverse transformation.
+#'
+#' @param u A numeric matrix or data frame. Each column will be normalized independently.
+#'
+#' @return A numeric matrix of the same dimensions as `u`, with all values rescaled to \[0, 1\].
+#' The returned matrix has two attributes:
+#' \itemize{
+#'   \item \code{"min_X"}: A matrix containing the column-wise minima.
+#'   \item \code{"max_X"}: A matrix containing the column-wise maxima.
+#' }
+#'
+#' @examples
+#' # Example matrix
+#' X <- matrix(c(1, 2, 3, 4, 5, 6), ncol = 2)
+#' X_norm <- phi(X)
+#' X_norm
+#' attributes(X_norm)$min_X
+#' attributes(X_norm)$max_X
+#'
+#' @export
+phi <- function(u) {
+  min_u <- matrix(apply(u, 2, min), nrow(u), ncol(u), byrow = TRUE)
+  max_u <- matrix(apply(u, 2, max), nrow(u), ncol(u), byrow = TRUE)
+  
+  out <- (u - min_u) / (max_u - min_u)
+  attr(out, "min_X") <- min_u
+  attr(out, "max_X") <- max_u
+  return(out) 
+}
+
+#' Inverse Min-Max Normalization
+#'
+#' This function reverses the min-max normalization applied by \code{\link{phi}}.
+#' It reconstructs the original scale of the data given a normalized matrix
+#' and the stored attributes \code{"min_X"} and \code{"max_X"}.
+#'
+#' @param t A normalized numeric matrix produced by \code{\link{phi}}, 
+#' containing attributes \code{"min_X"} and \code{"max_X"}.
+#'
+#' @return A numeric matrix with the same dimensions as `t`, rescaled back to the original values.
+#'
+#' @examples
+#' # Normalize and then invert
+#' X <- matrix(c(1, 2, 3, 4, 5, 6), ncol = 2)
+#' X_norm <- phi(X)
+#' X_recovered <- phi_inv(X_norm)
+#' all.equal(X, X_recovered)
+#'
+#' @export
+phi_inv <- function(t) {
+  min_u <- attr(t, "min_X")
+  max_u <- attr(t, "max_X")
+  
+  if (is.null(min_u) || is.null(max_u)) {
+    stop("Attributes 'min_X' and 'max_X' not found. Use phi() to normalize first.")
+  }
+  out <- t * (max_u - min_u) + min_u
+  return(out)
+}
