@@ -9,7 +9,7 @@ HX(A, X, prop_score)
 \arguments{
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \link{0,1}).}
 
 \item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 }

@@ -5,7 +5,7 @@
 #'
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -70,7 +70,7 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #'
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -133,7 +133,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #' using `SuperLearner`, applying cross-validation to compute out-of-fold estimates.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).

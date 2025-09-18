@@ -22,7 +22,7 @@ naive_process_results(
 \arguments{
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
 
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 

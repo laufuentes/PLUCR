@@ -7,7 +7,7 @@
 #' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #' 
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
@@ -161,7 +161,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
 #' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
 #' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
@@ -179,7 +179,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
 #' 
 #' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
-oracular_approach_algorithm <- function(X, A, Y, Xi, folds, 
+oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
                                      delta_Mu, delta_Nu, scenario_mu, scenario_nu, 
                                      Lambdas=seq(1, 8, by=1), alpha=0.1, 
                                      precision=0.05,B=c(0.05, 0.1, 0.25, 0.5), 
@@ -237,7 +237,7 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds,
   attr(theta_0, "lambda") <- 0 
   for(beta in B){
     saved <- FALSE
-    res <- oracular_process_results(theta_0, X_test, delta_Mu=delta_Mu, delta_Nu=delta_Nu, 
+    res <- oracular_process_results(theta_0, ncov= ncov,
                                     scenario_mu=scenario_mu, scenario_nu = scenario_nu, 
                                     lambda=0, alpha=alpha, beta=beta, centered=centered)
     if (!saved && res$constraint < 0) {
@@ -262,7 +262,7 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds,
                         delta_Nu=delta_Nu, 
                         lambda=lambda, beta=beta, precision=precision) 
         
-        res <- oracular_process_results(theta_opt, X_test, delta_Mu=delta_Mu, delta_Nu=delta_Nu, 
+        res <- oracular_process_results(theta_opt, ncov= ncov, 
                                         scenario_mu=scenario_mu, scenario_nu = scenario_nu, 
                                         lambda=lambda, alpha=alpha, beta=beta, centered=centered)
         if (!saved && res$constraint < 0) {

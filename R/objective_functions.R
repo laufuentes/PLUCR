@@ -4,7 +4,7 @@
 #' The function minimizes the squared error between \code{psi(X)} and \code{delta_Y(X)}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #'
 #' @return A numeric scalar representing the risk function value.
@@ -20,7 +20,7 @@ R_p <- function(psi, X, delta_Mu){
 #' This function enforces a limit on the expected impact of treatment via \code{delta_Z}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
@@ -34,13 +34,31 @@ S_p <- function(psi, X, beta, alpha, centered, delta_Nu){
     return(out)
 }
 
+#' Constraint function for binary policy
+#'
+#' Computes the constraint function \eqn{S_p}, which ensures that the learned policy satisfies a constraint. 
+#' This function enforces a limit on the expected impact of treatment via \code{delta_Z}.
+#'
+#' @param pi A numeric vector of binary decisions of length n.
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
+#'
+#' @return A numeric scalar representing the constraint function value.
+#' @export
+binary_S_p <- function (pi_X, X, alpha, delta_Nu) {
+  out <- mean(pi_X * delta_Nu(X)) - 
+    alpha
+  return(out)
+}
+
 #' Objective function taking the form of a Lagrangian
 #'
 #' Computes the objective function, which balances the risk function \code{R_p}  
 #' and the constraint function \code{S_p} using a parameter \code{lambda}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
@@ -61,7 +79,7 @@ Lagrangian_p <- function(psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, beta=0.0
 #' The gradient is used in optimization algorithms like Stochastic Gradient Descent (SGD).
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.

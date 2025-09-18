@@ -28,7 +28,7 @@ Optimization_Estimation(
 
 \item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 

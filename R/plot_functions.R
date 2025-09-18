@@ -139,55 +139,64 @@ plot_nuisance <- function(X, Var1, Var0, Var_learner, root.path, variable_name){
 #' @param name A string to add to the end of filename. 
 #' @return Saves a plot to "Images/synthetic_setting.pdf".
 #' @export
-synthetic_data_plot <-function(delta_Mu, delta_Nu, B=1e2, root.path, name){
-  `%>%`<- magrittr::`%>%`
-  # Add proper xlab and ylab for representation
+synthetic_data_plot <- function(delta_Mu, delta_Nu, B = 1e2, root.path, name) {
+  `%>%` <- magrittr::`%>%`
+  
   vars_mu <- attr(delta_Mu, "vars")
   vars_nu <- attr(delta_Nu, "vars")
-  my_delta_Mu <- function(df){
+  
+  my_delta_Mu <- function(df) {
     df <- as.matrix(df)
-    mat <- matrix(0, nrow=nrow(df), ncol = max(vars_mu))
-    for(i in 1:2){
-      mat[,vars_mu[i]]<- df[,i]
-    }
-    return(delta_Mu(mat))
-  } 
-  my_delta_Nu <- function(df){
+    mat <- matrix(0, nrow = nrow(df), ncol = max(vars_mu))
+    for (i in 1:2) mat[, vars_mu[i]] <- df[, i]
+    delta_Mu(mat)
+  }
+  my_delta_Nu <- function(df) {
     df <- as.matrix(df)
-    mat <- matrix(0, nrow=nrow(df), ncol = max(vars_nu))
-    for(i in 1:2){
-      mat[,vars_nu[i]]<- df[,i]
-    }
-    return(delta_Nu(mat))
-  } 
+    mat <- matrix(0, nrow = nrow(df), ncol = max(vars_nu))
+    for (i in 1:2) mat[, vars_nu[i]] <- df[, i]
+    delta_Nu(mat)
+  }
   
-  x_col <- paste0("X", vars_nu[1])
-  y_col <- paste0("X", vars_nu[2])
-  df <- tidyr::expand_grid(x=seq(0,1,length.out=B), 
-                    y=seq(0,1,length.out=B))
-  df$delta_mu<-my_delta_Mu(df)
-  df$delta_nu<-my_delta_Nu(df)
-  df_long <- df %>%
-    tidyr::pivot_longer(
-      cols = starts_with("delta"),
-      names_to = "What",
-      values_to = "Values"
-    )
+  df <- tidyr::expand_grid(
+    x = seq(0, 1, length.out = B),
+    y = seq(0, 1, length.out = B)
+  )
+  df$delta_mu <- my_delta_Mu(df)
+  df$delta_nu <- my_delta_Nu(df)
   
-  df_long$What <- factor(df_long$What, levels = c("delta_mu", "delta_nu"))
-  
-  # Set the labels as strings that label_parsed can parse
-  levels(df_long$What) <- c("Delta * mu[0](X)", "Delta * nu[0](X)")
-  
-  p<- ggplot2::ggplot(df_long) +
-    geom_raster(aes(x = x, y = y, fill = Values)) +
-    facet_grid(~What, labeller = label_parsed) +  # label_parsed will parse the factor levels
+  p_mu <- ggplot(df, aes(x = x, y = y, fill = delta_mu)) +
+    geom_raster() +
     scale_fill_viridis_c(option = "magma", limits = c(-1, 1)) +
-    labs(x = "X[1]", y = "X[2]") +
-    theme_minimal()
+    labs(
+      title = expression(Delta * mu[0](X)),
+      x = paste0("X", vars_mu[1]),
+      y = paste0("X", vars_mu[2]),
+      fill = NULL
+    ) +
+    theme_minimal() +
+    theme(legend.position = "none")   # <- no legend here
   
-  ggplot2::ggsave(file.path(root.path, "Images", paste0("Synthetic_data_plot_",name,".pdf")), width = 5, height = 4)
+  p_nu <- ggplot(df, aes(x = x, y = y, fill = delta_nu)) +
+    geom_raster() +
+    scale_fill_viridis_c(option = "magma", limits = c(-1, 1)) +
+    labs(
+      title = expression(Delta * nu[0](X)),
+      x = paste0("X", vars_nu[1]),
+      y = paste0("X", vars_nu[2]),
+      fill = NULL
+    ) +
+    theme_minimal()                   # <- legend stays here
+  
+  p <- gridExtra::grid.arrange(p_mu, p_nu, ncol = 2)
+  
+  ggplot2::ggsave(
+    filename = file.path(root.path, "Images", paste0("Synthetic_data_plot_", name, ".pdf")),
+    plot = p,
+    width = 8, height = 4
+  )
 }
+
 
 #' Plot realistic data setting
 #'

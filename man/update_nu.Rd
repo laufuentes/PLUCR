@@ -18,7 +18,7 @@ update_nu(
 \arguments{
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{nu0}{A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).}
 

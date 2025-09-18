@@ -19,7 +19,7 @@ logit <- qlogis
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #'
 #' @return A list with elements: `ok` (logical), and `diagnoses` (character vector of issues).
@@ -51,10 +51,16 @@ check_data <- function(Y, Xi, A, X, folds) {
   
   # Check X type
   if (!is.matrix(X) && !is.data.frame(X)) {
-    # Verifier qu'il n'y a pas des noms interdits
     diagnoses <- c(diagnoses, "X must be a matrix or data frame.")
     warning("X must be a matrix or data frame.")
     ok <- FALSE
+  } else {
+    X_mat <- as.matrix(X)
+    if (any(X_mat < 0 | X_mat > 1, na.rm = TRUE)) {
+      diagnoses <- c(diagnoses, "All entries of X must lie in [0, 1].")
+      warning("All entries of X must lie in [0, 1].")
+      ok <- FALSE
+    }
   }
   
   if (nrow(X) != length(Y) || nrow(X) != length(Xi) || nrow(X) != length(A)) {
@@ -181,7 +187,7 @@ V_p <- function(psi, beta=0.05, centered=FALSEmake_psi(theta_oracular)(X_test), 
 #' and the expected outcome is calculated using counterfactual outcomes.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param y1 A numeric vector or matrix of length n representing primary outcomes under treatment (in [0, 1]).
 #' @param y0 A numeric vector or matrix of length n representing primary outcomes under no treatment (in [0, 1]).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
@@ -201,7 +207,7 @@ V_Pn <- function(policy, y1, y0){
 #' This function computes the inverse propensity score weight based on treatment assignment and a propensity score model.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data).
+#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #'
 #' @return A numeric value representing the inverse propensity score weight.

@@ -17,7 +17,7 @@ FW(
 )
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 

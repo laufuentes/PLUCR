@@ -5,7 +5,7 @@ logit <- qlogis
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -23,7 +23,7 @@ model_Y_linear <- function(X,A){
 #'
 #' Computes a thresholded-shaped interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -42,7 +42,7 @@ model_Y_threshold <- function(X, A) {
 #'
 #' Computes a mix of a linear and threshold shaped interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -63,7 +63,7 @@ model_Y_mix <- function(X, A) {
 #'
 #' Computes a null treatment effect for everyone 
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -80,7 +80,7 @@ model_Y_null<- function(X,A){
 #'
 #' Computes a null treatment effect for everyone 
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -98,7 +98,7 @@ model_Y_constant<- function(X, A) {
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -121,7 +121,7 @@ model_Xi_linear <- function(X,A){
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -144,7 +144,7 @@ model_Xi_threshold <- function(X,A){
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -180,7 +180,7 @@ model_Xi_mix <- function(X, A) {
 #'
 #' Computes a close to zero interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
@@ -202,7 +202,7 @@ model_Xi_satisfied <- function(X,A){
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
@@ -220,7 +220,7 @@ attr(delta_mu_linear, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
@@ -238,7 +238,7 @@ attr(delta_mu_threshold, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
@@ -256,7 +256,7 @@ attr(delta_mu_mix, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
@@ -274,7 +274,7 @@ attr(delta_mu_null, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
@@ -293,7 +293,7 @@ attr(delta_mu_constant, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
@@ -312,7 +312,7 @@ attr(delta_nu_linear, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
@@ -332,7 +332,7 @@ attr(delta_nu_threshold, "vars")<- c(3, 4)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
@@ -352,7 +352,7 @@ attr(delta_nu_mix, "vars")<- c(1, 2)
 
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples

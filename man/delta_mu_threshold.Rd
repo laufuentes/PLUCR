@@ -7,7 +7,7 @@
 delta_mu_threshold(X)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 }
 \value{
 A numeric vector that represents the contrast between primary outcomes for given \code{X}.

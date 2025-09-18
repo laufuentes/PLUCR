@@ -43,7 +43,7 @@ update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
 #' then transforms back via the logistic function.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param epsilon1 A numeric vector of GLM coefficients for each column in \code{psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{psi} functions.
@@ -67,7 +67,7 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 #' then transforms back via the logistic function.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param epsilon2 A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.
@@ -95,7 +95,7 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).

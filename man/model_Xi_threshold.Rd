@@ -7,7 +7,7 @@
 model_Xi_threshold(X, A)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{A}{A vector indicating treatment assignment (+1 or -1) for each observation.}
 }

@@ -52,7 +52,7 @@ make_psi <- function(Theta) {
 #'
 #' @param theta_current A numeric matrix of size 1 x d (intialization for parameter to estimate).
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
@@ -126,7 +126,7 @@ SGD <- function(theta_current, psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, be
 #' is computed via stochastic gradient descent (SGD) and added to the convex combination  
 #' in the form \eqn{2 \cdot \text{expit}(X \theta) - 1}.
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.

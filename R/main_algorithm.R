@@ -8,7 +8,7 @@
 #' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #' 
 #'
-#' @param X A matrix of covariates of size n x d (input data).
+#' @param X A matrix of covariates of size n x d (input data in [0,1]).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).

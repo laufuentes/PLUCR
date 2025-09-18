@@ -13,7 +13,7 @@ V_Pn(policy, y1, y0)
 
 \item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \link{0,1}).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 

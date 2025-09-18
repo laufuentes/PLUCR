@@ -9,7 +9,7 @@ update_mu(A, X, mu0, epsilon1, theta_collection, prop_score)
 \arguments{
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
 

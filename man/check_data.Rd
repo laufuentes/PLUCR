@@ -13,7 +13,7 @@ check_data(Y, Xi, A, X, folds)
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \link{0,1}).}
 
 \item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
 }

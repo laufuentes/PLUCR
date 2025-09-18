@@ -23,7 +23,7 @@ main_algorithm(
 )
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data).}
+\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
 
 \item{A}{A binary vector of size n indicating treatment assignment (0 or 1).}
 
