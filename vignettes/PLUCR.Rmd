@@ -63,17 +63,8 @@ exp <- PLUCR::generate_data(n,
                             scenario_nu = scenario_nu, 
                             seed=2025) 
 
-# # Complete data (not available in real settings)
-df_complete <- exp[[1]] 
-
 # # Observational data (to be used for training)
 df_obs <- exp[[2]]
-
-# # Oracular delta mu function (treatment effect over Y conditionned on X) 
-delta_mu <- exp[[3]]
-
-# # Oracular delta mu function (treatment effect over Y conditionned on X) 
-delta_nu <- exp[[4]]
 ```
 
 ## 2.3. Prepare Variables and Function parameters
@@ -82,14 +73,22 @@ In this step, we extract the necessary variables from the observational data set
 
 ```{r,eval=FALSE}
 # Extract normalized numerical covariates as a matrix
-# Reminder: Categorical variables must be one-hot encoded 
-# before being included in the covariate matrix.
+# ---------------------------------------------------------------
+# Reminder:
+# - Ensure categorical variables are one-hot encoded 
+#   (dummy variables) prior to inclusion. 
+# ---------------------------------------------------------------
 
 X <- df_obs %>%
   dplyr::select(starts_with("X."))%>%
   as.matrix()
 
-# Note: To normalize the covariate matrix column-wise, you can apply:
+# ---------------------------------------------------------------
+# Optional: Normalize covariates
+# Applying phi(X) rescales each column of the covariate matrix X 
+# (e.g., centering and scaling) to improve numerical stability and 
+# ensure comparability across features.
+# ---------------------------------------------------------------
 # X <- phi(X)
 
 # Binary treatment assignment (0 = control, 1 = treated)
@@ -156,6 +155,10 @@ The output of this procedure includes:
 
 -A constrained-optimal policy, which achieves optimality while satisfying the pre-specified constraint on the expected rate of adverse events.
 ```{r, eval=FALSE}
+# ===============================================================
+# Run the Main Algorithm to Learn the Optimal Treatment Rule
+# ===============================================================
+
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                 Lambdas = Lambda_candidates,
                                 alpha=alpha.tolerance, 
@@ -164,6 +167,13 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 centered=centered,
                                 SL.library = SL.library, 
                                 root.path=root.path)
+
+# ---------------------------------------------------------------
+# Extract learned parameters from output
+# Depending on configuration, the algorithm may return:
+#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
+#   - A single theta object if constraint satisfied at lambda=0
+# ---------------------------------------------------------------
 
 if(is.list(output)){
   theta_0 <- output[[1]]
@@ -176,13 +186,57 @@ if(is.list(output)){
 The main function returns a list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps, as follows:
 
 ```{r, eval=FALSE}
-# First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). 
+# ===============================================================
+# Derive the Optimal Treatment Rule from Final Parameters
+# ===============================================================
+# ---------------------------------------------------------------
+# Step 1. Construct the decision function `psi` using the `make_psi` 
+# It maps covariates X to [-1,1] scores for treatment assignment.
+# ---------------------------------------------------------------
 psi_final <- PLUCR::make_psi(theta_final)
 
 # Obtain the optimal treatment rule by applying `sigma_beta` to the optimal `beta` associated to `theta_final`
+# ---------------------------------------------------------------
+# Step 2. Translate `psi(X)` into treatment probabilities
+# Apply the treatment probability function `sigma_beta`, 
+# controlled by beta. 
+# ---------------------------------------------------------------
 optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(theta_final, "beta"))
+```
 
-# Evaluate the optimal treatment rule 
+
+
+```{r, eval=FALSE}
+# ===============================================================
+# Evaluate the Optimal Treatment Rule
+# ===============================================================
+# ---------------------------------------------------------------
+# Step 1. Load pre-required objects (algorithm outputs)
+# ---------------------------------------------------------------
+folds <- readRDS(file.path(root.path,"Folds","folds.rds")) # Folds for splitting data 
+mu.hat.nj <- readRDS(file.path(root.path,"Mu.hat","mu.hat.nj.rds")) # Primary outcome model
+nu.hat.nj <- readRDS(file.path(root.path,"Nu.hat","nu.hat.nj.rds")) # Adverse event model
+ps.hat.nj <- readRDS(file.path(root.path,"PS.hat","ps.hat.nj.rds")) # Propensity score model 
+  
+# ---------------------------------------------------------------
+# Step 2. Extract the test set for policy evaluation
+# (thereby ensuring unbiased estimates of treatment performance)
+# ---------------------------------------------------------------
+X_test <- X[folds[[3]],]
+A_test <- A[folds[[3]]]
+Y_test <- Y[folds[[3]]]
+Xi_test <- Xi[folds[[3]]]
+
+# ---------------------------------------------------------------
+# Step 3. Extract test nuisance functions
+# ---------------------------------------------------------------
+mu0_test <- function(a,x){mu.hat.nj(a,x,3)}
+nu0_test <- function(a,x){nu.hat.nj(a,x,3)}
+prop_score_test <- function(a,x){ps.hat.nj(a,x,3)}
+
+# ---------------------------------------------------------------
+# Step 4. Evaluate the learned optimal treatment rule
+# ---------------------------------------------------------------
 eval_plucr <- process_results(theta=theta_final, X=X_test, A=A_test, Y=Y_test,
                               Xi=Xi_test, mu0=mu0_test, nu0=nu0_test,
                               prop_score=prop_score_test, 
@@ -191,7 +245,16 @@ eval_plucr <- process_results(theta=theta_final, X=X_test, A=A_test, Y=Y_test,
                               beta=attr(theta_final, "beta"), 
                               centered=centered)
 
-# We can further evaluate oracularly using the oracular data structures
+# ---------------------------------------------------------------
+# Optional: Oracular evaluation (synthetic scenarios only)
+# Uses the known data-generating process. 
+# ---------------------------------------------------------------
+# Extract oracular features (only available in synthetic settings)
+df_complete <- exp[[1]] # Complete data including counterfactuals c(Y(0),Y(1), xi(0), xi(1))
+delta_mu <- exp[[3]] # Oracular delta_mu function (treatment effect over Y conditioned on X) 
+delta_nu <- exp[[4]] # Oracular delta_nu function (treatment effect over xi conditioned on X) 
+
+# Oracular evaluation
 eval_plucr_oracular <- PLUCR::oracular_process_results(theta=theta_final, ncov=ncov,
                                               scenario_mu = scenario_mu, 
                                               scenario_nu = scenario_nu, 
@@ -202,12 +265,18 @@ eval_plucr_oracular <- PLUCR::oracular_process_results(theta=theta_final, ncov=n
 
 We can further learn a threshold that translates the treatment probabilites into binary choices.
 ```{r, eval=FALSE}
-# Extract folds used previously for cross validation
-folds <- readRDS(file.path(root.path,"Folds","folds.rds")) 
-# Learn threshold
+# ===============================================================
+# Learn Decision Threshold and Derive Treatment Assignments
+# ===============================================================
+# ---------------------------------------------------------------
+# Step 1. Learn the decision threshold t
+# ---------------------------------------------------------------
 t <- learn_threshold(theta_final, X, A, Y, Xi, folds, alpha.tolerance)
 
-# Obtain a treatment decision derived from the optimal treatment probabilities
+# ---------------------------------------------------------------
+# Step 2. Convert treatment probabilities into binary decisions
+# Assign treatment if the individualized probability exceeds t. 
+# ---------------------------------------------------------------
 optimal_treatment_decision <- ifelse(optimal_treatment_probability>t, 1, 0)
 ```
 
@@ -218,46 +287,15 @@ As an alternative, we can apply the `naive_approach_algorithm`, which relies on 
 
 Using these pre-computed components, the algorithm directly learns a treatment policy that, maximizes the estimated policy value, and enforces the estimated constraint on the probability of adverse events, using the baseline nuisance estimates.
 
-
 The output includes:
 
 - An unconstrained policy, which maximizes the primary outcome without regard to adverse events.
 
 - A constrained-optimal policy, which satisfies the specified constraint on adverse event probability using the uncorrected nuisance estimators.
 ```{r, eval=FALSE}
-# Load pre-required parameters, computed on previous algorithm 
-
-# Folds for splitting data 
-folds <- readRDS(file.path(root.path,"Folds","folds.rds")) 
-# Primary outcome model
-mu.hat.nj <- readRDS(file.path(root.path,"Mu.hat","mu.hat.nj.rds")) 
-# Adverse event model
-nu.hat.nj <- readRDS(file.path(root.path,"Nu.hat","nu.hat.nj.rds")) 
-# Propensity score model 
-ps.hat.nj <- readRDS(file.path(root.path,"PS.hat","ps.hat.nj.rds"))
-  
-# Split data into training and testing set
-# The training set will be used to train the treatment rule
-X_train <- X[folds[[2]],]
-A_train <- A[folds[[2]]]
-Y_train <- Y[folds[[2]]]
-Xi_train <- Xi[folds[[2]]]
-# The test set will be used exclusively for policy evaluation. 
-X_test <- X[folds[[3]],]
-A_test <- A[folds[[3]]]
-Y_test <- Y[folds[[3]]]
-Xi_test <- Xi[folds[[3]]]
-
-# Split the previous nuisances into training and testing set
-mu0_train <- function(a,x){mu.hat.nj(a=a,x=x,ff=1)}
-nu0_train <- function(a,x){nu.hat.nj(a=a,x=x,ff=1)}
-prop_score_train <- function(a,x){ps.hat.nj(a,x,1)}
-
-mu0_test <- function(a,x){mu.hat.nj(a,x,3)}
-nu0_test <- function(a,x){nu.hat.nj(a,x,3)}
-prop_score_test <- function(a,x){ps.hat.nj(a,x,3)}
-
-# Run the naive approach algorithm 
+# ===============================================================
+# Run the Naive Algorithm to Learn the Optimal Treatment Rule
+# ===============================================================
 naive_output <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                          folds= folds, 
                                          mu0_train = mu0_train, 
@@ -271,16 +309,28 @@ naive_output <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                          precision=optimization.precision,
                                          root.path = root.path)
 
+# ---------------------------------------------------------------
+# Extract learned parameters from output
+# Depending on configuration, the algorithm may return:
+#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
+#   - A single theta object if constraint satisfied at lambda=0
+# ---------------------------------------------------------------
 if(is.list(naive_output)){
  theta_naive <- naive_output[[2]] 
 }else{
   theta_naive <- naive_output[[1]]
 }
-# Evaluate the optimal treatment rule according to the naive approach
+
+# =================================================================
+# Evaluate the Optimal Treatment Rule according to Naive Approach
+# =================================================================
 eval_naive <- naive_process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test, Xi=Xi_test, mu0=mu0_test, nu0=nu0_test, prop_score=prop_score_test, lambda=attr(theta_naive, "lambda"), alpha=alpha.tolerance, beta=attr(theta_naive, "beta"), centered)
 
 
-# We can further evaluate oracularly using the oracular data structures
+# ---------------------------------------------------------------
+# Optional: Oracular evaluation (synthetic scenarios only)
+# Uses the known data-generating process. 
+# ---------------------------------------------------------------
 eval_naive_oracular <- PLUCR::oracular_process_results(theta=theta_naive, ncov=ncov,
                                               scenario_mu = scenario_mu, 
                                               scenario_nu = scenario_nu, 
@@ -304,6 +354,9 @@ The output includes:
 This approach serves as a theoretical upper bound on performance and offers a meaningful benchmark for assessing the quality of both the naïve and corrected estimators presented earlier.
 
 ```{r, eval=FALSE}
+# ===============================================================
+# Run the Orcular Algorithm to Learn the Optimal Treatment Rule
+# ===============================================================
 oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                                folds=folds,  ncov=ncov,
                                                delta_Mu=delta_mu, delta_Nu= delta_nu, 
@@ -314,11 +367,21 @@ oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                                scenario_nu=scenario_nu, 
                                                root.path = root.path)
 
+# ---------------------------------------------------------------
+# Extract learned parameters from output
+# Depending on configuration, the algorithm may return:
+#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
+#   - A single theta object if constraint satisfied at lambda=0
+# ---------------------------------------------------------------
 if(is.list(oracular_output)){
  theta_oracular <- oracular_output[[2]] 
 }else{
   theta_oracular <- oracular_output[[1]]
 }
+
+# =================================================================
+# Evaluate oracularly the Optimal Treatment Rule
+# =================================================================
 eval_oracular <- oracular_process_results(theta=theta_oracular, ncov=ncov,  
                                           scenario_mu = scenario_mu, 
                                           scenario_nu = scenario_nu, 
@@ -332,6 +395,13 @@ eval_oracular <- oracular_process_results(theta=theta_oracular, ncov=ncov,
 The function `synthetic_data_plot()` function provides an initial visualization of the treatment effects for both the primary outcome and the adverse event across the covariate space.
 
 ```{r, eval=FALSE}
+# ---------------------------------------------------------------
+# Plot treatment effect functions:
+#   - delta_Mu: for primary outcome function
+#   - delta_Nu: for adverse event function
+# The plot helps to interpret how treatment impacts outcomes 
+# under the chosen scenario.
+# ---------------------------------------------------------------
 fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, 
                                   delta_Nu=delta_nu, 
                                   root.path=root.path, 
@@ -343,6 +413,13 @@ print(fig)
 In addition, we can visualize the learned treatment policies by plotting treatment probabilities against selected covariates that allow for meaningful two-dimensional representation, using the function `visual_treatment_plot`. 
 
 ```{r, eval=FALSE}
+# ===============================================================
+# Visualize Learned Treatment Policies: 
+# Plot individualized treatment probabilities as a function of 
+# two selected covariates (X.1 and X.2) to enable 2-D visualization 
+# of the treatment probabilities. 
+# ===============================================================
+
 if(is.list(output)){
  PLUCR::visual_treatment_plot(make_psi(theta_0)(X), 
                               lambda = attr(theta_0, "lambda"), 
@@ -377,6 +454,9 @@ if(is.list(output)){
 Finally, we compare treatment recommendations across approaches by evaluating their estimated policy values and associated constraint violations.
 
 ```{r, eval=FALSE}
+# ===============================================================
+# Visualize metrics for different outcomes 
+# ===============================================================
 eval_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=attr(theta_0, "lambda"), alpha.tolerance,  beta=attr(theta_0, "beta"), centered)[[1]]
 
 if(is.list(output)){
@@ -424,15 +504,17 @@ Before estimating nuisance functions and optimizing the policy, the algorithm pe
 
 - Creates 3 cross-validation folds to enable cross-fitting. 
 ```{r, eval=FALSE}
- n <- nrow(X)
-  # Folds for cross-validation 
-  folds <- SuperLearner::CVFolds(n, 
-                                 id = NULL,
-                                 Y = Y,
-                                 cvControl = SuperLearner::SuperLearner.CV.control(V = Jfold, 
-                                                                                   shuffle = TRUE))
-  saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) 
-  checks<- PLUCR::check_data(Y, Xi, A, X, folds)
+ n <- nrow(X) 
+
+# Folds for cross-validation 
+folds <- SuperLearner::CVFolds(n, 
+                               id = NULL,
+                               Y = Y,
+                               cvControl = SuperLearner::SuperLearner.CV.control(V = Jfold, 
+                                                                                 shuffle = TRUE))
+
+saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) 
+checks<- PLUCR::check_data(Y, Xi, A, X, folds)
 ```
 
 ## Step 1: Estimate and Save Nuisance Parameters
