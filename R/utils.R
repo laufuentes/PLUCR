@@ -97,13 +97,17 @@ check_data <- function(Y, Xi, A, X, folds) {
 #' @return A numeric vector of treatment probabilities.
 #' @export
 sigma_beta <- function(t, beta=0.05, centered=FALSE) {
-  c_beta <- 1 / log((1 + exp(beta)) / (1 + exp(-beta)))
-  if (centered) {
-    cent <- 0.5 - c_beta * log(2 / (1 + exp(-beta)))
+  if(beta==0){
+    out <- (1+t)/2
   } else {
-    cent <- 0
+    c_beta <- 1 / log((1 + exp(beta)) / (1 + exp(-beta)))
+    if (centered) {
+      cent <- 0.5 - c_beta * log(2 / (1 + exp(-beta)))
+    } else {
+      cent <- 0
+    }
+    out <- c_beta * log((1 + exp(beta * t)) / (1 + exp(-beta))) + cent
   }
-  out <- c_beta * log((1 + exp(beta * t)) / (1 + exp(-beta))) + cent
   return(out)
 }
 
@@ -119,13 +123,14 @@ sigma_beta <- function(t, beta=0.05, centered=FALSE) {
 #' @return The derivative of \code{sigma_beta} evaluated at t.
 #' @export
 sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
-  if (!is.matrix(X)) {
-    X <- as.matrix(X)
+  if (beta == 0){
+    out <- rep(0.5, length.out=length(t))
+  } else {
+    c_beta <- 1 / log(
+      (1 + exp(beta)) / (1 + exp(-beta))
+    )
+    out <- c_beta *(beta*exp(beta*t))/(1+ exp(beta*t))
   }
-  c_beta <- 1 / log(
-    (1 + exp(beta)) / (1 + exp(-beta))
-  )
-  out <- c_beta *(beta*exp(beta*t))/(1+ exp(beta*t))
   return(out)
 }
 
