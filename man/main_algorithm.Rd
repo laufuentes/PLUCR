@@ -12,7 +12,7 @@ main_algorithm(
   Lambdas = seq(1, 8, by = 1),
   alpha = 0.1,
   precision = 0.05,
-  B = c(0.05, 0.1, 0.25, 0.5),
+  B = c(0, 0.05, 0.1, 0.25, 0.5),
   centered = FALSE,
   Jfold = 3L,
   V = 2L,
@@ -37,7 +37,7 @@ main_algorithm(
 
 \item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 
-\item{B}{A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).}
+\item{B}{A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default).}
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 

@@ -15,7 +15,7 @@
 #' @param Lambdas A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).
 #' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
 #' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
-#' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).
+#' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param Jfold Number of folds for the main algorithm, needs to be set to 3L.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -28,7 +28,7 @@
 #' @export
 main_algorithm <- function(X, A, Y, Xi, 
                            Lambdas=seq(1, 8, by=1), alpha=0.1, precision=0.05,
-                           B=c(0.05, 0.1, 0.25, 0.5), centered=FALSE,
+                           B=c(0, 0.05, 0.1, 0.25, 0.5), centered=FALSE,
                            Jfold=3L, V=2L, SL.library=c("SL.mean","SL.glm","SL.ranger","SL.grf"), 
                            tol=0.025, max_iter=5, root.path){
   # Check whether the root.path exists and contains proper folder to save data

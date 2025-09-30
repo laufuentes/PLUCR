@@ -125,8 +125,8 @@ root.path <- "results"
 Lambda_candidates <- seq(1, 10, by=1)
 
 # A vector of non-negative scalars controlling the sharpness of the 
-# treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default)
-Beta_candidates <- c(0.05, 0.1, 0.25, 0.5)
+# treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default)
+Beta_candidates <- c(0, 0.05, 0.1, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.2 means the policy may increase adverse event probability by up to 20%
