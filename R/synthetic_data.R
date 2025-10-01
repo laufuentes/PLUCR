@@ -503,15 +503,15 @@ model_Y_realistic <- function(X,A){
 #' @export
 model_Xi_realistic <- function(X,A){
   n <- nrow(X)
-  sex <- X[,2]
-  is_pregnant <- X[,3]
-  Xi.0 <- Xi.1 <- rep(0, n)
-  Xi.1 <- ifelse(sex==0,0, rbinom(n,1, p=0.35))
-  mask <- ifelse((A == 1) & (is_pregnant == 1),1,0)
-  Xi.1[mask==1] <- 1
+  p0 <- 0.01 
+  xi.0 <- rbinom(n,1,p0)
+  p1 <- ifelse(X[,2]==0, p0 , 0.35)
+  p1 <- ifelse((A == 1) & (X[,3] == 1),1,p1)
+  xi.1 <- rbinom(n,1,p1)
+  xi.1 <- ifelse(xi.0==1, 1, xi.1)
   
-  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
-  return(Xi.obs)
+  xi.obs <- ifelse(A==1, xi.1, xi.0)
+  return(xi.obs)
 }
 
 #' Realistic Conditional Average Treatment Effect estimator for Y
@@ -545,7 +545,7 @@ attr(delta_mu_realistic, "vars")<- c(1, 4)
 #' delta_nu(X)
 #' @export
 delta_nu_realistic <- function(X){
-  p0 <- 0
+  p0 <- 0.01
   p1 <- ifelse(X[,3]==1,1, ifelse(X[,2]==1,0.35,0))
   out <- p1-p0
   return(out)
@@ -586,14 +586,18 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
   is_pregnancy_window <- ifelse(age >= 18 & age <= 45 & sex == 1, 1, 0)
   is_pregnant <- ifelse(is_pregnancy_window==0, 0, rbinom(n, 1, 0.3))
   
-  X <- matrix(cbind(age, sex, is_pregnant,
-                    matrix(stats::runif(n*(ncov-3),1,10), n, ncov-3)), 
+  X <- matrix(cbind(age, 
+                    sex, 
+                    is_pregnant,
+                    runif(n, min = 0, max=10), 
+                    runif(n, min = -5, max=5)), 
               n,ncov)
+  colnames(X) <- c("X.1", "X.2", "X.3", "X.4", "X.5")
   delta_Mu <- delta_mu_realistic
   delta_Nu <- delta_nu_realistic
   mod_Y <- model_Y_realistic
   mod_Xi <- model_Xi_realistic
-  p.s <- expit(-0.5*sex + 0.2 * (X[,5] - 5.5) + 0.6 * (X[,4]-5.5))
+  p.s <- expit(-0.5*sex + 0.2 * (X[,5]) + 0.6 * (X[,4]-5.5))
   
   if(is_RCT){
     p.s <- rep(0.5, nrow(X))
