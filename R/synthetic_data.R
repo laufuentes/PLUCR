@@ -592,7 +592,7 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
                     runif(n, min = 0, max=10), 
                     runif(n, min = -5, max=5)), 
               n,ncov)
-  colnames(X) <- c("X.1", "X.2", "X.3", "X.4", "X.5")
+  colnames(X) <- c("1", "2", "3", "4", "5")
   delta_Mu <- delta_mu_realistic
   delta_Nu <- delta_nu_realistic
   mod_Y <- model_Y_realistic
