@@ -1,7 +1,7 @@
 #' Plot evolution of objective terms across lambda values
 #'
 #' Visualizes how risk, constraint, and overall objective evolve with respect to different lambda values.
-#' Includes smooth loess trends and confidence intervals.
+#' Includes smooth loss trends and confidence intervals.
 #'
 #' @param results A data frame or tibble containing `lambda`, `risk`, `constraint`, `obj`, and `beta` columns.
 #' @param type_simu A string indicating the simulation type (e.g., "oracular" or "empirical").

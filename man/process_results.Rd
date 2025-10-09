@@ -45,7 +45,7 @@ process_results(
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
-A vector of optimized policy parameters (\code{theta}) trained across folds.
+A vector of results for given \code{theta}.
 }
 \description{
 This function evaluates the optimal policy derived from \code{theta} and gives the upper bound of the constraint estimator.

@@ -89,13 +89,13 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   for(beta in B){
     saved <- FALSE
     res <- naive_process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
-    if (!saved && res[[1]]$constraint < 0) {
+    if (!saved && res$constraint < 0) {
       combinations <- rbind(combinations, c(beta, 0))
-      naive_opt_res <- rbind(naive_opt_res,res[[1]])
+      naive_opt_res <- rbind(naive_opt_res,res)
       naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_0
       saved <- TRUE
     }
-    if(res[[2]]<0){
+    if(res$upper_bound_constraint<0){
       stopped <- TRUE
       break
     }
@@ -114,14 +114,14 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                         lambda=lambda, beta=beta, precision=precision) 
       
         res <- naive_process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        if (!saved && res[[1]]$constraint < 0) {
+        if (!saved && res$constraint < 0) {
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
-          naive_opt_res <- rbind(naive_opt_res,res[[1]])
+          naive_opt_res <- rbind(naive_opt_res,res)
           naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_opt
           saved <- TRUE
         }
-        if(res[[2]]<0){
+        if(res$upper_bound_constraint<0){
           break
         }
       }

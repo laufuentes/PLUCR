@@ -18,5 +18,5 @@ Saves a plot to "figures/<type_simu>/lambda_evol.pdf".
 }
 \description{
 Visualizes how risk, constraint, and overall objective evolve with respect to different lambda values.
-Includes smooth loess trends and confidence intervals.
+Includes smooth loss trends and confidence intervals.
 }

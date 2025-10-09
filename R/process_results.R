@@ -18,7 +18,7 @@
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
-#' @return A vector of optimized policy parameters (`theta`) trained across folds.
+#' @return A vector of results for given `theta`.
 #' @export
 process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   # Correct estimators
@@ -47,6 +47,7 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
       update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score))}
   
+  constraint <- S_p(psi, X,beta, alpha, centered, Delta_nu)
   # Compute optimal policy value and its lower bound
   pi_X <- rbinom(nrow(X),1, prob= sigma_psi_X) # binary policy
   epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + ifelse(pi_X == A, HX(pi_X, X, prop_score), 0),
@@ -59,28 +60,24 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi_X,X))-V_pn) #varphi
   upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
   
+  updated_nuXA <- update_nu_XA(qlogis(nu0(A,X)), epsilon2, sigma_psi_X, H_XA)
+  
+  Vs_n <- var(H_XA* sigma_psi_X*(Xi- updated_nuXA) +
+                sigma_psi_X* Delta_nu(X) - constraint)
+  upper_bound_sn <- constraint + 1.64*sqrt(Vs_n/nrow(X))
+  
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
     beta = beta,
     risk = R_p(psi, X, Delta_mu),
-    constraint = S_p(
-      psi, X,
-      beta, alpha, centered, 
-      Delta_nu),
+    constraint = constraint,
     obj = Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered),
     policy_value= V_pn,
-    lwr_bound_policy_value = upper_bound_V_pn)
-  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value")
-  
-  # Compute upper bound for constraint
-  updated_nuXA <- update_nu_XA(qlogis(nu0(A,X)), epsilon2, sigma_psi_X, H_XA)
-  
-  Vs_n <- var(H_XA* sigma_psi_X*(Xi- updated_nuXA) +
-                sigma_psi_X* Delta_nu(X) -results$constraint)
-  upper_bound_sn <- results$constraint + 1.64*sqrt(Vs_n/nrow(X))
-  
-  return(list(results, upper_bound_sn)) # Return the updated results for this index
+    lwr_bound_policy_value = upper_bound_V_pn, 
+    upper_bound_constraint = upper_bound_sn)
+  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value", "upper_bound_constraint")
+  return(results) # Return the updated results for this index
 }
 
 
@@ -102,7 +99,7 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
-#' @return A vector of optimized policy parameters (`theta`) trained across folds.
+#' @return A vector of results for given `theta`.
 #' @export
 naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   psi<- make_psi(theta)
@@ -113,6 +110,8 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
   Delta_mu <- function(X) { mu0(rep(1,nrow(X)),X)- mu0(rep(0,nrow(X)),X)}
   Delta_nu <- function(X) { nu0(rep(1,nrow(X)),X) - nu0(rep(0,nrow(X)),X)}
   
+  constraint <- S_p(psi, X,beta, alpha, centered, Delta_nu)
+
   mu1_X <- mu0(rep(1,nrow(X)),X)
   mu0_X <- mu0(rep(0,nrow(X)),X)
   
@@ -126,25 +125,24 @@ naive_process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lamb
   Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu_AX + mu_pi_X)-V_pn) #varphi
   lower_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
   
+  # Compute upper bound for constraint
+  nuXA <- nu0(A,X)
+  Vs_n <- var(H_XA* sigma_psi_X*(Xi- nuXA) +
+                sigma_psi_X* Delta_nu(X) -constraint)
+  upper_bound_sn <- constraint + 1.64*sqrt(Vs_n/nrow(X))
+  
   # Extract the policy for the current index
   results <- data.frame(
     lambda = lambda,
     beta = beta,
     risk = R_p(psi, X, Delta_mu),
-    constraint = S_p(psi, X,beta, alpha, centered, Delta_nu),
+    constraint = constraint,
     obj = Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered),
     policy_value= V_pn,
-    lwr_bound_policy_value = lower_bound_V_pn)
-  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value")
-  
-  # Compute upper bound for constraint
-  nuXA <- nu0(A,X)
-  
-  Vs_n <- var(H_XA* sigma_psi_X*(Xi- nuXA) +
-                sigma_psi_X* Delta_nu(X) -results$constraint)
-  upper_bound_sn <- results$constraint + 1.64*sqrt(Vs_n/nrow(X))
-  
-  return(list(results, upper_bound_sn)) # Return the updated results for this index
+    lwr_bound_policy_value = lower_bound_V_pn, 
+    upper_bound_constraint = upper_bound_sn)
+  colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value", "upper_bound_constraint")
+  return(results) # Return the updated results for this index
 }
 
 #' Oracular evaluation of a policy

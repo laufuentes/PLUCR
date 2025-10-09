@@ -113,26 +113,26 @@ main_algorithm <- function(X, A, Y, Xi,
   for (beta in B){
     res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=0, alpha,  beta, centered)
     # Loop to check constraint satisfaction
-    if (res_0[[1]]$constraint < 0) {
-      min_constraint_lambda0 <- res_0[[1]]$constraint
+    if (res_0$constraint < 0) {
+      min_constraint_lambda0 <- res_0$constraint
       
-      if (res_0[[1]]$lwr_bound_policy_value > max_policy_value) {
+      if (res_0$lwr_bound_policy_value > max_policy_value) {
         beta_0 <- beta
-        max_policy_value <- res_0[[1]]$lwr_bound_policy_value
+        max_policy_value <- res_0$lwr_bound_policy_value
         attr(theta_0, "beta")<- beta
         saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
         #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
-        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
+        saveRDS(res_0, file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
         combinations <- rbind(combinations, c(beta_0, 0))
         saved <- TRUE}
     }else{
-      if(res_0[[1]]$constraint<min_constraint_lambda0){
-        min_constraint_lambda0 <- res_0[[1]]$constraint
+      if(res_0$constraint<min_constraint_lambda0){
+        min_constraint_lambda0 <- res_0$constraint
         beta_0 <- beta
       }
     }
     ##### If your constraint was already satified with lambda=0 return
-    if(res_0[[2]]<0){
+    if(res_0$upper_bound_constraint<0){
       warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
       optimal_combination <- get_opt_beta_lambda(combinations,root.path)
       beta <- optimal_combination$beta
@@ -161,8 +161,8 @@ main_algorithm <- function(X, A, Y, Xi,
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        if (!saved && res[[1]]$constraint < 0) {
-          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
+        if (!saved && res$constraint < 0) {
+          saveRDS(res, file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
           #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
           attr(theta_opt, "lambda") <- lambda
           attr(theta_opt, "beta") <- beta
@@ -170,7 +170,7 @@ main_algorithm <- function(X, A, Y, Xi,
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
         }
-        if(res[[2]]<0){
+        if(res$upper_bound_constraint<0){
           break
         }
       }
