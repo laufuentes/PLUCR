@@ -70,16 +70,12 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   # Step 2: Training process: grid search  #
   ##########################################
   ##### 1.1- Start by testing \code{lambda}=0 
-  saved <- FALSE
   combinations <- NULL
   naive_opt_res <- NULL
   naive_opt_theta <- NULL
   stopped <- FALSE
   lambda <- 0
-  min_constraint_lambda0 <- Inf
-  max_policy_value <- -Inf
-  beta_0 <- NULL
-  
+
   theta_0 <- PLUCR::FW(X_train,delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
                        delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}, 
                        lambda=0, beta=0.05, precision=precision) 
@@ -87,20 +83,14 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
   attr(theta_0, "lambda") <- 0 
   for(beta in B){
-    saved <- FALSE
-    res <- naive_process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
-    if (!saved && res$constraint < 0) {
+    res <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
+    if (res$upper_bound_constraint < 0) {
       combinations <- rbind(combinations, c(beta, 0))
       naive_opt_res <- rbind(naive_opt_res,res)
       naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_0
-      saved <- TRUE
-    }
-    if(res$upper_bound_constraint<0){
-      stopped <- TRUE
-      break
+      stopped<-TRUE
     }
   }
-  attr(theta_0, "beta") <- beta_0
   ##### If your constraint was not satified with lambda=0 goes onto step 2
   ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
   ### Training 
@@ -113,28 +103,32 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                         delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}, 
                         lambda=lambda, beta=beta, precision=precision) 
       
-        res <- naive_process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        if (!saved && res$constraint < 0) {
+        res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
+        if (!saved && res$upper_bound_constraint < 0) {
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
           naive_opt_res <- rbind(naive_opt_res,res)
           naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_opt
           saved <- TRUE
-        }
-        if(res$upper_bound_constraint<0){
           break
         }
       }
     }
   }
-  idx_n <- which.max(naive_opt_res$lwr_bound_policy_value)
-  beta_n <-combinations[idx_n,][1]
-  lambda_n <-combinations[idx_n,][2]
-  theta_final <- naive_opt_theta[[idx_n]]
-  saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Naive_approach.rds")))
-
-  attr(theta_final, "lambda") <- lambda_n
-  attr(theta_final, "beta") <- beta_n
+  if(!is.null(naive_opt_theta)){
+    idx_n <- which.max(naive_opt_res$lwr_bound_policy_value)
+    beta_n <-combinations[idx_n,][1]
+    lambda_n <-combinations[idx_n,][2]
+    theta_final <- naive_opt_theta[[idx_n]]
+    attr(theta_final, "lambda") <- lambda_n
+    attr(theta_final, "beta") <- beta_n
+    saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Naive_approach.rds")))
+  }else{
+    theta_final <- -sign(theta_0)*theta_0 * 1e100
+    attr(theta_final, "lambda") <- lambda
+    attr(theta_final, "beta") <- 0
+    saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Naive_approach.rds")))
+  }
   
   psi_values <- make_psi(theta_final)(X_test)
   optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))

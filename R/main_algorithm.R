@@ -96,7 +96,6 @@ main_algorithm <- function(X, A, Y, Xi,
   # Step 2: Training process: grid search  #
   ##########################################
   ##### 1.1- Start by testing \code{lambda}=0 
-  saved <- FALSE
   combinations <- NULL
   lambda <- 0
   min_constraint_lambda0 <- Inf
@@ -104,7 +103,7 @@ main_algorithm <- function(X, A, Y, Xi,
   beta_0 <- NULL
   out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, 
                                         X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
-                                        lambda=0, alpha=alpha, precision=precision, beta=0.05, centered=centered, 
+                                        lambda=0, alpha=alpha, precision=precision, beta=0, centered=centered, 
                                         tol=tol, max_iter=max_iter) #root.path=file.path(root.path,"Intermediate",paste0(0.05,"_",0))
   
   ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
@@ -113,40 +112,33 @@ main_algorithm <- function(X, A, Y, Xi,
   for (beta in B){
     res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=0, alpha,  beta, centered)
     # Loop to check constraint satisfaction
-    if (res_0$constraint < 0) {
-      min_constraint_lambda0 <- res_0$constraint
-      
-      if (res_0$lwr_bound_policy_value > max_policy_value) {
-        beta_0 <- beta
-        max_policy_value <- res_0$lwr_bound_policy_value
-        attr(theta_0, "beta")<- beta
-        saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-        #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
-        saveRDS(res_0, file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
-        combinations <- rbind(combinations, c(beta_0, 0))
-        saved <- TRUE}
-    }else{
-      if(res_0$constraint<min_constraint_lambda0){
-        min_constraint_lambda0 <- res_0$constraint
-        beta_0 <- beta
+    if (res_0$upper_bound_constraint < 0) {
+      saveRDS(res_0, file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
+      attr(theta_0, "beta")<- beta
+      saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
+      combinations <- rbind(combinations, c(beta, 0))
       }
     }
     ##### If your constraint was already satified with lambda=0 return
-    if(res_0$upper_bound_constraint<0){
+    if(!is.null(combinations)){
       warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
       optimal_combination <- get_opt_beta_lambda(combinations,root.path)
       beta <- optimal_combination$beta
-      theta_keep <- paste0(beta, "_", 0, ".rds")
-      theta_files <- list.files(file.path(root.path, "Theta_opt"))
+      
+      lambda <- 0 
+      theta_keep <- paste0(beta, "_", lambda, ".rds")
+      theta_files <- list.files(file.path(root.path, "Theta_opt"), pattern="^\\d+_")
       theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
-      file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
+      file.remove(file.path(root.path,"Theta_opt", theta_to_delete))
+      
       eval_files <- list.files(file.path(root.path, "Evaluation"))
       eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
       file.remove(file.path(root.path,"Evaluation", eval_to_delete))
+      
+      attr(theta_0, "beta")<- beta
       return(theta_0)
     }
-  }
-  attr(theta_0, "beta") <- beta_0
+  attr(theta_0, "beta") <- 0
   ##### If your constraint was not satified with lambda=0 goes onto step 2
   ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
     ### Training 
@@ -161,42 +153,40 @@ main_algorithm <- function(X, A, Y, Xi,
         theta_opt <- out$theta_collection[[length(out$theta_collection)]]
         ### Evaluating 
         res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        if (!saved && res$constraint < 0) {
+        if (!saved && res$upper_bound_constraint < 0) {
           saveRDS(res, file=file.path(root.path,"Evaluation", paste0(beta, "_", lambda,".rds")))
-          #saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",lambda,".rds")))
           attr(theta_opt, "lambda") <- lambda
           attr(theta_opt, "beta") <- beta
           saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds")))
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
-        }
-        if(res$upper_bound_constraint<0){
           break
         }
       }
     }
-  # Delete all intermediate results
-  #files_del <- file.path(root.path,"Intermediate")
-  #unlink(files_del, recursive = TRUE)
-  
-  # Select the optimal combination (beta, lambda)
-  optimal_combination <- get_opt_beta_lambda(combinations,root.path)
-  beta <- optimal_combination$beta
-  lambda <- optimal_combination$lambda
-  theta_keep <- paste0(beta, "_", lambda, ".rds")
-
-  # Delete unwanted files in Theta_opt
-  theta_files <- list.files(file.path(root.path, "Theta_opt"))
-  theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
-  file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
-
-  # Delete unwanted files in Evaluation
-  eval_files <- list.files(file.path(root.path, "Evaluation"))
-  eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
-  file.remove(file.path(root.path,"Evaluation", eval_to_delete))
+  if(!is.null(combinations)){
+    # Select the optimal combination (beta, lambda)
+    optimal_combination <- get_opt_beta_lambda(combinations,root.path)
+    beta <- optimal_combination$beta
+    lambda <- optimal_combination$lambda
+    theta_keep <- paste0(beta, "_", lambda, ".rds")
     
-  theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds"))) 
+    theta_files <- list.files(file.path(root.path, "Theta_opt"), pattern="^\\d+")
+    theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
+    file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
     
+    eval_files <- list.files(file.path(root.path, "Evaluation"))
+    eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
+    file.remove(file.path(root.path,"Evaluation", eval_to_delete))
+    theta_final <- readRDS(file = file.path(root.path, "Theta_opt", paste0(beta, "_", lambda, ".rds"))) 
+  }else{
+    theta_final <- -sign(theta_0)*theta_0 * 1e100
+    res <- process_results(theta_final, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  0, centered)
+    saveRDS(res, file=file.path(root.path,"Evaluation", paste0(iteration,"_",0, "_", lambda,".rds")))
+    attr(theta_opt, "lambda") <- lambda
+    attr(theta_opt, "beta") <- 0
+    saveRDS(theta_final, file = file.path(root.path, "Theta_opt", paste0(iteration,"_",0, "_", lambda, ".rds")))
+  }
   psi_values <- make_psi(theta_final)(X_test)
   optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
     
@@ -210,6 +200,5 @@ main_algorithm <- function(X, A, Y, Xi,
           "Consider relaxing it if treatment is being under-assigned."), 
         100 * prop_over_0.50))
     }
-    
   return(list(theta_0,theta_final))
 }
