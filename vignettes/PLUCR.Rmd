@@ -324,8 +324,13 @@ if(is.list(naive_output)){
 # =================================================================
 # Evaluate the Optimal Treatment Rule according to Naive Approach
 # =================================================================
-eval_naive <- naive_process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test, Xi=Xi_test, mu0=mu0_test, nu0=nu0_test, prop_score=prop_score_test, lambda=attr(theta_naive, "lambda"), alpha=alpha.tolerance, beta=attr(theta_naive, "beta"), centered)
-
+eval_naive <- process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test,
+                              Xi=Xi_test, mu0=mu0_test, nu0=nu0_test,
+                              prop_score=prop_score_test, 
+                              lambda=attr(theta_naive, "lambda"),
+                              alpha=alpha.tolerance, 
+                              beta=attr(theta_naive, "beta"), 
+                              centered=centered)
 
 # ---------------------------------------------------------------
 # Optional: Oracular evaluation (synthetic scenarios only)

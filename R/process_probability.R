@@ -104,39 +104,3 @@ lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, al
   lower_bound_V_pn <- V_targeted - 1.64*sqrt(Var_pn/nrow(X))
   return(list(c(lower_bound_V_pn, upper_bound_sn)))
 }
-
-#' Naive lower and upper bound estimators for policy value and constraint
-#'
-#' This function computes lower and upper confidence bounds for the policy value 
-#' and constraint, respectively, based on their plug-in estimators.
-#'
-#' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
-#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
-#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
-#' @param pi A numeric vector of binary decisions of length n.
-#' @param X A matrix or data frame of covariates of size n x d (input data in [0,1]).
-#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
-#' @param Xi A numeric vector or matrix of adverse events outcomes.
-#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
-#'
-#' @return 
-#' A list containing a numeric vector of length 2:
-#' \itemize{
-#'   \item \code{[1]}: Lower bound for the primary outcome effect.
-#'   \item \code{[2]}: Upper bound for the adverse event effect.
-#' }
-#' 
-#' @export
-naive_lwr_upper_bound_estimators <- function(mu0, nu0, pi, X, A, Y, Xi, prop_score, alpha){
-  V_pn <- V_Pn(pi, mu0(rep(1,nrow(X)),X), mu0(rep(0,nrow(X)),X))
-  Var_pn <- var((ifelse(A==pi,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi,X))-V_pn) #varphi
-  lower_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
-  Delta_nu <- function(X){
-    nu0(rep(1,nrow(X)),X) - nu0(rep(0,nrow(X)),X)
-  }
-  s_n <- binary_S_p(pi, X, alpha, Delta_nu)
-  Vs_n <- var( ifelse(A==pi, HX(A, X, prop_score), 0 ) * (Xi - ifelse(A==1, nu0(rep(1, nrow(X)),X), nu0(rep(0, nrow(X)),X))) + pi*Delta_nu(X)  - s_n)
-  upper_bound_sn <- s_n + 1.64 * sqrt(Vs_n/nrow(X))
-  return(list(c(lower_bound_V_pn, upper_bound_sn)))
-}
