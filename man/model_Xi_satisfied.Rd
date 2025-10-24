@@ -4,7 +4,7 @@
 \alias{model_Xi_satisfied}
 \title{Low treatment effect on Xi}
 \usage{
-model_Xi_satisfied(X, A)
+model_Xi_satisfied(X)
 }
 \arguments{
 \item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}

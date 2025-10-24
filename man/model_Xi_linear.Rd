@@ -4,7 +4,7 @@
 \alias{model_Xi_linear}
 \title{Linear treatment effect on Xi Component Function}
 \usage{
-model_Xi_linear(X, A)
+model_Xi_linear(X)
 }
 \arguments{
 \item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}

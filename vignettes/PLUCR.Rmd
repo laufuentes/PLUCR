@@ -208,7 +208,7 @@ optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(theta
 
 ```{r, eval=FALSE}
 # ===============================================================
-# Evaluate the Optimal Treatment Rule
+# Evaluate the Optimal Treatment Rule using normalized data
 # ===============================================================
 # ---------------------------------------------------------------
 # Step 1. Load pre-required objects (algorithm outputs)
@@ -263,7 +263,7 @@ eval_plucr_oracular <- PLUCR::oracular_process_results(theta=theta_final, ncov=n
                                               beta= attr(theta_final, "beta"))
 ```
 
-We can further learn a threshold that translates the treatment probabilites into binary choices.
+We can further learn a threshold that translates the treatment probabilities into binary choices.
 ```{r, eval=FALSE}
 # ===============================================================
 # Learn Decision Threshold and Derive Treatment Assignments
@@ -278,6 +278,51 @@ t <- learn_threshold(theta_final, X, A, Y, Xi, folds, alpha.tolerance)
 # Assign treatment if the individualized probability exceeds t. 
 # ---------------------------------------------------------------
 optimal_treatment_decision <- ifelse(optimal_treatment_probability>t, 1, 0)
+```
+
+
+For non-normalized data, we can as well provide an evaluation in data scale for both probabilistic policy and its binary counterpartt
+```{r, eval=FALSE}
+# ===============================================================
+# Evaluate the Optimal Treatment Rule using non-normalized data
+# ===============================================================
+# ---------------------------------------------------------------
+# Step 1. Train pre-required objects (algorithm outputs)
+# ---------------------------------------------------------------
+Y_non_normalized <- # Insert non scaled primary outcome 
+covariates <- # Insert X prior to `phi(X)`
+mu.hat.nj <- estimate_real_valued_mu(Y= Y_non_normalized, A= A, X=covariates, folds, SL.library = SL.library, V=2L)
+nu.hat.nj <- estimate_nu(Xi= Xi, A= A, X=covariates, folds, SL.library = SL.library, V=2L, threshold = 0.01)
+
+# Nuisances trained on testing subset for unbiased evaluation
+mu0_test <- function(a,x){mu.hat.nj(a,x,ff=3)}
+nu0_test <- function(a,x){nu.hat.nj(a,x,ff=3)}
+
+# Data testing subset
+covariates_test <- covariates[folds[[3]],]
+Y_non_test <- Y_non_normalized[folds[[3]]]
+proba_pi <- optimal_treatment_probability[folds[[3]]]
+pi_decision <- optimal_treatment_decision[folds[[3]]]
+  
+# Step 2. Evaluate probabilistic policy and derived decision
+# ---------------------------------------------------------------
+# Evaluation of optimal treatment probabilities 
+policy_value_proba <- V_Pn(proba_pi, 
+                           y1 = mu0_test(a = rep(1, nrow(covariates_test)), covariates_test), 
+                           y0 = mu0_test(a = rep(0, nrow(covariates_test)), covariates_test))
+
+constraint_value_proba <- mean(proba_pi*(nu0_test(a = rep(1, nrow(covariates_test)), covariates_test) - nu0_test(a = rep(0, nrow(covariates_test)), covariates_test))) - alpha.tolerance
+
+print(c(policy_value_proba, constraint_value_proba))
+
+# Evaluation of optimal treatment decisions derived from probabilities 
+policy_value_decision <- V_Pn(pi_decision, 
+                              y1 = mu0_test(a = rep(1, nrow(covariates_test)), covariates_test), 
+                              y0 = mu0_test(a = rep(0, nrow(covariates_test)), covariates_test))
+
+constraint_value_decision <- mean(pi_decision*(nu0_test(a = rep(1, nrow(covariates_test)), covariates_test) - nu0_test(a = rep(0, nrow(covariates_test)), covariates_test))) - alpha.tolerance
+
+print(c(policy_value_decision, constraint_value_decision))
 ```
 
 ## 2.5. Other results 

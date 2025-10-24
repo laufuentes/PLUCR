@@ -4,7 +4,7 @@
 \alias{model_Xi_realistic}
 \title{Realistic treatment effect on Xi Component Function}
 \usage{
-model_Xi_realistic(X, A)
+model_Xi_realistic(X)
 }
 \arguments{
 \item{X}{A matrix of covariates of size n x d (input data).}

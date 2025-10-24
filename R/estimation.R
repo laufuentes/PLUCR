@@ -198,3 +198,49 @@ estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
   
   return(ps)
 }
+
+
+#' Estimate real-valued mu 
+#'
+#' This function trains conditional mean of primary outcome models for treated and control groups 
+#' using `SuperLearner`, applying cross-validation to compute out-of-fold estimates.
+#'
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in R).
+#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
+#' @param X A matrix or data frame of covariates of size n x d (input data in R).
+#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
+#' @param SL.library Vector of libraries for training SuperLearner.
+#' @param V Number of folds inside the SuperLearner (2L by default).
+#' @return A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X)
+#' @export
+estimate_real_valued_mu <- function(Y, A, X, folds, SL.library, V = 2L) {
+  if (!(V<5 & V>1)) {
+    msg_folds <- paste("Number of folds:",V, "is either smaller than 1 or greater than 10")
+    warning(msg_folds)
+  }
+  if (missing(SL.library)) {
+    SL.library <- c("SL.mean", "SL.glm")
+  }
+  if (!is.data.frame(X)){
+    X <- as.data.frame(X)
+  }
+  cvControl <- SuperLearner::SuperLearner.CV.control(V = V)
+  method <- "method.NNLS"
+  n <- nrow(X)
+  objects <- vector("list", length(folds))
+  for (ff in c(1,3)) {
+    train_indices <- folds[[ff]]
+    objects[[ff]] <- SuperLearner::SuperLearner(Y[train_indices],
+                                                data.frame(X, A = A)[train_indices, , drop = FALSE],
+                                                SL.library = SL.library,
+                                                family = gaussian(),
+                                                cvControl = cvControl, method = method)
+  }
+  mu <- function(a, x, ff) {
+    if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
+    out <- rep(NA, length(a))
+    out <- stats::predict(objects[[ff]],newdata = data.frame(x,A=a))$pred
+    return(out)
+  }
+  return(mu)
+}

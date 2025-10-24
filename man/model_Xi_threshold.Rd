@@ -4,7 +4,7 @@
 \alias{model_Xi_threshold}
 \title{Thresholded treatment effect on Xi component function}
 \usage{
-model_Xi_threshold(X, A)
+model_Xi_threshold(X)
 }
 \arguments{
 \item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}

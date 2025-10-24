@@ -215,6 +215,8 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
   `%>%` <- magrittr::`%>%`
   vars_mu <- attr(delta_Mu, "vars")
   vars_nu <- attr(delta_Nu, "vars")
+  exp<- generate_realistic_data(2)
+   
   
   my_delta_Mu <- function(df) {
     df <- as.matrix(df)
@@ -222,6 +224,8 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
     for (i in seq_along(vars_mu)) {
       mat[, vars_mu[i]] <- df[, i]
     }
+    attr(mat, "max_Y")<- unique(exp[[1]]$max_Y)
+    attr(mat, "min_Y")<-unique(exp[[1]]$min_Y)
     delta_Mu(mat)
   }
   
@@ -231,13 +235,15 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
     for (i in seq_along(vars_nu)) {
       mat[, vars_nu[i]] <- df[, i]
     }
+    attr(mat, "max_Y")<- unique(exp[[1]]$max_Y)
+    attr(mat, "min_Y")<-unique(exp[[1]]$min_Y)
     delta_Nu(mat)
   }
   
   # Generate grid for mu (continuous) and nu (binary) separately
   # vars_mu: continuous ranges
   x_mu <- as.integer(seq(16, 65, length.out = B))  # for column 1
-  y_mu <- seq(-4, 7, length.out = B)   # for column 4 (adjust as needed)
+  y_mu <- seq(-5, 5, length.out = B)   # for column 4 (adjust as needed)
   
   # vars_nu: binary ranges
   x_nu <- c(0,1)  # column 2
@@ -263,13 +269,13 @@ plot_realistic <- function(delta_Mu, delta_Nu, B = 100, root.path, name) {
   p_mu <- ggplot2::ggplot(df_mu_long) +
     geom_raster(aes(x = x,y = y,fill = Values))+
     scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
-    labs(x = "age", y = "X4") +
+    labs(x = "X.1", y = "X.4") +
     theme(legend.position = "none")
   
   p_nu <- ggplot2::ggplot(df_nu_long) +
     geom_raster(aes(x = x,y = y,fill = Values))+
     scale_fill_viridis_c(option = "magma", limits=c(-1,1)) +
-    labs(x = "sex", y = "is_pregnant") +
+    labs(x = "X.2", y = "X.3") +
     theme_minimal()
   
   p <- gridExtra::grid.arrange(p_mu, p_nu, ncol = 2)

@@ -107,14 +107,13 @@ model_Y_constant<- function(X, A) {
 #' A <- rep(1, 10)
 #' model_Xi_linear(X, A)
 #' @export
-model_Xi_linear <- function(X,A){
+model_Xi_linear <- function(X){
   n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,0.25)
   p1 <- expit(4*(X[,2]-1/2))
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
   
-  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
-  return(Xi.obs)
+  return(list(Xi.0,Xi.1))
 }
 
 #' Thresholded treatment effect on Xi component function
@@ -130,14 +129,13 @@ model_Xi_linear <- function(X,A){
 #' A <- rep(1, 10)
 #' model_Xi_threshold(X, A)
 #' @export
-model_Xi_threshold <- function(X,A){
+model_Xi_threshold <- function(X){
   n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,0.1)
   in_square <- (X[,3] > 0.2 & X[,3] < 0.8) & (X[,4] > 0.25 & X[,4] < 0.75)
   p1 <- ifelse(in_square, 0.85, 0.35)
   Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n,1,p1))
-  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
-  return(Xi.obs)
+  return(list(Xi.0,Xi.1))
 }
 
 #' Mixed treatment effect on Xi component function
@@ -153,7 +151,7 @@ model_Xi_threshold <- function(X,A){
 #' A <- rep(1, 10)
 #' model_Xi_mix(X, A)
 #' @export
-model_Xi_mix <- function(X, A) {
+model_Xi_mix <- function(X) {
   n <- nrow(X)
   threshold <- 0.3
   
@@ -173,8 +171,7 @@ model_Xi_mix <- function(X, A) {
   Xi.0 <- rbinom(n, 1, 0.1)
   Xi.1 <- rbinom(n, 1, prob)
   
-  Xi.obs <- ifelse(A == 1, Xi.1, Xi.0)
-  return(Xi.obs)
+  return(list(Xi.0,Xi.1))
 }
 #' Low treatment effect on Xi
 #'
@@ -189,13 +186,12 @@ model_Xi_mix <- function(X, A) {
 #' A <- rep(1, 10)
 #' model_Xi_satisfied(X, A)
 #' @export
-model_Xi_satisfied <- function(X,A){
+model_Xi_satisfied <- function(X){
   n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,1e-2)
   p1 <- 4*1e-2
   Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
-  Xi.obs <- ifelse(A==1, Xi.1, Xi.0)
-  return(Xi.obs)
+  return(list(Xi.0,Xi.1))
 }
 
 #' Linear-shaped Conditional Average Treatment Effect estimator for Y
@@ -452,8 +448,9 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
     delta_Nu <- delta_nu_satisfied
     mod_Xi <- model_Xi_satisfied  
   }
-  Xi.0 <- mod_Xi(X, rep(-1,n))
-  Xi.1<- mod_Xi(X, rep(1,n))
+  res_xi <- mod_Xi(X)
+  Xi.0 <- res_xi[[1]]
+  Xi.1<- res_xi[[2]]
   
   df_complete <- data.frame(X=X,
                             Treatment,
@@ -501,7 +498,7 @@ model_Y_realistic <- function(X,A){
 #' A <- rep(1, 10)
 #' model_Xi_linear(X, A)
 #' @export
-model_Xi_realistic <- function(X,A){
+model_Xi_realistic <- function(X){
   n <- nrow(X)
   p0 <- 0.01 
   xi.0 <- rbinom(n,1,p0)
@@ -509,9 +506,7 @@ model_Xi_realistic <- function(X,A){
   p1 <- ifelse((A == 1) & (X[,3] == 1),1,p1)
   xi.1 <- rbinom(n,1,p1)
   xi.1 <- ifelse(xi.0==1, 1, xi.1)
-  
-  xi.obs <- ifelse(A==1, xi.1, xi.0)
-  return(xi.obs)
+  return(list(xi.0, xi.1))
 }
 
 #' Realistic Conditional Average Treatment Effect estimator for Y
@@ -611,8 +606,9 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
   delta_Mu <- delta_mu_realistic
   delta_Nu <- delta_nu_realistic
   
-  Xi.0 <- model_Xi_realistic(X,rep(-1,n))
-  Xi.1 <- model_Xi_realistic(X, rep(1,n))
+  res_xi <-model_Xi_realistic(X)
+  Xi.0 <- res_xi[[1]]
+  Xi.1 <- res_xi[[2]]
   
   df_complete <- data.frame(X=X,Treatment, Y.1=Y.1, Y.0=Y.0,
                             min_Y=min(c(Y.1,Y.0)), 
