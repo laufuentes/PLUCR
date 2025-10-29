@@ -53,8 +53,8 @@ We generate synthetic observational data using the built-in `generate_data()` fu
 ```{r, eval=FALSE}
 n <- 3000  # Sample size
 ncov <- 10L # Number of covariates
-scenario_mu <- "Threshold"
-scenario_nu <- "Threshold"
+scenario_mu <- "Linear"
+scenario_nu <- "Linear"
 
 # Generate synthetic scenario
 exp <- PLUCR::generate_data(n, 

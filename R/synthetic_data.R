@@ -387,7 +387,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
                           scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied"), is_RCT=FALSE, 
                           seed=NA){
   # ncov <- 5L  
-  ncov <- R.utils::Arguments$getIntegers(ncov, c(2, 15))
+  ncov <- R.utils::Arguments$getIntegers(ncov, c(5, 15))
   scenario_mu <- match.arg(scenario_mu)
   scenario_nu <- match.arg(scenario_nu)
   if(!is.na(seed)){
@@ -503,7 +503,7 @@ model_Xi_realistic <- function(X){
   p0 <- 0.01 
   xi.0 <- rbinom(n,1,p0)
   p1 <- ifelse(X[,2]==0, p0 , 0.35)
-  p1 <- ifelse((A == 1) & (X[,3] == 1),1,p1)
+  p1 <- ifelse((X[,3] == 1),1,p1)
   xi.1 <- rbinom(n,1,p1)
   xi.1 <- ifelse(xi.0==1, 1, xi.1)
   return(list(xi.0, xi.1))
