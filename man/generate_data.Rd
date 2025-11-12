@@ -7,7 +7,7 @@
 generate_data(
   n,
   ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Constant"),
+  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Linear2"),
   scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied"),
   is_RCT = FALSE,
   seed = NA

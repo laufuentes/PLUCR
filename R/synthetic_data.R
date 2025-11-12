@@ -383,7 +383,7 @@ attr(delta_nu_satisfied, "vars")<- c(1, 2)
 #' head(data[[1]])  # complete data
 #' head(data[[2]])  # observed data
 #' @export
-generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant"), 
+generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Linear2"), 
                           scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied"), is_RCT=FALSE, 
                           seed=NA){
   # ncov <- 5L  
@@ -412,8 +412,8 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
     mod_Y <- model_Y_null 
     p.s <- expit(4*(X[,5]-1/2))
   } else{
-    delta_Mu <- delta_mu_constant
-    mod_Y <- model_Y_constant
+    delta_Mu <- delta_mu_linear
+    mod_Y <- model_Y_linear
     p.s <- expit(4*(X[,5]-1/2))
   }
   
