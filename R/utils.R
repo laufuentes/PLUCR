@@ -154,7 +154,7 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
 V_p <- function(psi, beta=0.05, centered=FALSEmake_psi(theta_oracular)(X_test), alpha=0.1, B=1e6, ncov=10L, 
-                scenario_mu=c("Linear", "Threshold", "Mix", "Constant", "Null", "Realistic"), 
+                scenario_mu=c("Linear", "Threshold", "Mix", "Linear2", "Null", "Realistic"), 
                 scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), seed=NA){
   `%>%`<- magrittr::`%>%`
   if(scenario_mu=="Realistic"){

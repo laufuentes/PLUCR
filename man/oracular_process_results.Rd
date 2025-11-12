@@ -7,7 +7,7 @@
 oracular_process_results(
   theta,
   ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Constant", "Realistic"),
+  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Linear2", "Realistic"),
   scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),
   lambda,
   alpha = 0.1,

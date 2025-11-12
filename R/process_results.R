@@ -98,7 +98,7 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
 #' @return A vector of optimized policy parameters (`theta`) trained across folds.
 #' @export
 oracular_process_results <- function(theta, ncov=10L, 
-                                     scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Constant", "Realistic"), 
+                                     scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Linear2", "Realistic"), 
                                      scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), 
                                      lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
   psi<- make_psi(theta)
