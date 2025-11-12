@@ -88,8 +88,8 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
 #'
 #' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
-#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
-#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
+#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Linear2", "Realistic").
+#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix","Satisfied", "Realistic").
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
 #' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.

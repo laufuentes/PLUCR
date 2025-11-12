@@ -20,9 +20,9 @@ oracular_process_results(
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
 
-\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").}
+\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Linear2", "Realistic").}
 
-\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").}
+\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix","Satisfied", "Realistic").}
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
