@@ -182,10 +182,10 @@ main_algorithm <- function(X, A, Y, Xi,
   }else{
     theta_final <- -sign(theta_0)*theta_0 * 1e100
     res <- process_results(theta_final, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  0, centered)
-    saveRDS(res, file=file.path(root.path,"Evaluation", paste0(iteration,"_",0, "_", lambda,".rds")))
+    saveRDS(res, file=file.path(root.path,"Evaluation", paste0(0, "_", lambda,".rds")))
     attr(theta_opt, "lambda") <- lambda
     attr(theta_opt, "beta") <- 0
-    saveRDS(theta_final, file = file.path(root.path, "Theta_opt", paste0(iteration,"_",0, "_", lambda, ".rds")))
+    saveRDS(theta_final, file = file.path(root.path, "Theta_opt", paste0(0, "_", lambda, ".rds")))
   }
   psi_values <- make_psi(theta_final)(X_test)
   optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
