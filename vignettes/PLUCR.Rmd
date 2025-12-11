@@ -35,7 +35,10 @@ This section demonstrates a basic example of how to use the `PLUCR` package. We 
 You can install the development version from your local source:
 
 ```{r,eval=FALSE}
-devtools::install_github("laufuentes/PLUCR")
+devtools::install_local(
+    "path/to/downloaded_file.tar.gz",
+    dependencies = TRUE # Install dependencies from CRAN
+)
 ```
 
 ## 2.2. Load required packages and data

@@ -3,7 +3,7 @@ Title: Policy Learning Under Constraint
 Version: 0.0.0.9000
 Authors@R: 
     person("Laura", "Fuentes Vicente", , "laura.fuentes-vicente@inria.fr", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: The `PLUCR` package provides tools for estimating treatment probabilities that maximize a primary clinical outcome while controlling for the occurrence of adverse events
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
