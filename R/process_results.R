@@ -30,28 +30,20 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   sigma_psi_X <- sigma_beta(psi_X,beta, centered)
   H_XA <- HX(A, X, prop_score)
   
+  # Build targeted risk estimator
   df_mu <- tibble::tibble(
     y = Y, new.cov=H_XA*as.vector(psi_X))
-  
-  df_nu <- tibble::tibble(
-    xi = Xi, new.cov=H_XA*as.vector(sigma_psi_X))
   
   mu_update_obj <- stats::glm(y ~ -1 + ., offset=offset_mu, data = df_mu, family=binomial())
   epsilon1 <- as.matrix(as.numeric(mu_update_obj$coefficients))
   
-  nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
-  epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
-  
   Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
       update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
-  Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
-      update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score))}
   
-  constraint <- S_p(psi, X,beta, alpha, centered, Delta_nu)
-  # Compute optimal policy value and its lower bound
+  # Compute policy value and its lower bound
   pi_X <- rbinom(nrow(X),1, prob= sigma_psi_X) # binary policy
   epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + ifelse(pi_X == A, HX(pi_X, X, prop_score), 0),
-    family = gaussian())
+                              family = gaussian())
   
   V_pn <- mean(mu0(pi_X, X) + 
                  coef(epsilon_model) * ifelse(pi_X == A, HX(pi_X, X, prop_score), 0))
@@ -60,6 +52,31 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
   Var_pn <- var( (ifelse(A==pi_X,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi_X,X))-V_pn) #varphi
   upper_bound_V_pn <- V_pn - 1.64*sqrt(Var_pn/nrow(X))
   
+  # If policy is 0 everywhere, no need to target estimator of constraint
+  if(all(sigma_psi_X==0)){
+    results <- data.frame(
+      lambda = lambda,
+      beta = beta,
+      risk = R_p(psi, X, Delta_mu),
+      constraint = -alpha,
+      obj = R_p(psi, X, Delta_mu) +lambda*(-alpha),
+      policy_value= V_pn,
+      lwr_bound_policy_value = upper_bound_V_pn, 
+      upper_bound_constraint = -alpha)
+    colnames(results) <- c("lambda","beta","risk","constraint","obj", "policy_value", "lwr_bound_policy_value", "upper_bound_constraint")
+  }
+  
+  # Build targeted constraint estimator
+  df_nu <- tibble::tibble(
+    xi = Xi, new.cov=H_XA*as.vector(sigma_psi_X))
+  
+  nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
+  epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
+  
+  Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
+      update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score))}
+  
+  constraint <- S_p(psi, X,beta, alpha, centered, Delta_nu)
   updated_nuXA <- update_nu_XA(qlogis(nu0(A,X)), epsilon2, sigma_psi_X, H_XA)
   
   Vs_n <- var(H_XA* sigma_psi_X*(Xi- updated_nuXA) +
