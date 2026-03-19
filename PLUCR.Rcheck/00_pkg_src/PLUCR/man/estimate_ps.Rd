@@ -17,7 +17,7 @@ estimate_ps(A, X, folds, SL.library, V = 2L, threshold = 0.01)
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 
-\item{threshold}{A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to $\link{threshold, 1 - threshold}$.}
+\item{threshold}{A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to \verb{[threshold, 1 - threshold]}.}
 }
 \value{
 A fold-specific function predicting propensity score given treatment (A) and covariates (X)

@@ -16,7 +16,6 @@ estimate_mu	estimate_mu
 estimate_nu	estimate_nu
 estimate_ps	estimate_ps
 estimate_real_valued_mu	estimate_real_valued_mu
-expit	expit
 FW	FW
 generate_data	generate_data
 generate_realistic_data	generate_realistic_data
@@ -26,7 +25,6 @@ grad_Lagrangian_p_X	grad_Lagrangian_p
 HX	HX
 Lagrangian_p	Lagrangian_p
 learn_threshold	learn_threshold
-logit	expit
 lwr_upper_bound_estimators	lwr_upper_bound_estimators
 main_algorithm	main_algorithm
 make_psi	make_psi

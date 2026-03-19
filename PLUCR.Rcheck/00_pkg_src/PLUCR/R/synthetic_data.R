@@ -103,8 +103,7 @@ model_Y_constant<- function(X, A) {
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*2), 10, 2)
-#' A <- rep(1, 10)
-#' model_Xi_linear(X, A)
+#' model_Xi_linear(X)
 #' @export
 model_Xi_linear <- function(X){
   n <- nrow(X)
@@ -124,8 +123,7 @@ model_Xi_linear <- function(X){
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*2), 10, 2)
-#' A <- rep(1, 10)
-#' model_Xi_threshold(X, A)
+#' model_Xi_threshold(X)
 #' @export
 model_Xi_threshold <- function(X){
   n <- nrow(X)
@@ -145,8 +143,7 @@ model_Xi_threshold <- function(X){
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*2), 10, 2)
-#' A <- rep(1, 10)
-#' model_Xi_mix(X, A)
+#' model_Xi_mix(X)
 #' @export
 model_Xi_mix <- function(X) {
   n <- nrow(X)
@@ -179,8 +176,7 @@ model_Xi_mix <- function(X) {
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*2), 10, 2)
-#' A <- rep(1, 10)
-#' model_Xi_satisfied(X, A)
+#' model_Xi_satisfied(X)
 #' @export
 model_Xi_satisfied <- function(X){
   n <- nrow(X)
@@ -486,13 +482,11 @@ model_Y_realistic <- function(X,A){
 #' Computes a realistic interaction term between covariates and treatment.
 #'
 #' @param X A matrix of covariates of size n x d (input data).
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*2), 10, 2)
-#' A <- rep(1, 10)
-#' model_Xi_linear(X, A)
+#' model_Xi_linear(X)
 #' @export
 model_Xi_realistic <- function(X){
   n <- nrow(X)

@@ -36,8 +36,7 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-# (Requires user-defined functions: mu0, nu0, 
-prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
+# (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
 # Optimization_Estimation(mu0, nu0, prop_score, df, 
                           lambda=1, alpha=0.1, precision=0.025, beta=0.05, 
                          centered=TRUE, folder="path/to/folder", prefix="run1")
@@ -391,8 +390,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_linear(X, A)
+model_Xi_linear(X)
 
 
 
@@ -409,8 +407,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_mix(X, A)
+model_Xi_mix(X)
 
 
 
@@ -427,8 +424,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_linear(X, A)
+model_Xi_linear(X)
 
 
 
@@ -445,8 +441,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_satisfied(X, A)
+model_Xi_satisfied(X)
 
 
 
@@ -463,8 +458,7 @@ flush(stderr()); flush(stdout())
 ### ** Examples
 
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_threshold(X, A)
+model_Xi_threshold(X)
 
 
 

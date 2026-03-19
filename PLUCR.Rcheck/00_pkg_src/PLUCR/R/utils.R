@@ -1,17 +1,3 @@
-#' The expit/logit functions
-#'
-#' @description
-#' expit(x) returns \code{1/(1+exp(-x))} for any real x. 
-#' 
-#' logit(p) return \code{log(p/(1-p))} for any probability p.
-#' 
-#' @export
-expit <- stats::plogis
-
-#' @rdname expit
-#' @export
-logit <- stats::qlogis
-
 #' Check input data for validity
 #'
 #' Performs quality control checks on the input data to ensure it meets expected formats and conditions.
@@ -192,10 +178,8 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, ncov=10L,
 #' and the expected outcome is calculated using counterfactual outcomes.
 #'
 #' @param policy A numeric vector of treatment probabilities associated with \code{X} (length n).
-#' @param y1 A numeric vector or matrix of length n representing primary outcomes under treatment (in [0, 1]).
-#' @param y0 A numeric vector or matrix of length n representing primary outcomes under no treatment (in [0, 1]).
-#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#' @param y1 A numeric vector or matrix of length n representing primary outcomes under treatment (in `[0, 1]`).
+#' @param y0 A numeric vector or matrix of length n representing primary outcomes under no treatment (in `[0, 1]`).
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export

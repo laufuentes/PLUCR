@@ -45,7 +45,6 @@ estimate_nu             Estimate nu
 estimate_ps             Estimate propensity score
 estimate_real_valued_mu
                         Estimate real-valued mu
-expit                   The expit/logit functions
 generate_data           Synthetic data generator and functions
                         generator
 generate_realistic_data

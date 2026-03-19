@@ -14,7 +14,7 @@ Imports: cowplot, dplyr, ggplot2, grf, gridExtra, glmnet, magrittr,
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2026-03-19 10:38:50 UTC; laurafuentesvicente
+Packaged: 2026-03-19 10:48:04 UTC; laurafuentesvicente
 Author: X X [aut, cre]
 Maintainer: X X <example@gmail.com>
-Built: R 4.5.2; ; 2026-03-19 10:39:02 UTC; unix
+Built: R 4.5.2; ; 2026-03-19 10:48:16 UTC; unix

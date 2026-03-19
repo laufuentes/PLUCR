@@ -8,8 +8,6 @@ model_Xi_realistic(X)
 }
 \arguments{
 \item{X}{A matrix of covariates of size n x d (input data).}
-
-\item{A}{A vector indicating treatment assignment (+1 or -1) for each observation.}
 }
 \value{
 A numeric vector with the transformed values based on covariates and treatment.
@@ -19,6 +17,5 @@ Computes a realistic interaction term between covariates and treatment.
 }
 \examples{
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_linear(X, A)
+model_Xi_linear(X)
 }

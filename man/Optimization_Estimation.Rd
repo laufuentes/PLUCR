@@ -70,11 +70,3 @@ two consecutive solutions do not change much.
 This function saves intermediate results to files in order to recover progress or inspect iteration-level behavior.
 If the optimization converges or the maximum number of iterations is reached, the final parameter vector \code{theta_init} is saved.
 }
-\examples{
-# (Requires user-defined functions: mu0, nu0, 
-prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-# Optimization_Estimation(mu0, nu0, prop_score, df, 
-                          lambda=1, alpha=0.1, precision=0.025, beta=0.05, 
-                         centered=TRUE, folder="path/to/folder", prefix="run1")
-
-}

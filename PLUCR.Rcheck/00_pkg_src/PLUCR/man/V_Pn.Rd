@@ -9,13 +9,9 @@ V_Pn(policy, y1, y0)
 \arguments{
 \item{policy}{A numeric vector of treatment probabilities associated with \code{X} (length n).}
 
-\item{y1}{A numeric vector or matrix of length n representing primary outcomes under treatment (in \link{0, 1}).}
+\item{y1}{A numeric vector or matrix of length n representing primary outcomes under treatment (in \verb{[0, 1]}).}
 
-\item{y0}{A numeric vector or matrix of length n representing primary outcomes under no treatment (in \link{0, 1}).}
-
-\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
-
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+\item{y0}{A numeric vector or matrix of length n representing primary outcomes under no treatment (in \verb{[0, 1]}).}
 }
 \value{
 A numeric scalar representing the expected primary outcome under the policy.

@@ -17,6 +17,5 @@ Computes a linear interaction term between covariates and treatment.
 }
 \examples{
 X <- matrix(stats::runif(10*2), 10, 2)
-A <- rep(1, 10)
-model_Xi_linear(X, A)
+model_Xi_linear(X)
 }
