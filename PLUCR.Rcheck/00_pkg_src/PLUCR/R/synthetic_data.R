@@ -507,7 +507,7 @@ model_Xi_realistic <- function(X){
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*3), 10, 3)
 #' delta_mu_realistic(X)
 #' @export
 delta_mu_realistic <- function(X){
@@ -526,7 +526,7 @@ attr(delta_mu_realistic, "vars")<- c(1, 4)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*3), 10, 3)
 #' delta_nu_realistic(X)
 #' @export
 delta_nu_realistic <- function(X){

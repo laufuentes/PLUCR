@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -329,8 +329,8 @@ File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count289
 \l__pdf_internal_box=\box57
 )
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -383,36 +383,32 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
-Package textcomp Info: Symbol \textasciigrave not provided by
-(textcomp)             font family ptm in TS1 encoding.
-(textcomp)             Default family used instead on input line 20.
-Package textcomp Info: Symbol \textasciigrave not provided by
-(textcomp)             font family ptm in TS1 encoding.
-(textcomp)             Default family used instead on input line 20.
-LaTeX Font Info:    Trying to load font information for T1+zi4 on input line 32
+LaTeX Font Info:    Trying to load font information for T1+zi4 on input line 33
 .
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 32.
+(Font)              scaled to size 10.0pt on input line 33.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.toc
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
- (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
- (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for U+rsfs on input line 1.
@@ -428,229 +424,229 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 \openout5 = `Rd2.toc'.
 
  [2]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 77--78
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 78--79
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 85--86
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 86--87
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 [3]
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 142.
+(Font)              scaled to size 9.0pt on input line 143.
  [4] [5] [6] [7] [8] [9]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 442--443
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 443--444
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 448--449
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 449--450
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (53.1279pt too wide) in paragraph at lines 454--455
+Overfull \hbox (53.1279pt too wide) in paragraph at lines 455--456
 \T1/ptm/m/n/10 bound es-ti-ma-tions (1e-2 by de-fault). Con-strains es-ti-ma-ti
 on to \T1/zi4/m/n/10 [threshold, 1 - threshold]\T1/ptm/m/n/10 . 
  []
 
 [10]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 508--509
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 509--510
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (53.1279pt too wide) in paragraph at lines 514--515
+Overfull \hbox (53.1279pt too wide) in paragraph at lines 515--516
 \T1/ptm/m/n/10 bound es-ti-ma-tions (1e-2 by de-fault). Con-strains es-ti-ma-ti
 on to \T1/zi4/m/n/10 [threshold, 1 - threshold]\T1/ptm/m/n/10 . 
  []
 
 [11]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 566--567
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 567--568
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (53.1279pt too wide) in paragraph at lines 572--573
+Overfull \hbox (53.1279pt too wide) in paragraph at lines 573--574
 \T1/ptm/m/n/10 bound es-ti-ma-tions (1e-2 by de-fault). Con-strains es-ti-ma-ti
 on to \T1/zi4/m/n/10 [threshold, 1 - threshold]\T1/ptm/m/n/10 . 
  []
 
 [12]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 625--626
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 626--627
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 [13]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 712--713
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 713--714
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
 
-Overfull \hbox (3.77783pt too wide) in paragraph at lines 714--715
+Overfull \hbox (3.77783pt too wide) in paragraph at lines 715--716
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
 [14]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 760--761
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 761--762
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
 
-Overfull \hbox (3.77783pt too wide) in paragraph at lines 762--763
+Overfull \hbox (3.77783pt too wide) in paragraph at lines 763--764
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
 [15] [16] [17] [18]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 972--973
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 973--974
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 976--977
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 977--978
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 [19]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1015--1016
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1016--1017
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-027.
+028.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [20]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1072--1073
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1073--1074
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (45.40752pt too wide) in paragraph at lines 1090--1091
+Overfull \hbox (45.40752pt too wide) in paragraph at lines 1091--1092
 []\T1/ptm/m/n/10 Vector of li-braries for train-ing Su-per Learner (c("SL.mean"
 ,"SL.glm","SL.ranger","SL.grf")
  []
 
 [21] [22] [23] [24] [25] [26] [27]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1493--1494
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1494--1495
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1497--1498
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1498--1499
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 [28] [29]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1569--1570
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1570--1571
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 [30]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1646--1647
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1647--1648
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1650--1651
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1651--1652
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 1658--1659
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 1659--1660
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 1660--1661
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 1661--1662
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 [31]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 1707--1708
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 1708--1709
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
 [32]
-Overfull \hbox (48.88718pt too wide) in paragraph at lines 1709--1710
+Overfull \hbox (48.88718pt too wide) in paragraph at lines 1710--1711
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix","Satisfied",
  []
 
 [33] [34] [35]
 LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 1
-885.
+886.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
 File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 1885.
+(Font)              scaled to size 10.0pt on input line 1886.
  [36]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1939--1940
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1940--1941
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 [37] [38] [39] [40] [41] [42] [43]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2322--2323
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2323--2324
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (16.26765pt too wide) in paragraph at lines 2324--2325
+Overfull \hbox (16.26765pt too wide) in paragraph at lines 2325--2326
 []\T1/ptm/m/n/10 A list of the op-ti-mal []\T1/zi4/m/n/10 theta []\T1/ptm/m/n/1
 0 en-abling the re-con-struc-tion of op-ti-mal []\T1/zi4/m/n/10 sigma_beta(psi)
 
  []
 
 [44]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2355--2356
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2356--2357
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
  []
 
 [45] [46]
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 2448--2449
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 2449--2450
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 2450--2451
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 2451--2452
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.ind [47]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.ind [47]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 41.
@@ -658,8 +654,8 @@ LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 [48
 
 ])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
-d42704b8/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpBB2Wdd/Rd2pdf1291
+52e7ffe03/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -667,31 +663,29 @@ Package rerunfilecheck Info: File `Rd2.out' has not changed.
 (rerunfilecheck)             Checksum: D8DC05C783A38325627F50008D121042;8814.
  ) 
 Here is how much of TeX's memory you used:
- 10786 strings out of 478268
- 167139 string characters out of 5846347
+ 10783 strings out of 478268
+ 167113 string characters out of 5846347
  453201 words of memory out of 5000000
- 28336 multiletter control sequences out of 15000+600000
- 507038 words of font info for 75 fonts, out of 8000000 for 9000
+ 28334 multiletter control sequences out of 15000+600000
+ 506703 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  77i,6n,79p,502b,618s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}{/
 usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texli
-ve/2022/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}{/usr/local/texlive/
-2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2
-022/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/
-texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/t
-exlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/tex
-live/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texli
-ve/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
-e/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/
-2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2022/texmf
--dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/font
-s/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/ur
-w/times/utmri8a.pfb>
-Output written on Rd2.pdf (48 pages, 215910 bytes).
+ve/2022/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</usr/local/texlive/
+2022/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local
+/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/
+texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/te
+xlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
+ive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
+ve/2022/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2022/te
+xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/f
+onts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1
+/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (48 pages, 207813 bytes).
 PDF statistics:
- 1135 PDF objects out of 1200 (max. 8388607)
- 1053 compressed objects within 11 object streams
+ 1129 PDF objects out of 1200 (max. 8388607)
+ 1049 compressed objects within 11 object streams
  475 named destinations out of 1000 (max. 500000)
  529 words of extra memory for PDF output out of 10000 (max. 10000000)
 

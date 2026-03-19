@@ -160,7 +160,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_realistic(X)
 numeric(0)
 > 
@@ -250,8 +250,52 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_realistic(X)
+ [1] -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_nu_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_nu_satisfied")
+> ### * delta_nu_satisfied
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_satisfied
+> ### Title: Computes the difference in expected outcomes under treatment and
+> ###   control.
+> ### Aliases: delta_nu_satisfied
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu_satisfied(X)
+[1] 0.0396
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_nu_satisfied", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_nu_threshold")
+> ### * delta_nu_threshold
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_threshold
+> ### Title: Thresholded Conditional Average Treatment Effect estimator for
+> ###   Xi
+> ### Aliases: delta_nu_threshold
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu_threshold(X)
 Error in X[, 3] : subscript out of bounds
-Calls: delta_nu_realistic -> ifelse
+Calls: delta_nu_threshold
 Execution halted

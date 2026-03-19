@@ -1,6 +1,6 @@
 name	user	system	elapsed
 HX	0	0	0	
-delta_mu_constant	0.000	0.000	0.001	
+delta_mu_constant	0	0	0	
 delta_mu_linear	0	0	0	
 delta_mu_mix	0	0	0	
 delta_mu_null	0	0	0	
@@ -8,3 +8,5 @@ delta_mu_realistic	0	0	0
 delta_mu_threshold	0	0	0	
 delta_nu_linear	0	0	0	
 delta_nu_mix	0	0	0	
+delta_nu_realistic	0	0	0	
+delta_nu_satisfied	0	0	0	

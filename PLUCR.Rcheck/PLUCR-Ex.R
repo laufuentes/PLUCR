@@ -133,7 +133,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*3), 10, 3)
 delta_mu_realistic(X)
 
 
@@ -216,7 +216,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*3), 10, 3)
 delta_nu_realistic(X)
 
 

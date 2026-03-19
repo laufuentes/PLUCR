@@ -18,7 +18,7 @@ A numeric vector with the transformed values based on covariates and treatment.
 Computes a null treatment effect for everyone
 }
 \examples{
-X <- matrix(stats::runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*3), 10, 3)
 A <- rep(1, 10)
 model_Y_constant_TE(X, A)
 }
