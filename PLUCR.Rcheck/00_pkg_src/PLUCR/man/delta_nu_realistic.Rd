@@ -17,5 +17,5 @@ Computes the difference in expected outcomes under treatment and control.
 }
 \examples{
 X <- matrix(stats::runif(10*2), 10, 2)
-delta_nu(X)
+delta_nu_realistic(X)
 }

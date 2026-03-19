@@ -76,8 +76,9 @@ The error most likely occurred in:
 > ### ** Examples
 > 
 > X <- matrix(stats::runif(10*2), 10, 2)
-> delta_nu(X)
-Error in delta_nu(X) : could not find function "delta_nu"
+> delta_nu_realistic(X)
+Error in X[, 3] : subscript out of bounds
+Calls: delta_nu_realistic -> ifelse
 Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK

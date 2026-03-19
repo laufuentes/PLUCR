@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -329,8 +329,8 @@ File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count289
 \l__pdf_internal_box=\box57
 )
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -383,10 +383,10 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -405,8 +405,8 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 32.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.toc
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
  (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -649,8 +649,8 @@ ear", "Thresh-old", "Mix").
  []
 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.ind [47]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.ind [47]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 41.
@@ -658,8 +658,8 @@ LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 [48
 
 ])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
-5880eaf1/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpXO2UeB/Rd2pdf122c
+d42704b8/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
