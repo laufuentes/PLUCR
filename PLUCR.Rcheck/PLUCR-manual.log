@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -329,8 +329,8 @@ File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count289
 \l__pdf_internal_box=\box57
 )
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -383,10 +383,10 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -405,16 +405,14 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 32.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.toc
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
-
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
-
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
+ (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for U+rsfs on input line 1.
@@ -569,96 +567,90 @@ mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ).
  []
 
 [30]
-Overfull \hbox (87.74715pt too wide) in paragraph at lines 1610--1610
- []\T1/zi4/m/n/9 # (Requires user-defined functions: mu0, nu0, prop_score, FW, 
-make_psi, sigma_beta, update_mu_XA, update_nu_XA) 
- []
-
-
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1656--1657
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1646--1647
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
-[31]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1660--1661
+
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1650--1651
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 1668--1669
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 1658--1659
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 1670--1671
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 1660--1661
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
-[32]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 1717--1718
+[31]
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 1707--1708
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
  []
 
-
-Overfull \hbox (48.88718pt too wide) in paragraph at lines 1719--1720
+[32]
+Overfull \hbox (48.88718pt too wide) in paragraph at lines 1709--1710
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix","Satisfied",
  []
 
 [33] [34] [35]
 LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 1
-895.
+885.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
 File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 1895.
+(Font)              scaled to size 10.0pt on input line 1885.
  [36]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1949--1950
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1939--1940
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
  []
 
 [37] [38] [39] [40] [41] [42] [43]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2332--2333
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2322--2323
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
  []
 
 
-Overfull \hbox (16.26765pt too wide) in paragraph at lines 2334--2335
+Overfull \hbox (16.26765pt too wide) in paragraph at lines 2324--2325
 []\T1/ptm/m/n/10 A list of the op-ti-mal []\T1/zi4/m/n/10 theta []\T1/ptm/m/n/1
 0 en-abling the re-con-struc-tion of op-ti-mal []\T1/zi4/m/n/10 sigma_beta(psi)
 
  []
 
 [44]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2365--2366
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2355--2356
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
  []
 
 [45] [46]
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 2458--2459
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 2448--2449
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 2460--2461
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 2450--2451
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
  []
 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.ind [47]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.ind [47]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 41.
@@ -666,8 +658,8 @@ LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 [48
 
 ])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -675,8 +667,8 @@ Package rerunfilecheck Info: File `Rd2.out' has not changed.
 (rerunfilecheck)             Checksum: D8DC05C783A38325627F50008D121042;8814.
  ) 
 Here is how much of TeX's memory you used:
- 10787 strings out of 478268
- 167164 string characters out of 5846347
+ 10786 strings out of 478268
+ 167139 string characters out of 5846347
  453201 words of memory out of 5000000
  28336 multiletter control sequences out of 15000+600000
  507038 words of font info for 75 fonts, out of 8000000 for 9000
@@ -696,10 +688,10 @@ e/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/
 -dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/font
 s/type1/urw/times/utmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/ur
 w/times/utmri8a.pfb>
-Output written on Rd2.pdf (48 pages, 216068 bytes).
+Output written on Rd2.pdf (48 pages, 215910 bytes).
 PDF statistics:
- 1136 PDF objects out of 1200 (max. 8388607)
- 1054 compressed objects within 11 object streams
- 476 named destinations out of 1000 (max. 500000)
+ 1135 PDF objects out of 1200 (max. 8388607)
+ 1053 compressed objects within 11 object streams
+ 475 named destinations out of 1000 (max. 500000)
  529 words of extra memory for PDF output out of 10000 (max. 10000000)
 

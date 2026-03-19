@@ -55,27 +55,30 @@ Namespaces in Imports field not imported from:
 * checking R code for possible problems ... OK
 * checking Rd files ... OK
 * checking Rd metadata ... OK
-* checking Rd line widths ... NOTE
-Rd file 'Optimization_Estimation.Rd':
-  \examples lines wider than 100 characters:
-     # (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-
-These lines will be truncated in the PDF manual.
+* checking Rd line widths ... OK
 * checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... OK
 * checking Rd contents ... OK
-* checking for unstated dependencies in examples ... ERROR
-Warning: parse error in file 'lines':
-35: unexpected ','
-40: # Optimization_Estimation(mu0, nu0, prop_score, df, 
-41:                           lambda=1,
-                                      ^
-** will not attempt to run examples
+* checking for unstated dependencies in examples ... OK
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... SKIPPED
+* checking examples ... ERROR
+Running examples in ‘PLUCR-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_realistic
+> ### Title: Realistic Conditional Average Treatment Effect estimator for Xi
+> ### Aliases: delta_nu_realistic
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu(X)
+Error in delta_nu(X) : could not find function "delta_nu"
+Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
 * checking re-building of vignette outputs ... OK
@@ -88,4 +91,4 @@ Skipping checking math rendering: package 'V8' unavailable
 * checking for non-standard things in the check directory ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 6 NOTEs
+Status: 1 ERROR, 5 NOTEs

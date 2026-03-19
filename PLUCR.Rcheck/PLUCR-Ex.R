@@ -1,6 +1,18 @@
 pkgname <- "PLUCR"
 source(file.path(R.home("share"), "R", "examples-header.R"))
 options(warn = 1)
+base::assign(".ExTimings", "PLUCR-Ex.timings", pos = 'CheckExEnv')
+base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+base::assign(".format_ptime",
+function(x) {
+  if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
+  if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
+  options(OutDec = '.')
+  format(x[1L:3L], digits = 7L)
+},
+pos = 'CheckExEnv')
+
+### * </HEADER>
 library('PLUCR')
 
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
@@ -11,6 +23,7 @@ nameEx("HX")
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: HX
 ### Title: Compute the Inverse Propensity Score Weight (IPW)
 ### Aliases: HX
@@ -24,32 +37,15 @@ HX(1, data.frame(x1 = 1, x2 = 2), prop_model)
 
 
 
-cleanEx()
-nameEx("Optimization_Estimation")
-### * Optimization_Estimation
-
-flush(stderr()); flush(stdout())
-
-### Name: Optimization_Estimation
-### Title: Iterative optimization procedure
-### Aliases: Optimization_Estimation
-
-### ** Examples
-
-# (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-# Optimization_Estimation(mu0, nu0, prop_score, df, 
-                          lambda=1, alpha=0.1, precision=0.025, beta=0.05, 
-                         centered=TRUE, folder="path/to/folder", prefix="run1")
-
-
-
-
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("HX", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_constant")
 ### * delta_mu_constant
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_constant
 ### Title: Constant Conditional Average Treatment Effect estimator for Y
 ### Aliases: delta_mu_constant
@@ -61,12 +57,15 @@ delta_mu_constant(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_constant", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_linear")
 ### * delta_mu_linear
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_linear
 ### Title: Linear-shaped Conditional Average Treatment Effect estimator for
 ###   Y
@@ -79,12 +78,15 @@ delta_mu_linear(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_mix")
 ### * delta_mu_mix
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_mix
 ### Title: Mixed-shape Conditional Average Treatment Effect estimator for Y
 ### Aliases: delta_mu_mix
@@ -96,12 +98,15 @@ delta_mu_mix(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_null")
 ### * delta_mu_null
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_null
 ### Title: Null Conditional Average Treatment Effect estimator for Y
 ### Aliases: delta_mu_null
@@ -113,12 +118,15 @@ delta_mu_null(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_null", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_realistic")
 ### * delta_mu_realistic
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_realistic
 ### Title: Realistic Conditional Average Treatment Effect estimator for Y
 ### Aliases: delta_mu_realistic
@@ -130,12 +138,15 @@ delta_mu_realistic(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_mu_threshold")
 ### * delta_mu_threshold
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_mu_threshold
 ### Title: Thresholded-shaped Conditional Average Treatment Effect
 ###   estimator for Y
@@ -148,12 +159,15 @@ delta_mu_threshold(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_mu_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_nu_linear")
 ### * delta_nu_linear
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_nu_linear
 ### Title: Linear-shaped Conditional Average Treatment Effect estimator for
 ###   Xi
@@ -166,12 +180,15 @@ delta_nu_linear(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_nu_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_nu_mix")
 ### * delta_nu_mix
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_nu_mix
 ### Title: Mixed-shaped Conditional Average Treatment Effect estimator for
 ###   Xi
@@ -184,12 +201,15 @@ delta_nu_mix(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_nu_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_nu_realistic")
 ### * delta_nu_realistic
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_nu_realistic
 ### Title: Realistic Conditional Average Treatment Effect estimator for Xi
 ### Aliases: delta_nu_realistic
@@ -201,12 +221,15 @@ delta_nu(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_nu_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_nu_satisfied")
 ### * delta_nu_satisfied
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_nu_satisfied
 ### Title: Computes the difference in expected outcomes under treatment and
 ###   control.
@@ -219,12 +242,15 @@ delta_nu_satisfied(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_nu_satisfied", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("delta_nu_threshold")
 ### * delta_nu_threshold
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: delta_nu_threshold
 ### Title: Thresholded Conditional Average Treatment Effect estimator for
 ###   Xi
@@ -237,12 +263,15 @@ delta_nu_threshold(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("delta_nu_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("estimate_mu")
 ### * estimate_mu
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: estimate_mu
 ### Title: Estimate mu
 ### Aliases: estimate_mu
@@ -272,12 +301,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("estimate_mu", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("estimate_nu")
 ### * estimate_nu
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: estimate_nu
 ### Title: Estimate nu
 ### Aliases: estimate_nu
@@ -307,12 +339,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("estimate_nu", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("estimate_ps")
 ### * estimate_ps
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: estimate_ps
 ### Title: Estimate propensity score
 ### Aliases: estimate_ps
@@ -341,12 +376,15 @@ flush(stderr()); flush(stdout())
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("estimate_ps", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("generate_data")
 ### * generate_data
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: generate_data
 ### Title: Synthetic data generator and functions generator
 ### Aliases: generate_data
@@ -359,12 +397,15 @@ head(data[[2]])  # observed data
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("generate_data", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("generate_realistic_data")
 ### * generate_realistic_data
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: generate_realistic_data
 ### Title: Realistic synthetic data generator and functions generator
 ### Aliases: generate_realistic_data
@@ -377,12 +418,15 @@ head(data[[2]])  # observed data
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("generate_realistic_data", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Xi_linear")
 ### * model_Xi_linear
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Xi_linear
 ### Title: Linear treatment effect on Xi Component Function
 ### Aliases: model_Xi_linear
@@ -394,12 +438,15 @@ model_Xi_linear(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Xi_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Xi_mix")
 ### * model_Xi_mix
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Xi_mix
 ### Title: Mixed treatment effect on Xi component function
 ### Aliases: model_Xi_mix
@@ -411,12 +458,15 @@ model_Xi_mix(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Xi_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Xi_realistic")
 ### * model_Xi_realistic
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Xi_realistic
 ### Title: Realistic treatment effect on Xi Component Function
 ### Aliases: model_Xi_realistic
@@ -428,12 +478,15 @@ model_Xi_linear(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Xi_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Xi_satisfied")
 ### * model_Xi_satisfied
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Xi_satisfied
 ### Title: Low treatment effect on Xi
 ### Aliases: model_Xi_satisfied
@@ -445,12 +498,15 @@ model_Xi_satisfied(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Xi_satisfied", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Xi_threshold")
 ### * model_Xi_threshold
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Xi_threshold
 ### Title: Thresholded treatment effect on Xi component function
 ### Aliases: model_Xi_threshold
@@ -462,12 +518,15 @@ model_Xi_threshold(X)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Xi_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_constant")
 ### * model_Y_constant
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_constant
 ### Title: Constant treatment effect on Y component function
 ### Aliases: model_Y_constant
@@ -480,12 +539,15 @@ model_Y_constant_TE(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_constant", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_linear")
 ### * model_Y_linear
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_linear
 ### Title: Linear treatment effect on Y component function
 ### Aliases: model_Y_linear
@@ -498,12 +560,15 @@ model_Y_linear(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_mix")
 ### * model_Y_mix
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_mix
 ### Title: Mixed treatment effect on Y component function
 ### Aliases: model_Y_mix
@@ -516,12 +581,15 @@ model_Y_mix(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_null")
 ### * model_Y_null
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_null
 ### Title: No treatment effect on Y component function
 ### Aliases: model_Y_null
@@ -534,12 +602,15 @@ model_Y_null_TE(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_null", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_realistic")
 ### * model_Y_realistic
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_realistic
 ### Title: Realistic treatment effect on Y component function
 ### Aliases: model_Y_realistic
@@ -552,12 +623,15 @@ model_Y_linear(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("model_Y_threshold")
 ### * model_Y_threshold
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: model_Y_threshold
 ### Title: Thresholded treatment effect on Y component function
 ### Aliases: model_Y_threshold
@@ -570,12 +644,15 @@ model_Y_threshold(X, A)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("model_Y_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("phi")
 ### * phi
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: phi
 ### Title: Normalize a Matrix by Column Min-Max Scaling
 ### Aliases: phi
@@ -592,12 +669,15 @@ attributes(X_norm)$max_X
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("phi", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 cleanEx()
 nameEx("phi_inv")
 ### * phi_inv
 
 flush(stderr()); flush(stdout())
 
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 ### Name: phi_inv
 ### Title: Inverse Min-Max Normalization
 ### Aliases: phi_inv
@@ -613,6 +693,8 @@ all.equal(X, X_recovered)
 
 
 
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("phi_inv", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 ### * <FOOTER>
 ###
 cleanEx()

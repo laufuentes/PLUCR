@@ -165,63 +165,59 @@ Overfull \hbox (3.80762pt too wide) in paragraph at lines 1569--1570
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [29]
-Overfull \hbox (87.74715pt too wide) in paragraph at lines 1610--1610
- []\T1/zi4/m/n/9 # (Requires user-defined functions: mu0, nu0, prop_score, FW, 
-make_psi, sigma_beta, update_mu_XA, update_nu_XA) 
-
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1656--1657
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1646--1647
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
-[30]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1660--1661
+
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1650--1651
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 1668--1669
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 1658--1659
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 1670--1671
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 1660--1661
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
-[31]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 1717--1718
+[30]
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 1707--1708
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
-
-Overfull \hbox (48.88718pt too wide) in paragraph at lines 1719--1720
+[31]
+Overfull \hbox (48.88718pt too wide) in paragraph at lines 1709--1710
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix","Satisfied",
 [32] [33] [34]
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd) [35]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1949--1950
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1939--1940
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [36] [37] [38] [39] [40] [41] [42]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2332--2333
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2322--2323
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (16.26765pt too wide) in paragraph at lines 2334--2335
+Overfull \hbox (16.26765pt too wide) in paragraph at lines 2324--2325
 []\T1/ptm/m/n/10 A list of the op-ti-mal []\T1/zi4/m/n/10 theta []\T1/ptm/m/n/1
 0 en-abling the re-con-struc-tion of op-ti-mal []\T1/zi4/m/n/10 sigma_beta(psi)
 
 [43]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2365--2366
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2355--2356
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 [44] [45]
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 2458--2459
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 2448--2449
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 2460--2461
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 2450--2451
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
 No file Rd2.ind.
 [46]
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 
 Package rerunfilecheck Warning: File `Rd2.out' has changed.
 (rerunfilecheck)                Rerun to get outlines right
@@ -242,7 +238,7 @@ pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
 rw/times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
 </usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (46 pages, 204267 bytes).
+Output written on Rd2.pdf (46 pages, 204534 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.16 [TeX Live 2022] (kpathsea + Thai support).
 Scanning input file Rd2.idx....done (68 entries accepted, 0 rejected).
@@ -314,23 +310,22 @@ For additional information on amsmath, use the `?' option.
 Writing index file Rd2.idx
 (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/t1ptm.fd)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 (/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty)
 (/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
 ty))
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.toc
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd)
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.toc (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd) [1{/usr/local/
 texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) [2]
 Overfull \hbox (3.80762pt too wide) in paragraph at lines 77--78
@@ -421,69 +416,65 @@ Overfull \hbox (3.80762pt too wide) in paragraph at lines 1569--1570
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [30]
-Overfull \hbox (87.74715pt too wide) in paragraph at lines 1610--1610
- []\T1/zi4/m/n/9 # (Requires user-defined functions: mu0, nu0, prop_score, FW, 
-make_psi, sigma_beta, update_mu_XA, update_nu_XA) 
-
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1656--1657
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1646--1647
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
-[31]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1660--1661
+
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1650--1651
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 1668--1669
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 1658--1659
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 1670--1671
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 1660--1661
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
-[32]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 1717--1718
+[31]
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 1707--1708
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
-
-Overfull \hbox (48.88718pt too wide) in paragraph at lines 1719--1720
+[32]
+Overfull \hbox (48.88718pt too wide) in paragraph at lines 1709--1710
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix","Satisfied",
 [33] [34] [35]
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd) [36]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1949--1950
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1939--1940
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [37] [38] [39] [40] [41] [42] [43]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2332--2333
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2322--2323
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (16.26765pt too wide) in paragraph at lines 2334--2335
+Overfull \hbox (16.26765pt too wide) in paragraph at lines 2324--2325
 []\T1/ptm/m/n/10 A list of the op-ti-mal []\T1/zi4/m/n/10 theta []\T1/ptm/m/n/1
 0 en-abling the re-con-struc-tion of op-ti-mal []\T1/zi4/m/n/10 sigma_beta(psi)
 
 [44]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2365--2366
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2355--2356
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 [45] [46]
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 2458--2459
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 2448--2449
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 2460--2461
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 2450--2451
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.ind [47]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.ind [47]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 41.
 
 [48])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -507,7 +498,7 @@ pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
 rw/times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
 </usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (48 pages, 215088 bytes).
+Output written on Rd2.pdf (48 pages, 214970 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.16 [TeX Live 2022] (kpathsea + Thai support).
 Scanning input file Rd2.idx....done (68 entries accepted, 0 rejected).
@@ -579,23 +570,22 @@ For additional information on amsmath, use the `?' option.
 Writing index file Rd2.idx
 (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/t1ptm.fd)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 (/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty)
 (/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
 ty))
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.out)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.toc
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd)
-(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.toc (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd) [1{/usr/local/
 texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) [2]
 Overfull \hbox (3.80762pt too wide) in paragraph at lines 77--78
@@ -686,69 +676,65 @@ Overfull \hbox (3.80762pt too wide) in paragraph at lines 1569--1570
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [30]
-Overfull \hbox (87.74715pt too wide) in paragraph at lines 1610--1610
- []\T1/zi4/m/n/9 # (Requires user-defined functions: mu0, nu0, prop_score, FW, 
-make_psi, sigma_beta, update_mu_XA, update_nu_XA) 
-
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1656--1657
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1646--1647
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
-[31]
-Overfull \hbox (0.42761pt too wide) in paragraph at lines 1660--1661
+
+Overfull \hbox (0.42761pt too wide) in paragraph at lines 1650--1651
 []\T1/ptm/m/n/10 A list of cross-validation folds, typ-i-cally cre-ated with []
 \T1/zi4/m/n/10 SuperLearner::CVFolds[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 1668--1669
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 1658--1659
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 1670--1671
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 1660--1661
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
-[32]
-Overfull \hbox (5.44775pt too wide) in paragraph at lines 1717--1718
+[31]
+Overfull \hbox (5.44775pt too wide) in paragraph at lines 1707--1708
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix",
-
-Overfull \hbox (48.88718pt too wide) in paragraph at lines 1719--1720
+[32]
+Overfull \hbox (48.88718pt too wide) in paragraph at lines 1709--1710
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix","Satisfied",
 [33] [34] [35]
 (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd) [36]
-Overfull \hbox (3.80762pt too wide) in paragraph at lines 1949--1950
+Overfull \hbox (3.80762pt too wide) in paragraph at lines 1939--1940
 []\T1/ptm/m/n/10 A nu-meric vec-tor or ma-trix of length n rep-re-sent-ing pri-
 mary out-comes (in \T1/zi4/m/n/10 [0,1]\T1/ptm/m/n/10 ). 
 [37] [38] [39] [40] [41] [42] [43]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2332--2333
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2322--2323
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 
-Overfull \hbox (16.26765pt too wide) in paragraph at lines 2334--2335
+Overfull \hbox (16.26765pt too wide) in paragraph at lines 2324--2325
 []\T1/ptm/m/n/10 A list of the op-ti-mal []\T1/zi4/m/n/10 theta []\T1/ptm/m/n/1
 0 en-abling the re-con-struc-tion of op-ti-mal []\T1/zi4/m/n/10 sigma_beta(psi)
 
 [44]
-Overfull \hbox (12.53784pt too wide) in paragraph at lines 2365--2366
+Overfull \hbox (12.53784pt too wide) in paragraph at lines 2355--2356
 []\T1/ptm/m/n/10 A nu-meric vec-tor of GLM co-ef-fi-cients for each col-umn in 
 []\T1/zi4/m/n/10 sigma_psi_collection[]\T1/ptm/m/n/10 . 
 [45] [46]
-Overfull \hbox (8.77771pt too wide) in paragraph at lines 2458--2459
+Overfull \hbox (8.77771pt too wide) in paragraph at lines 2448--2449
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Mu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-Overfull \hbox (7.10779pt too wide) in paragraph at lines 2460--2461
+Overfull \hbox (7.10779pt too wide) in paragraph at lines 2450--2451
 []\T1/ptm/m/n/10 String in-di-cat-ing the type of sce-nario for delta_Nu ("Lin-
 ear", "Thresh-old", "Mix"). 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.ind [47]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.ind [47]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 41.
 
 [48])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpguPGs2/Rd2pdf1166
-a65079862/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpsOPpo8/Rd2pdf11ca
+5880eaf1/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -767,8 +753,8 @@ pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
 rw/times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
 </usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (48 pages, 216068 bytes).
+Output written on Rd2.pdf (48 pages, 215910 bytes).
 Transcript written on Rd2.log.
 Saving output to ‘PLUCR-manual.pdf’ ...
 Done
-You may want to clean up by 'rm -Rf /var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T//RtmpguPGs2/Rd2pdf1166a65079862'
+You may want to clean up by 'rm -Rf /var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T//RtmpsOPpo8/Rd2pdf11ca5880eaf1'

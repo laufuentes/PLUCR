@@ -1,0 +1,256 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "PLUCR"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "PLUCR-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('PLUCR')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("HX")
+> ### * HX
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: HX
+> ### Title: Compute the Inverse Propensity Score Weight (IPW)
+> ### Aliases: HX
+> 
+> ### ** Examples
+> 
+> # Example usage:
+> prop_model <- function(A, X) { 0.5 }  # Constant propensity score for illustration
+> HX(1, data.frame(x1 = 1, x2 = 2), prop_model)
+[1] 2
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("HX", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_constant")
+> ### * delta_mu_constant
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_constant
+> ### Title: Constant Conditional Average Treatment Effect estimator for Y
+> ### Aliases: delta_mu_constant
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_constant(X)
+ [1] 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768
+ [8] 0.4188768 0.4188768 0.4188768
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_constant", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_linear")
+> ### * delta_mu_linear
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_linear
+> ### Title: Linear-shaped Conditional Average Treatment Effect estimator for
+> ###   Y
+> ### Aliases: delta_mu_linear
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_linear(X)
+ [1]  0.46003416  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
+ [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_mix")
+> ### * delta_mu_mix
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_mix
+> ### Title: Mixed-shape Conditional Average Treatment Effect estimator for Y
+> ### Aliases: delta_mu_mix
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_mix(X)
+ [1]  0.94530202  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
+ [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_null")
+> ### * delta_mu_null
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_null
+> ### Title: Null Conditional Average Treatment Effect estimator for Y
+> ### Aliases: delta_mu_null
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_null(X)
+[1] 0
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_null", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_realistic")
+> ### * delta_mu_realistic
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_realistic
+> ### Title: Realistic Conditional Average Treatment Effect estimator for Y
+> ### Aliases: delta_mu_realistic
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_realistic(X)
+numeric(0)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_realistic", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_mu_threshold")
+> ### * delta_mu_threshold
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_mu_threshold
+> ### Title: Thresholded-shaped Conditional Average Treatment Effect
+> ###   estimator for Y
+> ### Aliases: delta_mu_threshold
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_mu_threshold(X)
+ [1] -0.40080405 -0.40080405  0.47549420  0.04746046  0.04746046  0.04746046
+ [7]  0.47549420  0.47549420  0.04746046  0.04746046
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_mu_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_nu_linear")
+> ### * delta_nu_linear
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_linear
+> ### Title: Linear-shaped Conditional Average Treatment Effect estimator for
+> ###   Xi
+> ### Aliases: delta_nu_linear
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu_linear(X)
+ [1] 0.1768154 0.1614112 0.5090720 0.2896018 0.5597804 0.3732744 0.5286332
+ [8] 0.6580168 0.2867140 0.5640662
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_nu_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_nu_mix")
+> ### * delta_nu_mix
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_mix
+> ### Title: Mixed-shaped Conditional Average Treatment Effect estimator for
+> ###   Xi
+> ### Aliases: delta_nu_mix
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu_mix(X)
+ [1] 0.21217846 0.19369339 0.04268329 0.34752211 0.67173653 0.44792933
+ [7] 0.63435989 0.78962015 0.04268329 0.67687943
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_nu_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("delta_nu_realistic")
+> ### * delta_nu_realistic
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: delta_nu_realistic
+> ### Title: Realistic Conditional Average Treatment Effect estimator for Xi
+> ### Aliases: delta_nu_realistic
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*2), 10, 2)
+> delta_nu(X)
+Error in delta_nu(X) : could not find function "delta_nu"
+Execution halted
