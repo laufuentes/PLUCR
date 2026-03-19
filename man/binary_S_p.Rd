@@ -9,9 +9,9 @@ binary_S_p(pi_X, X, alpha, delta_Nu)
 \arguments{
 \item{pi_X}{A numeric vector of binary decisions of length n.}
 
-\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
 
 \item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
 }

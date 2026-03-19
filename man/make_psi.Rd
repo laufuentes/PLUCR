@@ -10,7 +10,7 @@ make_psi(Theta)
 \item{Theta}{A numeric matrix (k x d). Each row \code{theta} is from FW inner minimization, used to recover an extremal point for convex function construction.}
 }
 \value{
-A function \code{psi} that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]},
+A function \code{psi} that takes an input \code{X} and returns a numeric vector with values in the range \verb{[-1,1]},
 using a convex combination of past \code{theta} solutions.
 }
 \description{

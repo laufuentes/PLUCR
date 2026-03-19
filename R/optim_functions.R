@@ -6,7 +6,7 @@
 #'
 #' @param Theta A numeric matrix (k x d). Each row \code{theta} is from FW inner minimization, used to recover an extremal point for convex function construction.
 #'
-#' @return A function \code{psi} that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]},
+#' @return A function \code{psi} that takes an input \code{X} and returns a numeric vector with values in the range `[-1,1]`,
 #'         using a convex combination of past \code{theta} solutions.
 #' @export
 make_psi <- function(Theta) {
@@ -51,12 +51,12 @@ make_psi <- function(Theta) {
 #' Performs stochastic gradient descent to optimize the parameters.
 #'
 #' @param theta_current A numeric matrix of size 1 x d (intialization for parameter to estimate).
-#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range `[-1,1]`.
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param batch_prop Proportion of data in a batch (by default 1/5).
@@ -126,11 +126,11 @@ SGD <- function(theta_current, psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, be
 #' is computed via stochastic gradient descent (SGD) and added to the convex combination  
 #' in the form \eqn{2 \cdot \text{expit}(X \theta) - 1}.
 #'
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical (FALSE by default) indicating whether to center the policy.
 #' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.

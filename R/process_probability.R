@@ -7,12 +7,12 @@
 #' under constraint satisfaction.
 #'
 #' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #'
 #' @return 
 #' A numeric value corresponding to the optimal threshold chosen 
@@ -65,11 +65,11 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha){
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #' @param pi A binary treatment rule vector indicating treatment assignment 
 #'   under the learned decision rule.
-#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #'
 #' @return 
 #' A list containing a numeric vector of length 2:

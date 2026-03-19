@@ -16,7 +16,7 @@ visual_treatment_plot(
 )
 }
 \arguments{
-\item{psi_X}{A numeric vector with values in the range \code{[-1, 1]} representing the output of \code{psi} at fixed X.}
+\item{psi_X}{A numeric vector with values in the range \verb{[-1,1]} representing the output of \code{psi} at fixed X.}
 
 \item{lambda}{Regularization scalar for the constraint (display purposes).}
 

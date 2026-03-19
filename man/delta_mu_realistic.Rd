@@ -17,5 +17,5 @@ Computes the difference in expected Y outcomes under treatment and control, usin
 }
 \examples{
 X <- matrix(stats::runif(10*2), 10, 2)
-delta_mu(X)
+delta_mu_realistic(X)
 }

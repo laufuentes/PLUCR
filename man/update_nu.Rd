@@ -18,7 +18,7 @@ update_nu(
 \arguments{
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{nu0}{A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).}
 
@@ -33,7 +33,7 @@ update_nu(
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 }
 \value{
-A numeric vector of updated nu on the \code{[0,1]} scale.
+A numeric vector of updated nu on the \verb{[0,1]} scale.
 }
 \description{
 Computes updated Nu predictions by adding the bias correction for all previous solutions at X

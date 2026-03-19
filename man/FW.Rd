@@ -17,7 +17,7 @@ FW(
 )
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 
@@ -25,7 +25,7 @@ FW(
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 

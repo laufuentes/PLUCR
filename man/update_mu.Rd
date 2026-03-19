@@ -9,7 +9,7 @@ update_mu(A, X, mu0, epsilon1, theta_collection, prop_score)
 \arguments{
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
 
@@ -20,7 +20,7 @@ update_mu(A, X, mu0, epsilon1, theta_collection, prop_score)
 \item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 }
 \value{
-A numeric vector of updated mu on the \code{[0,1]} scale.
+A numeric vector of updated mu on the \verb{[0,1]} scale.
 }
 \description{
 Computes updated Mu predictions by adding the bias correction for all previous solutions at X

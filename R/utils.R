@@ -16,10 +16,10 @@ logit <- stats::qlogis
 #'
 #' Performs quality control checks on the input data to ensure it meets expected formats and conditions.
 #'
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #'
 #' @return A list with elements: `ok` (logical), and `diagnoses` (character vector of issues).
@@ -87,10 +87,10 @@ check_data <- function(Y, Xi, A, X, folds) {
 
 #' Link function
 #'
-#' Link function mapping \code{[-1,1]} to \code{[0,1]}, parametrized    
+#' Link function mapping `[-1,1]` to `[0,1]`, parametrized    
 #' by \code{beta} with an optional centering.
 #'
-#' @param t A vector of numerics (in \code{[-1,1]}).
+#' @param t A vector of numerics (in `[-1,1]`).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -116,7 +116,7 @@ sigma_beta <- function(t, beta=0.05, centered=FALSE) {
 #' Computes the derivative of the link function \code{sigma_beta},  
 #' with respect to t.
 #'
-#' @param t A vector of numerics (in \code{[-1,1]}).
+#' @param t A vector of numerics (in `[-1,1]`).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -141,10 +141,10 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' The policy assigns treatment probabilistically based on \code{sigma_beta(psi(X))},  
 #' and the expected outcome is calculated using counterfactual outcomes.
 #'
-#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}.
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range `[-1,1]`.
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
 #' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
@@ -211,7 +211,7 @@ V_Pn <- function(policy, y1, y0){
 #' This function computes the inverse propensity score weight based on treatment assignment and a propensity score model.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #'
 #' @return A numeric value representing the inverse propensity score weight.
@@ -231,12 +231,12 @@ HX <- function(A, X, prop_score){
 #' Normalize a Matrix by Column Min-Max Scaling
 #'
 #' This function performs feature-wise min-max normalization on a matrix or data frame. 
-#' Each column is rescaled to the range \code{[0,1]} using its minimum and maximum values.
+#' Each column is rescaled to the range `[0,1]` using its minimum and maximum values.
 #' The minimum and maximum values are stored as attributes for later inverse transformation.
 #'
 #' @param u A numeric matrix or data frame. Each column will be normalized independently.
 #'
-#' @return A numeric matrix of the same dimensions as `u`, with all values rescaled to \code{[0,1]}.
+#' @return A numeric matrix of the same dimensions as `u`, with all values rescaled to `[0,1]`.
 #' The returned matrix has two attributes:
 #' \itemize{
 #'   \item \code{"min_X"}: A matrix containing the column-wise minima.

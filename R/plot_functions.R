@@ -2,7 +2,7 @@
 #'
 #' Plots the smoothed treatment assignment probability over covariates Var_X_axis and Var_Y_axis
 #'
-#' @param psi_X A numeric vector with values in the range \code{[-1, 1]} representing the output of \code{psi} at fixed X.
+#' @param psi_X A numeric vector with values in the range `[-1,1]` representing the output of \code{psi} at fixed X.
 #' @param lambda Regularization scalar for the constraint (display purposes).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).

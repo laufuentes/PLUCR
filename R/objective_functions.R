@@ -4,7 +4,7 @@
 #' The function minimizes the squared error between \code{psi(X)} and \code{delta_Y(X)}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #'
 #' @return A numeric scalar representing the risk function value.
@@ -20,9 +20,9 @@ R_p <- function(psi, X, delta_Mu){
 #' This function enforces a limit on the expected impact of treatment via \code{delta_Z}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #'
@@ -40,8 +40,8 @@ S_p <- function(psi, X, beta, alpha, centered, delta_Nu){
 #' This function enforces a limit on the expected impact of treatment via \code{delta_Z}.
 #'
 #' @param pi_X A numeric vector of binary decisions of length n.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #'
 #' @return A numeric scalar representing the constraint function value.
@@ -58,11 +58,11 @@ binary_S_p <- function (pi_X, X, alpha, delta_Nu) {
 #' and the constraint function \code{S_p} using a parameter \code{lambda}.
 #'
 #' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -78,8 +78,8 @@ Lagrangian_p <- function(psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, beta=0.0
 #' Computes the gradient of the objective function with respect to \code{psi} at X.  
 #' The gradient is used in optimization algorithms like Stochastic Gradient Descent (SGD).
 #'
-#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range `[-1,1]`.
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
@@ -99,7 +99,7 @@ grad_Lagrangian_p <- function(psi, X, delta_Mu, delta_Nu, lambda, alpha=0.1, bet
 #' @param psi_X The function psi evaluated at \code{X} (numeric vector).
 #' @param delta_Mu_X The function delta_Mu evaluated at \code{X} (numeric vector).
 #' @param delta_Nu_X The function delta_Nu evaluated at \code{X} (numeric vector).
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #'
 #' @export
 grad_Lagrangian_p_X <- function(psi_X, delta_Mu_X, delta_Nu_X, lambda, alpha=0.1, beta=0.05, centered=FALSE){

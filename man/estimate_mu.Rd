@@ -7,11 +7,11 @@
 estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.01)
 }
 \arguments{
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
 

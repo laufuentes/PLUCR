@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.14)  19 MAR 2026 11:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -329,8 +329,8 @@ File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count289
 \l__pdf_internal_box=\box57
 )
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -383,10 +383,10 @@ LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.out)
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.out)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -405,14 +405,16 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 32.
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.toc
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
- (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 1.
- (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for U+rsfs on input line 1.
@@ -604,8 +606,8 @@ ear", "Thresh-old", "Mix").
  []
 
 
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.ind [49]
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.ind [49]
 
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
 (Font)              using `T1/zi4/m/n' instead on input line 69.
@@ -617,8 +619,8 @@ LaTeX Font Info:    Font shape `T1/zi4/m/it' will be
 ] [51
 
 ])
-(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/RtmpxHNSoO/Rd2pdffeba
-36f22cd6/Rd2.aux)
+(/private/var/folders/04/67_z02nd1090c2k_j83w84m80000gn/T/Rtmph87LTA/Rd2pdf1054
+97a3f8312/Rd2.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -627,7 +629,7 @@ Package rerunfilecheck Info: File `Rd2.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  10815 strings out of 478268
- 167550 string characters out of 5846347
+ 167563 string characters out of 5846347
  453201 words of memory out of 5000000
  28339 multiletter control sequences out of 15000+600000
  507038 words of font info for 75 fonts, out of 8000000 for 9000

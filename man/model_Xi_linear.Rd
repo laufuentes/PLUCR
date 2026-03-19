@@ -7,7 +7,7 @@
 model_Xi_linear(X)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 }
 \value{
 A numeric vector with the transformed values based on covariates and treatment.
