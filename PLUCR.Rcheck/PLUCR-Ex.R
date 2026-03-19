@@ -412,7 +412,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-data <- data_gen(100)
+data <- generate_realistic_data(100)
 head(data[[1]])  # complete data
 head(data[[2]])  # observed data
 

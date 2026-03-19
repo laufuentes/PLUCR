@@ -26,7 +26,8 @@ New submission
 * checking whether package ‘PLUCR’ can be installed ... OK
 * checking installed package size ... OK
 * checking package directory ... OK
-* checking for future file timestamps ... OK
+* checking for future file timestamps ... NOTE
+unable to verify current time
 * checking ‘build’ directory ... OK
 * checking DESCRIPTION meta-information ... OK
 * checking top-level files ... OK
@@ -62,14 +63,17 @@ Running examples in ‘PLUCR-Ex.R’ failed
 The error most likely occurred in:
 
 > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: generate_realistic_data
-> ### Title: Realistic synthetic data generator and functions generator
-> ### Aliases: generate_realistic_data
+> ### Name: model_Y_constant
+> ### Title: Constant treatment effect on Y component function
+> ### Aliases: model_Y_constant
 > 
 > ### ** Examples
 > 
-> data <- data_gen(100)
-Error in data_gen(100) : could not find function "data_gen"
+> X <- matrix(stats::runif(10*5), 10, 5)
+> A <- rep(1, 10)
+> model_Y_constant_TE(X, A)
+Error in model_Y_constant_TE(X, A) : 
+  could not find function "model_Y_constant_TE"
 Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
@@ -83,4 +87,4 @@ Skipping checking math rendering: package 'V8' unavailable
 * checking for non-standard things in the check directory ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 2 NOTEs
+Status: 1 ERROR, 3 NOTEs

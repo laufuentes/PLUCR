@@ -87,7 +87,7 @@ model_Y_null<- function(X,A){
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
-#' model_Y_constant_TE(X, A)
+#' model_Y_constant(X, A)
 #' @export
 model_Y_constant<- function(X, A) {
   out <- A*2
@@ -470,7 +470,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
-#' model_Y_linear(X, A)
+#' model_Y_realistic(X, A)
 #' @export
 model_Y_realistic <- function(X,A){
   out <- A * (-4 + 0.1 * X[,1])
@@ -486,7 +486,7 @@ model_Y_realistic <- function(X,A){
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
-#' model_Xi_linear(X)
+#' model_Xi_realistic(X)
 #' @export
 model_Xi_realistic <- function(X){
   n <- nrow(X)
