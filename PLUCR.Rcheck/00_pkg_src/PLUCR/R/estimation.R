@@ -3,9 +3,9 @@
 #' This function trains conditional mean of primary outcome models for treated and control groups 
 #' using `SuperLearner`, applying cross-validation to compute out-of-fold estimates.
 #'
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \[0,1\]).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data in \[0,1\]).
+#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -18,8 +18,15 @@
 #' A <- stats::rbinom(100, 1, 0.5)
 #' Y <- stats::runif(100)
 #' JFold <- 3
-#' folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, 
-#' cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+#' folds <- SuperLearner::CVFolds(
+#'   n, 
+#'   id = NULL,
+#'   Y = Y, 
+#'   cvControl = SuperLearner::SuperLearner.CV.control(
+#'     V = JFold, 
+#'     shuffle = TRUE
+#'   )
+#' )
 #' SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
 #' mu_functions <- estimate_mu(Y, A, X, folds)
 #' # Apply a function from the list to new data:
@@ -71,7 +78,7 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #'
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data in \[0,1\]).
+#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -84,8 +91,15 @@ estimate_mu <- function(Y, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #' A <- stats::rbinom(100, 1, 0.5)
 #' Xi <- stats::rbinom(100, n=1, p=0.5)
 #' JFold <- 3
-#' folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, 
-#' cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+#' folds <- SuperLearner::CVFolds(
+#'   n, 
+#'   id = NULL,
+#'   Y = Y, 
+#'   cvControl = SuperLearner::SuperLearner.CV.control(
+#'     V = JFold, 
+#'     shuffle = TRUE
+#'   )
+#' )
 #' SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
 #' nu_functions <- estimate_nu(Xi, A, X, folds)
 #' # Apply a function from the list to new data:
@@ -135,7 +149,7 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #' using `SuperLearner`, applying cross-validation to compute out-of-fold estimates.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix or data frame of covariates of size n x d (input data in \[0,1\]).
+#' @param X A matrix or data frame of covariates of size n x d (input data in \code{[0,1]}).
 #' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
 #' @param SL.library Vector of libraries for training SuperLearner.
 #' @param V Number of folds inside the SuperLearner (2L by default).
@@ -147,8 +161,15 @@ estimate_nu <- function(Xi, A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
 #' X <- matrix(stats::rnorm(100 * 5), ncol = 5)
 #' A <- stats::rbinom(100, 1, 0.5)
 #' JFold <- 3
-#' folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, 
-#' cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+#' folds <- SuperLearner::CVFolds(
+#'   n, 
+#'   id = NULL,
+#'   Y = Y, 
+#'   cvControl = SuperLearner::SuperLearner.CV.control(
+#'     V = JFold, 
+#'     shuffle = TRUE
+#'   )
+#' )
 #' SL.library <- c("SL.glm", "SL.mean")
 #' prop_score <- estimate_ps(A, X, folds)
 #' # Apply a function from the list to new data:
@@ -170,7 +191,6 @@ estimate_ps <- function(A, X, folds, SL.library, V = 2L, threshold = 1e-2) {
   if (!is.data.frame(X)){
     X <- as.data.frame(X)
   }
-  #cvControl = list(V = 0)
   cvControl <- SuperLearner::SuperLearner.CV.control(V = V)
   method <- "method.CC_nloglik"
   n <- nrow(X)

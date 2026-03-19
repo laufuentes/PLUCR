@@ -26,7 +26,7 @@ oracular_process_results(
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function.}
 

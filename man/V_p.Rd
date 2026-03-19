@@ -7,7 +7,7 @@
 V_p(
   psi,
   beta = 0.05,
-  centered = FALSEmake_psi(theta_oracular)(X_test),
+  centered = FALSE,
   alpha = 0.1,
   B = 1e+06,
   ncov = 10L,
@@ -17,13 +17,13 @@ V_p(
 )
 }
 \arguments{
-\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}.}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
 
 \item{B}{Integer, number of Monte Carlo repetitions (1e4 by default).}
 

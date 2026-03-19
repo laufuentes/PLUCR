@@ -7,7 +7,7 @@
 sigma_beta_prime(t, beta = 0.05, centered = FALSE)
 }
 \arguments{
-\item{t}{A vector of numerics (in \link{-1,1}).}
+\item{t}{A vector of numerics (in \code{[-1,1]}).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 

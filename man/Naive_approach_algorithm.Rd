@@ -25,11 +25,11 @@ naive_approach_algorithm(
 )
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 
 \item{A}{A binary vector of size n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).}
 
 \item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
@@ -39,7 +39,9 @@ naive_approach_algorithm(
 
 \item{mu0_test}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X) for testing.}
 
-\item{nu0_train}{A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for testing.}
+\item{nu0_train}{A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for training.}
+
+\item{nu0_test}{A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for testing.}
 
 \item{prop_score_train}{A function that estimates the propensity score given treatment (A) and covariates (X) for training.}
 
@@ -47,7 +49,7 @@ naive_approach_algorithm(
 
 \item{Lambdas}{A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
 
 \item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 

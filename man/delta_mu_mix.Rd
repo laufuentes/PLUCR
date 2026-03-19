@@ -7,7 +7,7 @@
 delta_mu_mix(X)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 }
 \value{
 A numeric vector that represents the contrast between primary outcomes for given \code{X}.
@@ -16,6 +16,6 @@ A numeric vector that represents the contrast between primary outcomes for given
 Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 }
 \examples{
-X <- matrix(runif(10*2), 10, 2)
-delta_mu(X)
+X <- matrix(stats::runif(10*2), 10, 2)
+delta_mu_mix(X)
 }

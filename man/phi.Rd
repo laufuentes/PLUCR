@@ -10,7 +10,7 @@ phi(u)
 \item{u}{A numeric matrix or data frame. Each column will be normalized independently.}
 }
 \value{
-A numeric matrix of the same dimensions as \code{u}, with all values rescaled to [0, 1].
+A numeric matrix of the same dimensions as \code{u}, with all values rescaled to \code{[0,1]}.
 The returned matrix has two attributes:
 \itemize{
 \item \code{"min_X"}: A matrix containing the column-wise minima.
@@ -19,7 +19,7 @@ The returned matrix has two attributes:
 }
 \description{
 This function performs feature-wise min-max normalization on a matrix or data frame.
-Each column is rescaled to the range [0, 1] using its minimum and maximum values.
+Each column is rescaled to the range \code{[0,1]} using its minimum and maximum values.
 The minimum and maximum values are stored as attributes for later inverse transformation.
 }
 \examples{

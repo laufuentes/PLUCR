@@ -22,11 +22,11 @@ process_results(
 \arguments{
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
 
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).}
 
 \item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
@@ -38,7 +38,7 @@ process_results(
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function.}
 

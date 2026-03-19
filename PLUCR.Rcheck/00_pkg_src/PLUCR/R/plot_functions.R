@@ -217,6 +217,7 @@ plot_metric_comparison <- function(data,
                                    techniques = NULL,
                                    root.path) {
   # Pivot to long format: one row per (method, metric)
+  `%>%`<- magrittr::`%>%`
   data_long <- data %>%
     tidyr::pivot_longer(cols = tidyselect::all_of(metrics), 
                  names_to = "metric", 

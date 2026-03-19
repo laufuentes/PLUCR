@@ -51,7 +51,7 @@ make_psi <- function(Theta) {
 #' Performs stochastic gradient descent to optimize the parameters.
 #'
 #' @param theta_current A numeric matrix of size 1 x d (intialization for parameter to estimate).
-#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}}.
+#' @param psi A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1,1]}.
 #' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param delta_Mu A function of \code{X} that determines the contrast between primary outcomes.
 #' @param delta_Nu A function of \code{X} that determines the contrast between adverse event outcomes.

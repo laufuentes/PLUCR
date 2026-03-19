@@ -6,15 +6,15 @@
 #' for the constraint estimator.
 #'
 #' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param X A matrix of covariates of size n x d (input data in \[0,1\]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \[0,1\]).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \[0,1/2\], 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -108,7 +108,7 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
 #' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Linear2", "Realistic").
 #' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix","Satisfied", "Realistic").
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \[0,1/2\], 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -118,13 +118,14 @@ oracular_process_results <- function(theta, ncov=10L,
                                      scenario_mu=c("Linear", "Threshold", "Mix", "Null", "Linear2", "Realistic"), 
                                      scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), 
                                      lambda, alpha=0.1,  beta=0.05, centered=FALSE) {
+  `%>%`<- magrittr::`%>%`
   psi<- make_psi(theta)
   if(scenario_mu=="Realistic"){
     exp<- generate_realistic_data(1e6)
     df_complete <- exp[[1]]
     df_obs <- exp[[2]]
     X <- df_obs %>%
-      dplyr::select(starts_with("X."))%>% as.matrix()
+      dplyr::select(tidyselect::starts_with("X."))%>% as.matrix()
     X_norm <- phi(X)
     attr(X_norm, "min_Y") <- unique(df_complete$min_Y)
     attr(X_norm, "max_Y") <- unique(df_complete$max_Y)
@@ -135,7 +136,7 @@ oracular_process_results <- function(theta, ncov=10L,
     exp<- generate_data(n=n,ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu)
     df_obs <- exp[[2]]
     X <- df_obs %>%
-      dplyr::select(starts_with("X."))%>% as.matrix()
+      dplyr::select(tidyselect::starts_with("X."))%>% as.matrix()
     delta_Mu <- exp[[3]]
     delta_Nu <- exp[[4]]
   }

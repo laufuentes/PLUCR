@@ -7,9 +7,7 @@
 model_Xi_mix(X)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
-
-\item{A}{A vector indicating treatment assignment (+1 or -1) for each observation.}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 }
 \value{
 A numeric vector with the transformed values based on covariates and treatment.
@@ -18,7 +16,7 @@ A numeric vector with the transformed values based on covariates and treatment.
 Computes a threshold-based interaction term between covariates and treatment.
 }
 \examples{
-X <- matrix(runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*2), 10, 2)
 A <- rep(1, 10)
 model_Xi_mix(X, A)
 }

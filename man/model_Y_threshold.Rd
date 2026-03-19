@@ -7,7 +7,7 @@
 model_Y_threshold(X, A)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (-1 or 1).}
 }
@@ -18,7 +18,7 @@ A numeric vector with the transformed values based on covariates and treatment.
 Computes a thresholded-shaped interaction term between covariates and treatment.
 }
 \examples{
-X <- matrix(runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*2), 10, 2)
 A <- rep(1, 10)
 model_Y_threshold(X, A)
 }

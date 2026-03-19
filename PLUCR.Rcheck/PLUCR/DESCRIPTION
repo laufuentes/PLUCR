@@ -10,11 +10,11 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: cowplot, dplyr, ggplot2, grf, gridExtra, glmnet, magrittr,
         patchwork, randomForest, R.utils, scales, stats, SuperLearner,
-        tibble, tidyr, tidyselect
+        tibble, tidyr, tidyselect, glue
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2026-03-19 09:40:58 UTC; laurafuentesvicente
+Packaged: 2026-03-19 10:08:32 UTC; laurafuentesvicente
 Author: X X [aut, cre]
 Maintainer: X X <example@gmail.com>
-Built: R 4.5.2; ; 2026-03-19 09:41:17 UTC; unix
+Built: R 4.5.2; ; 2026-03-19 10:08:44 UTC; unix

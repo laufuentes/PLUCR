@@ -28,11 +28,11 @@ Optimization_Estimation(
 
 \item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \code{[0,1]}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).}
 
 \item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
@@ -71,8 +71,10 @@ This function saves intermediate results to files in order to recover progress o
 If the optimization converges or the maximum number of iterations is reached, the final parameter vector \code{theta_init} is saved.
 }
 \examples{
-# (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-# Optimization_Estimation(mu0, nu0, prop_score, df, lambda=1, alpha=0.1, precision=0.025,
-#                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
+# (Requires user-defined functions: mu0, nu0, 
+prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
+# Optimization_Estimation(mu0, nu0, prop_score, df, 
+                          lambda=1, alpha=0.1, precision=0.025, beta=0.05, 
+                         centered=TRUE, folder="path/to/folder", prefix="run1")
 
 }
