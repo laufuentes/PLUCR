@@ -1,16 +1,16 @@
-expit <- plogis
-logit <- qlogis
+expit <- stats::plogis
+logit <- stats::qlogis
 
 #' Linear treatment effect on Y component function
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_linear(X, A)
 #' @export
@@ -23,12 +23,12 @@ model_Y_linear <- function(X,A){
 #'
 #' Computes a thresholded-shaped interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_threshold(X, A)
 #' @export
@@ -42,12 +42,12 @@ model_Y_threshold <- function(X, A) {
 #'
 #' Computes a mix of a linear and threshold shaped interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_mix(X, A)
 #' @export
@@ -63,12 +63,12 @@ model_Y_mix <- function(X, A) {
 #'
 #' Computes a null treatment effect for everyone 
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_null_TE(X, A)
 #' @export
@@ -80,12 +80,12 @@ model_Y_null<- function(X,A){
 #'
 #' Computes a null treatment effect for everyone 
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (-1 or 1).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_constant_TE(X, A)
 #' @export
@@ -98,12 +98,11 @@ model_Y_constant<- function(X, A) {
 #'
 #' Computes a linear interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Xi_linear(X, A)
 #' @export
@@ -111,7 +110,7 @@ model_Xi_linear <- function(X){
   n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,0.25)
   p1 <- expit(4*(X[,2]-1/2))
-  Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
+  Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n, 1, p1))
   
   return(list(Xi.0,Xi.1))
 }
@@ -120,12 +119,11 @@ model_Xi_linear <- function(X){
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Xi_threshold(X, A)
 #' @export
@@ -142,12 +140,11 @@ model_Xi_threshold <- function(X){
 #'
 #' Computes a threshold-based interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Xi_mix(X, A)
 #' @export
@@ -168,8 +165,8 @@ model_Xi_mix <- function(X) {
   prob <- expit(effect)
   
   # Simulate binary potential outcomes
-  Xi.0 <- rbinom(n, 1, 0.1)
-  Xi.1 <- rbinom(n, 1, prob)
+  Xi.0 <- stats::rbinom(n, 1, 0.1)
+  Xi.1 <- stats::rbinom(n, 1, prob)
   
   return(list(Xi.0,Xi.1))
 }
@@ -177,12 +174,11 @@ model_Xi_mix <- function(X) {
 #'
 #' Computes a close to zero interaction term between covariates and treatment.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
-#' @param A A vector indicating treatment assignment (+1 or -1) for each observation.
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Xi_satisfied(X, A)
 #' @export
@@ -190,7 +186,7 @@ model_Xi_satisfied <- function(X){
   n <- nrow(X)
   Xi.0 <- stats::rbinom(n,1,1e-2)
   p1 <- 4*1e-2
-  Xi.1<- ifelse(Xi.0 == 1, 1, rbinom(n, 1, p1))
+  Xi.1<- ifelse(Xi.0 == 1, 1, stats::rbinom(n, 1, p1))
   return(list(Xi.0,Xi.1))
 }
 
@@ -198,12 +194,12 @@ model_Xi_satisfied <- function(X){
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_mu(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_mu_linear(X)
 #' @export
 delta_mu_linear <- function(X){
   n <- nrow(X)
@@ -216,12 +212,12 @@ attr(delta_mu_linear, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_mu(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_mu_threshold(X)
 #' @export
 delta_mu_threshold <- function(X){
   n <- nrow(X)
@@ -234,12 +230,12 @@ attr(delta_mu_threshold, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_mu(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_mu_mix(X)
 #' @export
 delta_mu_mix <- function(X){
   n <- nrow(X)
@@ -252,11 +248,11 @@ attr(delta_mu_mix, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' delta_mu_null(X)
 #' @export
 delta_mu_null <- function(X){
@@ -270,12 +266,12 @@ attr(delta_mu_null, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected Y outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_mu_null(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_mu_constant(X)
 #' @export
 delta_mu_constant <- function(X){
   n <- nrow(X)
@@ -289,12 +285,12 @@ attr(delta_mu_constant, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_nu(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_nu_linear(X)
 #' @export
 delta_nu_linear <- function(X){
   p0 <- 0.25
@@ -308,12 +304,12 @@ attr(delta_nu_linear, "vars")<- c(1, 2)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_nu(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_nu_threshold(X)
 #' @export
 delta_nu_threshold <- function(X){
   p0 <- 0.1
@@ -328,11 +324,11 @@ attr(delta_nu_threshold, "vars")<- c(3, 4)
 #'
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' delta_nu_mix(X)
 #' @export
 delta_nu_mix <- function(X){
@@ -348,12 +344,12 @@ attr(delta_nu_mix, "vars")<- c(1, 2)
 
 #' Computes the difference in expected outcomes under treatment and control.
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
-#' delta_nu_mix(X)
+#' X <- matrix(stats::runif(10*2), 10, 2)
+#' delta_nu_satisfied(X)
 #' @export
 delta_nu_satisfied <- function(X){
   p0 <- 1e-2
@@ -421,7 +417,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
     p.s <- rep(0.5, nrow(X))
   }
   outcome_X <- 3*X[,3] - X[,4]
-  epsilon_Y <- rnorm(n,0,1)  
+  epsilon_Y <- stats::rnorm(n,0,1)  
   Treatment <- stats::rbinom(n,1,p.s)
   
   if(scenario_mu %in% c("Linear", "Threshold", "Mix")){
@@ -476,7 +472,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Y_linear(X, A)
 #' @export
@@ -494,17 +490,17 @@ model_Y_realistic <- function(X,A){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' A <- rep(1, 10)
 #' model_Xi_linear(X, A)
 #' @export
 model_Xi_realistic <- function(X){
   n <- nrow(X)
   p0 <- 0.01 
-  xi.0 <- rbinom(n,1,p0)
+  xi.0 <- stats::rbinom(n,1,p0)
   p1 <- ifelse(X[,2]==0, p0 , 0.35)
   p1 <- ifelse((X[,3] == 1),1,p1)
-  xi.1 <- rbinom(n,1,p1)
+  xi.1 <- stats::rbinom(n,1,p1)
   xi.1 <- ifelse(xi.0==1, 1, xi.1)
   return(list(xi.0, xi.1))
 }
@@ -517,7 +513,7 @@ model_Xi_realistic <- function(X){
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' delta_mu(X)
 #' @export
 delta_mu_realistic <- function(X){
@@ -536,7 +532,7 @@ attr(delta_mu_realistic, "vars")<- c(1, 4)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(runif(10*2), 10, 2)
+#' X <- matrix(stats::runif(10*2), 10, 2)
 #' delta_nu(X)
 #' @export
 delta_nu_realistic <- function(X){
@@ -576,16 +572,16 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
     set.seed(seed)
   }
   
-  sex <- as.integer(rbinom(n,1, 0.5)) # 1: woman, 0: man
-  age <- round(runif(n,16,65))
+  sex <- as.integer(stats::rbinom(n,1, 0.5)) # 1: woman, 0: man
+  age <- round(stats::runif(n,16,65))
   is_pregnancy_window <- ifelse(age >= 18 & age <= 45 & sex == 1, 1, 0)
-  is_pregnant <- ifelse(is_pregnancy_window==0, 0, rbinom(n, 1, 0.3))
+  is_pregnant <- ifelse(is_pregnancy_window==0, 0, stats::rbinom(n, 1, 0.3))
   
   X <- matrix(cbind(age, 
                     sex, 
                     is_pregnant,
-                    runif(n, min = 0, max=10), 
-                    runif(n, min = -5, max=5)), 
+                    stats::runif(n, min = 0, max=10), 
+                    stats::runif(n, min = -5, max=5)), 
               n,ncov)
   colnames(X) <- c("1", "2", "3", "4", "5")
   delta_Mu <- delta_mu_realistic
@@ -598,7 +594,7 @@ generate_realistic_data <- function(n, ncov=5L, scenario_mu="Realistic", scenari
     p.s <- rep(0.5, nrow(X))
   }
   outcome_X <- (0.4*X[,4] - 0.2*X[,5])
-  epsilon_Y <- rnorm(n,0,1)  
+  epsilon_Y <- stats::rnorm(n,0,1)  
   Treatment <- stats::rbinom(n,1,p.s)
   
   Y.1 <- 0.5*epsilon_Y + mod_Y(X,rep(1,n)) + outcome_X

@@ -1,3 +1,8 @@
+utils::globalVariables(c(
+  "SL.library", "theta_oracular", "X_test", "df_complete",
+  "n", "metric", "value", "method", "type",
+  "delta_mu", "delta_nu", "x", "y", "Values", "treat_proba"
+))
 #' Main algorithm
 #'
 #' Executes the full estimation pipeline for learning an optimal treatment policy under constraints.
@@ -8,12 +13,12 @@
 #' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
 #' 
 #'
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param Lambdas A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (in [0,1/2], 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
 #' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
 #' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
@@ -119,7 +124,7 @@ main_algorithm <- function(X, A, Y, Xi,
       combinations <- rbind(combinations, c(beta, 0))
       }
     }
-    ##### If your constraint was already satified with lambda=0 return
+    ##### If your constraint was already satisfied with lambda=0 return
     if(!is.null(combinations)){
       warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
       optimal_combination <- get_opt_beta_lambda(combinations,root.path)

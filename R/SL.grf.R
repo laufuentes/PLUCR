@@ -24,7 +24,7 @@ SL.grf <- function(Y, X, newX, family, obsWeights, ...) {
     fit.grf <- grf::regression_forest(Y = Y, X = X)
   }
   
-  pred_output <- predict(fit.grf, newdata = newX)
+  pred_output <- stats::predict(fit.grf, newdata = newX)
   
   # Extract predictions based on the type of forest
   pred <- if (is_binary) {
@@ -70,7 +70,7 @@ predict.SL.grf <- function (object, newdata, ...) {
     newdata <- as.data.frame(newdata)
   }
   # Get predictions from the underlying grf forest
-  pred_output <- predict(object = object$object, newdata = newdata)
+  pred_output <- stats::predict(object = object$object, newdata = newdata)
   
   # Determine if the original model was a probability forest or regression forest
   # This can be inferred from the class of the stored grf object.

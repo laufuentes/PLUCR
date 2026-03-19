@@ -9,7 +9,7 @@
 #' @param psi_collection A matrix whose columns are optimal \code{psi} solutions.
 #' @param H_XA A numeric vector of inverse-propensity weights, typically from \code{HX()}.
 #'
-#' @return A numeric vector of updated mu on the \[0,1\] scale.
+#' @return A numeric vector of updated mu on the \code{[0,1]} scale.
 #'
 #'@export
 update_mu_XA <- function(offset_mu_XA, epsilon1, psi_collection, H_XA){ 
@@ -28,7 +28,7 @@ update_mu_XA <- function(offset_mu_XA, epsilon1, psi_collection, H_XA){
 #' @param sigma_psi_collection A matrix whose columns are optimal \code{psi} solutions composed by sigma.
 #' @param H_XA A numeric vector of inverse-propensity weights, typically from \code{HX()}.
 #'
-#' @return A numeric vector of updated nu on the \[0,1\] scale.
+#' @return A numeric vector of updated nu on the \code{[0,1]} scale.
 #'
 #'@export
 update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
@@ -43,13 +43,13 @@ update_nu_XA <- function(offset_nu_XA, epsilon2, sigma_psi_collection, H_XA){
 #' then transforms back via the logistic function.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param epsilon1 A numeric vector of GLM coefficients for each column in \code{psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{psi} functions.
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #'
-#' @return A numeric vector of updated mu on the \[0,1\] scale.
+#' @return A numeric vector of updated mu on the \code{[0,1]} scale.
 #'
 #'@export
 update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){ 
@@ -67,7 +67,7 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 #' then transforms back via the logistic function.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param epsilon2 A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.
 #' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.
@@ -75,7 +75,7 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
-#' @return A numeric vector of updated nu on the \[0,1\] scale.
+#' @return A numeric vector of updated nu on the \code{[0,1]} scale.
 #'
 #'@export
 update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.05, centered=FALSE){
@@ -95,9 +95,9 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
-#' @param X A matrix of covariates of size n x d (input data in [0,1]).
+#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in [0, 1]).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
 #' @param alpha A numeric scalar representing the constraint tolerance (0.1 by default).
@@ -122,12 +122,18 @@ update_nu <- function(A, X, nu0, epsilon2, theta_collection, prop_score, beta=0.
 #' If the optimization converges or the maximum number of iterations is reached, the final parameter vector \code{theta_init} is saved.
 #'
 #' @examples
-#' # (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-#' # Optimization_Estimation(mu0, nu0, prop_score, df, lambda=1, alpha=0.1, precision=0.025,
-#' #                         beta=0.05, centered=TRUE, folder="path/to/folder", prefix="run1")
+#' # (Requires user-defined functions: mu0, nu0, 
+#' prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
+#' # Optimization_Estimation(mu0, nu0, prop_score, df, 
+#'                           lambda=1, alpha=0.1, precision=0.025, beta=0.05, 
+#'                          centered=TRUE, folder="path/to/folder", prefix="run1")
 #'
 #' @export
-Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, alpha=0.1, precision=0.05, beta=0.05, centered=FALSE, tol= 2.5*1e-2, max_iter=5){#root.path
+Optimization_Estimation <- function(mu0, nu0, prop_score, 
+                                    X, A, Y, Xi, lambda, 
+                                    alpha=0.1, precision=0.05, 
+                                    beta=0.05, centered=FALSE, 
+                                    tol= 2.5*1e-2, max_iter=5){
   tol <- R.utils::Arguments$getNumerics(tol, c(0.01, 0.1))
   max_iter <- R.utils::Arguments$getIntegers(max_iter, c(2, 10))
   
@@ -136,16 +142,18 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
   reason <- ""
   H <- HX(A,X,prop_score)
   
-  theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, lambda=lambda, alpha=alpha, beta=beta, centered=centered, precision=precision, verbose=TRUE)
+  theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, 
+              lambda=lambda, alpha=alpha, beta=beta, 
+              centered=centered, precision=precision, verbose=TRUE)
   psi<- make_psi(theta)
   psi_X <- psi(X)
   sigma_psi_X <- sigma_beta(psi_X,beta, centered)
   
-  offset_mu <- qlogis(mu0(A,X))
+  offset_mu <- stats::qlogis(mu0(A,X))
   df_mu <- tibble::tibble(
     Y = Y)
   
-  offset_nu <- qlogis(nu0(A,X))
+  offset_nu <- stats::qlogis(nu0(A,X))
   df_nu <- tibble::tibble(
     xi = Xi)
   
@@ -174,7 +182,9 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
         # Stop if new sigma_psi_X is too similar to previous
         if (max_cor > 0.90) {
           reason <- "New sigma_psi_X is highly correlated"
-          message(glue::glue("Stopping early at iteration {k}: new sigma_psi_X is highly correlated (max_cor = {round(max_cor, 4)})"))
+          message(glue::glue("Stopping early at iteration {k}: 
+                             new sigma_psi_X is highly correlated 
+                             (max_cor = {round(max_cor, 4)})"))
           break
         }
       } 
@@ -182,8 +192,8 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
     sigma_psi_collection <- cbind(sigma_psi_collection, as.vector(sigma_psi_X))
     theta_collection[[k]] <- theta
     
-      mu_update_obj <- stats::glm(Y ~ -1 + ., offset=offset_mu, data = df_mu, family=binomial())
-      nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=binomial())
+      mu_update_obj <- stats::glm(Y ~ -1 + ., offset=offset_mu, data = df_mu, family=stats::binomial())
+      nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=stats::binomial())
       epsilon1<- as.matrix(as.numeric(mu_update_obj$coefficients))
       epsilon2<- as.matrix(as.numeric(nu_update_obj$coefficients))
       
@@ -213,32 +223,24 @@ Optimization_Estimation <- function(mu0, nu0, prop_score, X, A, Y, Xi, lambda, a
         term2=term2
       )
 
-    Delta_mu <- function(X) { update_mu_XA(qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_collection, HX(rep(1,nrow(X)),X,prop_score)) - 
-        update_mu_XA(qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
-    Delta_nu <- function(X) { update_nu_XA(qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_collection,HX(rep(1,nrow(X)),X,prop_score)) - 
-        update_nu_XA(qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_collection, HX(rep(0,nrow(X)), X, prop_score)) }
+    Delta_mu <- function(X) { update_mu_XA(stats::qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, 
+                                           psi_collection, HX(rep(1,nrow(X)),X,prop_score)) - 
+        update_mu_XA(stats::qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_collection, 
+                     HX(rep(0,nrow(X)), X, prop_score)) }
+    Delta_nu <- function(X) { update_nu_XA(stats::qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, 
+                                           sigma_psi_collection,HX(rep(1,nrow(X)), X,prop_score)) - 
+        update_nu_XA(stats::qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_collection, 
+                     HX(rep(0,nrow(X)), X, prop_score)) }
     
-    theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, lambda=lambda, alpha=alpha, beta=beta, centered=centered, precision=precision, verbose=TRUE)
+    theta <- FW(X, delta_Mu=Delta_mu, delta_Nu=Delta_nu, lambda=lambda, alpha=alpha, 
+                beta=beta, centered=centered, precision=precision, verbose=TRUE)
     psi<- make_psi(theta)
     new_psi <- psi(X)
     sigma_psi_X <- sigma_beta(new_psi,beta, centered)
     go_on <- (k < max_iter) & (sqrt(mean((psi_X - new_psi)^2)) > tol)
-    
-    #if(k%%10==0){
-    #  print(mean(H*(-2*psi_X*(df_mu$Y-update_mu_XA(offset_mu, epsilon1, psi_collection, H))
-    #                + lambda*sigma_psi_X*(df_nu$xi - update_nu_XA(offset_nu, epsilon2, sigma_psi_collection, H)))))
-    #  print(sqrt(mean((psi_X - new_psi)^2)))}
+  
     
     psi_X <- new_psi
-    
-    #step_file_prev <- file.path(paste0(root.path,"_step_", k - 1, ".rds"))
-    #step_file_current <- file.path(paste0(root.path,"_step_", k, ".rds"))
-    
-    #saveRDS(out, file = step_file_current)
-    
-    #if (file.exists(step_file_prev)) {
-    #  file.remove(step_file_prev)
-    #  cat("Deleted previous step file:", step_file_prev, "\n")}
   }
   if(reason==""){
     if(!k<max_iter){

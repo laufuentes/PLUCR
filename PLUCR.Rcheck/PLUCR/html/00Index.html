@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: Policy Learning Under Constraint</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body><div class="container">
+<h1> Policy Learning Under Constraint
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]">
+</h1>
+<hr>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]"></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]"></a>
+</div><h2>Documentation for package &lsquo;PLUCR&rsquo; version 0.0.0.9000</h2>
+
+<ul><li><a href="../DESCRIPTION" type="text/plain; charset=utf-8">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="binary_S_p.html">binary_S_p</a></td>
+<td>Constraint function for binary policy</td></tr>
+<tr><td style="width: 25%;"><a href="check_data.html">check_data</a></td>
+<td>Check input data for validity</td></tr>
+<tr><td style="width: 25%;"><a href="CVFolds.html">CVFolds</a></td>
+<td>CVFolds (from SuperLearner package)</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_constant.html">delta_mu_constant</a></td>
+<td>Constant Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_linear.html">delta_mu_linear</a></td>
+<td>Linear-shaped Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_mix.html">delta_mu_mix</a></td>
+<td>Mixed-shape Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_null.html">delta_mu_null</a></td>
+<td>Null Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_realistic.html">delta_mu_realistic</a></td>
+<td>Realistic Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_mu_threshold.html">delta_mu_threshold</a></td>
+<td>Thresholded-shaped Conditional Average Treatment Effect estimator for Y</td></tr>
+<tr><td style="width: 25%;"><a href="delta_nu_linear.html">delta_nu_linear</a></td>
+<td>Linear-shaped Conditional Average Treatment Effect estimator for Xi</td></tr>
+<tr><td style="width: 25%;"><a href="delta_nu_mix.html">delta_nu_mix</a></td>
+<td>Mixed-shaped Conditional Average Treatment Effect estimator for Xi</td></tr>
+<tr><td style="width: 25%;"><a href="delta_nu_realistic.html">delta_nu_realistic</a></td>
+<td>Realistic Conditional Average Treatment Effect estimator for Xi</td></tr>
+<tr><td style="width: 25%;"><a href="delta_nu_satisfied.html">delta_nu_satisfied</a></td>
+<td>Computes the difference in expected outcomes under treatment and control.</td></tr>
+<tr><td style="width: 25%;"><a href="delta_nu_threshold.html">delta_nu_threshold</a></td>
+<td>Thresholded Conditional Average Treatment Effect estimator for Xi</td></tr>
+<tr><td style="width: 25%;"><a href="estimate_mu.html">estimate_mu</a></td>
+<td>Estimate mu</td></tr>
+<tr><td style="width: 25%;"><a href="estimate_nu.html">estimate_nu</a></td>
+<td>Estimate nu</td></tr>
+<tr><td style="width: 25%;"><a href="estimate_ps.html">estimate_ps</a></td>
+<td>Estimate propensity score</td></tr>
+<tr><td style="width: 25%;"><a href="estimate_real_valued_mu.html">estimate_real_valued_mu</a></td>
+<td>Estimate real-valued mu</td></tr>
+<tr><td style="width: 25%;"><a href="expit.html">expit</a></td>
+<td>The expit/logit functions</td></tr>
+<tr><td style="width: 25%;"><a href="FW.html">FW</a></td>
+<td>Frank-Wolfe algorithm</td></tr>
+<tr><td style="width: 25%;"><a href="generate_data.html">generate_data</a></td>
+<td>Synthetic data generator and functions generator</td></tr>
+<tr><td style="width: 25%;"><a href="generate_realistic_data.html">generate_realistic_data</a></td>
+<td>Realistic synthetic data generator and functions generator</td></tr>
+<tr><td style="width: 25%;"><a href="get_opt_beta_lambda.html">get_opt_beta_lambda</a></td>
+<td>Select Optimal Beta and Lambda Combination</td></tr>
+<tr><td style="width: 25%;"><a href="grad_Lagrangian_p.html">grad_Lagrangian_p</a></td>
+<td>Gradient of the objective function</td></tr>
+<tr><td style="width: 25%;"><a href="grad_Lagrangian_p.html">grad_Lagrangian_p_X</a></td>
+<td>Gradient of the objective function</td></tr>
+<tr><td style="width: 25%;"><a href="HX.html">HX</a></td>
+<td>Compute the Inverse Propensity Score Weight (IPW)</td></tr>
+<tr><td style="width: 25%;"><a href="Lagrangian_p.html">Lagrangian_p</a></td>
+<td>Objective function taking the form of a Lagrangian</td></tr>
+<tr><td style="width: 25%;"><a href="lambda_evol.html">lambda_evol</a></td>
+<td>Plot evolution of objective terms across lambda values</td></tr>
+<tr><td style="width: 25%;"><a href="learn_threshold.html">learn_threshold</a></td>
+<td>Learn Optimal Decision Threshold</td></tr>
+<tr><td style="width: 25%;"><a href="expit.html">logit</a></td>
+<td>The expit/logit functions</td></tr>
+<tr><td style="width: 25%;"><a href="lwr_upper_bound_estimators.html">lwr_upper_bound_estimators</a></td>
+<td>Lower and upper bound estimators for policy value and constraint</td></tr>
+<tr><td style="width: 25%;"><a href="main_algorithm.html">main_algorithm</a></td>
+<td>Main algorithm</td></tr>
+<tr><td style="width: 25%;"><a href="make_psi.html">make_psi</a></td>
+<td>Generate psi function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Xi_linear.html">model_Xi_linear</a></td>
+<td>Linear treatment effect on Xi Component Function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Xi_mix.html">model_Xi_mix</a></td>
+<td>Mixed treatment effect on Xi component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Xi_realistic.html">model_Xi_realistic</a></td>
+<td>Realistic treatment effect on Xi Component Function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Xi_satisfied.html">model_Xi_satisfied</a></td>
+<td>Low treatment effect on Xi</td></tr>
+<tr><td style="width: 25%;"><a href="model_Xi_threshold.html">model_Xi_threshold</a></td>
+<td>Thresholded treatment effect on Xi component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_constant.html">model_Y_constant</a></td>
+<td>Constant treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_linear.html">model_Y_linear</a></td>
+<td>Linear treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_mix.html">model_Y_mix</a></td>
+<td>Mixed treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_null.html">model_Y_null</a></td>
+<td>No treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_realistic.html">model_Y_realistic</a></td>
+<td>Realistic treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="model_Y_threshold.html">model_Y_threshold</a></td>
+<td>Thresholded treatment effect on Y component function</td></tr>
+<tr><td style="width: 25%;"><a href="naive_approach_algorithm.html">naive_approach_algorithm</a></td>
+<td>Naive approach main algorithm</td></tr>
+<tr><td style="width: 25%;"><a href="Optimization_Estimation.html">Optimization_Estimation</a></td>
+<td>Iterative optimization procedure</td></tr>
+<tr><td style="width: 25%;"><a href="oracular_approach_algorithm.html">oracular_approach_algorithm</a></td>
+<td>Oracular approach main algorithm</td></tr>
+<tr><td style="width: 25%;"><a href="oracular_process_results.html">oracular_process_results</a></td>
+<td>Oracular evaluation of a policy</td></tr>
+<tr><td style="width: 25%;"><a href="phi.html">phi</a></td>
+<td>Normalize a Matrix by Column Min-Max Scaling</td></tr>
+<tr><td style="width: 25%;"><a href="phi_inv.html">phi_inv</a></td>
+<td>Inverse Min-Max Normalization</td></tr>
+<tr><td style="width: 25%;"><a href="plot_metric_comparison.html">plot_metric_comparison</a></td>
+<td>Plot metric values for comparison</td></tr>
+<tr><td style="width: 25%;"><a href="plot_nuisance.html">plot_nuisance</a></td>
+<td>Visualize the true value versus the estimated version.</td></tr>
+<tr><td style="width: 25%;"><a href="plot_realistic.html">plot_realistic</a></td>
+<td>Plot realistic data setting</td></tr>
+<tr><td style="width: 25%;"><a href="predict.SL.grf.html">predict.SL.grf</a></td>
+<td>predict.SL.grf</td></tr>
+<tr><td style="width: 25%;"><a href="process_results.html">process_results</a></td>
+<td>Evaluate a policy</td></tr>
+<tr><td style="width: 25%;"><a href="R_p.html">R_p</a></td>
+<td>Risk function for Conditional Average Treatment Effect (CATE)</td></tr>
+<tr><td style="width: 25%;"><a href="SGD.html">SGD</a></td>
+<td>Stochastic Gradient Descent (SGD) algorithm</td></tr>
+<tr><td style="width: 25%;"><a href="sigma_beta.html">sigma_beta</a></td>
+<td>Link function</td></tr>
+<tr><td style="width: 25%;"><a href="sigma_beta_prime.html">sigma_beta_prime</a></td>
+<td>Derivative of link function</td></tr>
+<tr><td style="width: 25%;"><a href="SL.grf.html">SL.grf</a></td>
+<td>SL.grf</td></tr>
+<tr><td style="width: 25%;"><a href="SuperLearner.CV.control.html">SuperLearner.CV.control</a></td>
+<td>SuperLearner.CV.control (from SuperLearner package)</td></tr>
+<tr><td style="width: 25%;"><a href="synthetic_data_plot.html">synthetic_data_plot</a></td>
+<td>Plot synthetic data setting</td></tr>
+<tr><td style="width: 25%;"><a href="S_p.html">S_p</a></td>
+<td>Constraint function</td></tr>
+<tr><td style="width: 25%;"><a href="update_mu.html">update_mu</a></td>
+<td>Update mu via augmented covariate adjustment</td></tr>
+<tr><td style="width: 25%;"><a href="update_mu_XA.html">update_mu_XA</a></td>
+<td>Update mu via augmented covariate adjustment for fixed X</td></tr>
+<tr><td style="width: 25%;"><a href="update_nu.html">update_nu</a></td>
+<td>Update nu via augmented covariate adjustment</td></tr>
+<tr><td style="width: 25%;"><a href="update_nu_XA.html">update_nu_XA</a></td>
+<td>Update nu via augmented covariate adjustment for fixed X</td></tr>
+<tr><td style="width: 25%;"><a href="visual_treatment_plot.html">visual_treatment_plot</a></td>
+<td>Visualize treatment assignment probability</td></tr>
+<tr><td style="width: 25%;"><a href="V_p.html">V_p</a></td>
+<td>Oracular approximation of value function</td></tr>
+<tr><td style="width: 25%;"><a href="V_Pn.html">V_Pn</a></td>
+<td>Estimation of policy value</td></tr>
+</table>
+</div></body></html>
