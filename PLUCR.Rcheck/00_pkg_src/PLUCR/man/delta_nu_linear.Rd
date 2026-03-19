@@ -7,7 +7,7 @@
 delta_nu_linear(X)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 }
 \value{
 A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
@@ -16,6 +16,6 @@ A numeric vector that represents the contrast between adverse event outcomes for
 Computes the difference in expected outcomes under treatment and control.
 }
 \examples{
-X <- matrix(runif(10*2), 10, 2)
-delta_nu(X)
+X <- matrix(stats::runif(10*2), 10, 2)
+delta_nu_linear(X)
 }

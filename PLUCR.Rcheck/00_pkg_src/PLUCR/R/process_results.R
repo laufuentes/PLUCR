@@ -6,15 +6,15 @@
 #' for the constraint estimator.
 #'
 #' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
-#' @param X A matrix of covariates of size n x d (input data in \code{[0,1]}).
+#' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in \code{[0,1]}).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'
@@ -108,7 +108,7 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda, al
 #' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Linear2", "Realistic").
 #' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix","Satisfied", "Realistic").
 #' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in \code{[0,1/2]}, 0.1 by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
 #'

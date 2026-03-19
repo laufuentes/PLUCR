@@ -12,6 +12,12 @@ plot_metric_comparison(
 )
 }
 \arguments{
+\item{data}{A tibble or data frame with two columns:
+\describe{
+\item{method}{A character vector indicating the estimation method (e.g., "Theta_0", "Theta_naive", etc.).}
+\item{metric1}{A numeric vector containing the corresponding metric1 values for each method.}
+\item{metric2}{A numeric vector containing the corresponding metric2 values for each method.}}}
+
 \item{metrics}{A vector containing the metrics to be represented.}
 
 \item{techniques}{A vector containing the names of the techniques to be represented.}
@@ -26,10 +32,4 @@ Creates a comparison plot of different metrics across different treatment rule e
 }
 \details{
 The function takes a data frame with method names and corresponding policy values, constraints, etc. (typically including \code{Theta_0}, \code{Theta_naive}, \code{Theta_final}, and \code{Theta_oracular}) and generates a visual comparison (e.g., bar plot or point plot).
-
-#' @param data A tibble or data frame with two columns:
-\describe{
-\item{method}{A character vector indicating the estimation method (e.g., "Theta_0", "Theta_naive", etc.).}
-\item{metric1}{A numeric vector containing the corresponding metric1 values for each method.}
-\item{metric2}{A numeric vector containing the corresponding metric2 values for each method.}}
 }

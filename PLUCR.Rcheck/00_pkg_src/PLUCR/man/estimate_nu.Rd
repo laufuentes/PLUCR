@@ -11,7 +11,7 @@ estimate_nu(Xi, A, X, folds, SL.library, V = 2L, threshold = 0.01)
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
 
@@ -31,11 +31,19 @@ using \code{SuperLearner}, applying cross-validation to compute out-of-fold esti
 \examples{
 \dontrun{
 set.seed(123)
-X <- matrix(rnorm(100 * 5), ncol = 5)
+X <- matrix(stats::rnorm(100 * 5), ncol = 5)
 A <- stats::rbinom(100, 1, 0.5)
-Xi <- rbinom(100, n=1, p=0.5)
+Xi <- stats::rbinom(100, n=1, p=0.5)
 JFold <- 3
-folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE))
+folds <- SuperLearner::CVFolds(
+  n, 
+  id = NULL,
+  Y = Y, 
+  cvControl = SuperLearner::SuperLearner.CV.control(
+    V = JFold, 
+    shuffle = TRUE
+  )
+)
 SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
 nu_functions <- estimate_nu(Xi, A, X, folds)
 # Apply a function from the list to new data:

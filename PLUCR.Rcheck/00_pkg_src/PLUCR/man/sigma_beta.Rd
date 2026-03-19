@@ -7,7 +7,7 @@
 sigma_beta(t, beta = 0.05, centered = FALSE)
 }
 \arguments{
-\item{t}{A vector of numerics (in \link{-1,1}).}
+\item{t}{A vector of numerics (in \verb{[-1,1]}).}
 
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
@@ -17,6 +17,6 @@ sigma_beta(t, beta = 0.05, centered = FALSE)
 A numeric vector of treatment probabilities.
 }
 \description{
-Link function mapping \eqn{[-1,1]} to \eqn{[0,1]}, parametrized
+Link function mapping \verb{[-1,1]} to \verb{[0,1]}, parametrized
 by \code{beta} with an optional centering.
 }

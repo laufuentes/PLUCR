@@ -16,7 +16,7 @@ update_mu_XA(offset_mu_XA, epsilon1, psi_collection, H_XA)
 \item{H_XA}{A numeric vector of inverse-propensity weights, typically from \code{HX()}.}
 }
 \value{
-A numeric vector of updated mu on the [0,1] scale.
+A numeric vector of updated mu on the \verb{[0,1]} scale.
 }
 \description{
 Computes updated Mu predictions by adding the bias correction for fixed

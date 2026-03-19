@@ -53,8 +53,6 @@ generate_realistic_data
                         functions generator
 get_opt_beta_lambda     Select Optimal Beta and Lambda Combination
 grad_Lagrangian_p       Gradient of the objective function
-lambda_evol             Plot evolution of objective terms across lambda
-                        values
 learn_threshold         Learn Optimal Decision Threshold
 lwr_upper_bound_estimators
                         Lower and upper bound estimators for policy
@@ -88,8 +86,6 @@ phi                     Normalize a Matrix by Column Min-Max Scaling
 phi_inv                 Inverse Min-Max Normalization
 plot_metric_comparison
                         Plot metric values for comparison
-plot_nuisance           Visualize the true value versus the estimated
-                        version.
 plot_realistic          Plot realistic data setting
 predict.SL.grf          predict.SL.grf
 process_results         Evaluate a policy

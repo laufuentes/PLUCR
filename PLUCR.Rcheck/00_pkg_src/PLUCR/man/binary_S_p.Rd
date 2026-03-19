@@ -7,13 +7,13 @@
 binary_S_p(pi_X, X, alpha, delta_Nu)
 }
 \arguments{
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{pi_X}{A numeric vector of binary decisions of length n.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
+
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
 
 \item{delta_Nu}{A function of \code{X} that determines the contrast between adverse event outcomes.}
-
-\item{pi}{A numeric vector of binary decisions of length n.}
 }
 \value{
 A numeric scalar representing the constraint function value.

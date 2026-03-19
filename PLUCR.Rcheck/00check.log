@@ -55,271 +55,41 @@ Namespaces in Imports field not imported from:
 * checking R code for possible problems ... OK
 * checking Rd files ... OK
 * checking Rd metadata ... OK
-* checking Rd line widths ... NOTE
-Rd file 'Optimization_Estimation.Rd':
-  \examples lines wider than 100 characters:
-     # (Requires user-defined functions: mu0, nu0, prop_score, FW, make_psi, sigma_beta, update_mu_XA, update_nu_XA)
-
-Rd file 'estimate_mu.Rd':
-  \examples lines wider than 100 characters:
-     folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE ... [TRUNCATED]
-
-Rd file 'estimate_nu.Rd':
-  \examples lines wider than 100 characters:
-     folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE ... [TRUNCATED]
-
-Rd file 'estimate_ps.Rd':
-  \examples lines wider than 100 characters:
-     folds <- folds <- SuperLearner::CVFolds(n, id = NULL,Y = Y, cvControl = SuperLearner::SuperLearner.CV.control(V = JFold, shuffle = TRUE ... [TRUNCATED]
-
-These lines will be truncated in the PDF manual.
+* checking Rd line widths ... OK
 * checking Rd cross-references ... WARNING
-Missing link(s) in Rd file 'FW.Rd':
-  ‘0,1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'HX.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'Lagrangian_p.Rd':
-  ‘0,1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'Optimization_Estimation.Rd':
-  ‘0,1’ ‘0, 1’
-
-Missing link(s) in Rd file 'R_p.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'SGD.Rd':
-  ‘0,1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'S_p.Rd':
-  ‘0,1’ ‘0,1/2’
-
 Missing link(s) in Rd file 'V_Pn.Rd':
-  ‘0, 1’ ‘0,1’
-
-Missing link(s) in Rd file 'V_p.Rd':
-  ‘0,1/2’
-
-Missing link(s) in Rd file 'binary_S_p.Rd':
-  ‘0,1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'check_data.Rd':
-  ‘0, 1’ ‘0,1’
-
-Missing link(s) in Rd file 'delta_mu_constant.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_mu_linear.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_mu_mix.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_mu_null.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_mu_threshold.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_nu_linear.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_nu_mix.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_nu_satisfied.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'delta_nu_threshold.Rd':
-  ‘0,1’
+  ‘0, 1’
 
 Missing link(s) in Rd file 'estimate_mu.Rd':
-  ‘0, 1’ ‘0,1’ ‘threshold, 1 - threshold’
+  ‘threshold, 1 - threshold’
 
 Missing link(s) in Rd file 'estimate_nu.Rd':
-  ‘0,1’ ‘threshold, 1 - threshold’
+  ‘threshold, 1 - threshold’
 
 Missing link(s) in Rd file 'estimate_ps.Rd':
-  ‘0,1’ ‘threshold, 1 - threshold’
-
-Missing link(s) in Rd file 'grad_Lagrangian_p.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'learn_threshold.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'lwr_upper_bound_estimators.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'main_algorithm.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'model_Xi_linear.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Xi_mix.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Xi_satisfied.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Xi_threshold.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Y_constant.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Y_linear.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Y_mix.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Y_null.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'model_Y_threshold.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'naive_approach_algorithm.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'oracular_approach_algorithm.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'oracular_process_results.Rd':
-  ‘0,1/2’
-
-Missing link(s) in Rd file 'process_results.Rd':
-  ‘0,1’ ‘0, 1’ ‘0,1/2’
-
-Missing link(s) in Rd file 'sigma_beta.Rd':
-  ‘-1,1’
-
-Missing link(s) in Rd file 'sigma_beta_prime.Rd':
-  ‘-1,1’
-
-Missing link(s) in Rd file 'update_mu.Rd':
-  ‘0,1’
-
-Missing link(s) in Rd file 'update_nu.Rd':
-  ‘0,1’
+  ‘threshold, 1 - threshold’
 
 See section 'Cross-references' in the 'Writing R Extensions' manual.
 
 Found the following Rd file(s) with Rd \link{} targets missing package
 anchors:
-  FW.Rd: 0,1, 0,1/2
-  HX.Rd: 0,1
-  Lagrangian_p.Rd: 0,1, 0,1/2
-  Optimization_Estimation.Rd: 0,1, 0, 1
-  R_p.Rd: 0,1
-  SGD.Rd: 0,1, 0,1/2
-  S_p.Rd: 0,1, 0,1/2
-  V_Pn.Rd: 0, 1, 0,1
-  V_p.Rd: 0,1/2
-  binary_S_p.Rd: 0,1, 0,1/2
-  check_data.Rd: 0, 1, 0,1
-  delta_mu_constant.Rd: 0,1
-  delta_mu_linear.Rd: 0,1
-  delta_mu_mix.Rd: 0,1
-  delta_mu_null.Rd: 0,1
-  delta_mu_threshold.Rd: 0,1
-  delta_nu_linear.Rd: 0,1
-  delta_nu_mix.Rd: 0,1
-  delta_nu_satisfied.Rd: 0,1
-  delta_nu_threshold.Rd: 0,1
-  estimate_mu.Rd: 0, 1, 0,1, threshold, 1 - threshold
-  estimate_nu.Rd: 0,1, threshold, 1 - threshold
-  estimate_ps.Rd: 0,1, threshold, 1 - threshold
-  grad_Lagrangian_p.Rd: 0,1
-  learn_threshold.Rd: 0,1, 0, 1, 0,1/2
-  lwr_upper_bound_estimators.Rd: 0,1, 0, 1, 0,1/2
-  main_algorithm.Rd: 0,1, 0, 1, 0,1/2
-  model_Xi_linear.Rd: 0,1
-  model_Xi_mix.Rd: 0,1
-  model_Xi_satisfied.Rd: 0,1
-  model_Xi_threshold.Rd: 0,1
-  model_Y_constant.Rd: 0,1
-  model_Y_linear.Rd: 0,1
-  model_Y_mix.Rd: 0,1
-  model_Y_null.Rd: 0,1
-  model_Y_threshold.Rd: 0,1
-  naive_approach_algorithm.Rd: 0,1, 0, 1, 0,1/2
-  oracular_approach_algorithm.Rd: 0,1, 0, 1, 0,1/2
-  oracular_process_results.Rd: 0,1/2
-  process_results.Rd: 0,1, 0, 1, 0,1/2
-  sigma_beta.Rd: -1,1
-  sigma_beta_prime.Rd: -1,1
-  update_mu.Rd: 0,1
-  update_nu.Rd: 0,1
+  V_Pn.Rd: 0, 1
+  estimate_mu.Rd: threshold, 1 - threshold
+  estimate_nu.Rd: threshold, 1 - threshold
+  estimate_ps.Rd: threshold, 1 - threshold
 Please provide package anchors for all Rd \link{} targets not in the
 package itself and the base packages.
 * checking for missing documentation entries ... OK
-* checking for code/documentation mismatches ... WARNING
-Functions or methods with usage in Rd file 'lambda_evol.Rd' but not in code:
-  ‘lambda_evol’
-
-Functions or methods with usage in Rd file 'plot_nuisance.Rd' but not in code:
-  ‘plot_nuisance’
-
-Codoc mismatches from Rd file 'V_p.Rd':
-V_p
-  Code: function(psi, beta = 0.05, centered = FALSE, alpha = 0.1, B =
-                 1e+06, ncov = 10L, scenario_mu = c("Linear",
-                 "Threshold", "Mix", "Linear2", "Null", "Realistic"),
-                 scenario_nu = c("Linear", "Threshold", "Mix",
-                 "Satisfied", "Realistic"), seed = NA)
-  Docs: function(psi, beta = 0.05, centered =
-                 FALSEmake_psi(theta_oracular)(X_test), alpha = 0.1, B
-                 = 1e+06, ncov = 10L, scenario_mu = c("Linear",
-                 "Threshold", "Mix", "Linear2", "Null", "Realistic"),
-                 scenario_nu = c("Linear", "Threshold", "Mix",
-                 "Satisfied", "Realistic"), seed = NA)
-  Mismatches in argument default values:
-    Name: 'centered' Code: FALSE Docs: FALSEmake_psi(theta_oracular)(X_test)
-
+* checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... WARNING
-Undocumented arguments in Rd file 'V_Pn.Rd'
-  ‘policy’
 Documented arguments not in \usage in Rd file 'V_Pn.Rd':
-  ‘psi’ ‘X’ ‘beta’ ‘centered’
-
-Undocumented arguments in Rd file 'binary_S_p.Rd'
-  ‘pi_X’
-Documented arguments not in \usage in Rd file 'binary_S_p.Rd':
-  ‘pi’
+  ‘beta’ ‘centered’
 
 Undocumented arguments in Rd file 'expit.Rd'
   ‘q’ ‘location’ ‘scale’ ‘lower.tail’ ‘log.p’ ‘p’
 
-Undocumented arguments in Rd file 'grad_Lagrangian_p.Rd'
-  ‘alpha’ ‘psi_X’ ‘delta_Mu_X’ ‘delta_Nu_X’
-
-Documented arguments not in \usage in Rd file 'model_Xi_linear.Rd':
-  ‘A’
-
-Documented arguments not in \usage in Rd file 'model_Xi_mix.Rd':
-  ‘A’
-
 Documented arguments not in \usage in Rd file 'model_Xi_realistic.Rd':
   ‘A’
-
-Documented arguments not in \usage in Rd file 'model_Xi_satisfied.Rd':
-  ‘A’
-
-Documented arguments not in \usage in Rd file 'model_Xi_threshold.Rd':
-  ‘A’
-
-Undocumented arguments in Rd file 'naive_approach_algorithm.Rd'
-  ‘nu0_test’
-
-Undocumented arguments in Rd file 'oracular_approach_algorithm.Rd'
-  ‘ncov’
-
-Undocumented arguments in Rd file 'plot_metric_comparison.Rd'
-  ‘data’
 
 Functions with \usage entries need to have the appropriate \alias
 entries, and all their arguments documented.
@@ -327,25 +97,16 @@ The \usage entries must correspond to syntactically valid R code.
 See chapter ‘Writing R documentation files’ in the ‘Writing R
 Extensions’ manual.
 * checking Rd contents ... OK
-* checking for unstated dependencies in examples ... OK
+* checking for unstated dependencies in examples ... ERROR
+Warning: parse error in file 'lines':
+11: unexpected ','
+39: # (Requires user-defined functions: mu0, nu0, 
+40: prop_score,
+              ^
+** will not attempt to run examples
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... ERROR
-Running examples in ‘PLUCR-Ex.R’ failed
-The error most likely occurred in:
-
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: delta_mu_linear
-> ### Title: Linear-shaped Conditional Average Treatment Effect estimator for
-> ###   Y
-> ### Aliases: delta_mu_linear
-> 
-> ### ** Examples
-> 
-> X <- matrix(runif(10*2), 10, 2)
-> delta_mu(X)
-Error in delta_mu(X) : could not find function "delta_mu"
-Execution halted
+* checking examples ... SKIPPED
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
 * checking re-building of vignette outputs ... OK
@@ -358,4 +119,4 @@ Skipping checking math rendering: package 'V8' unavailable
 * checking for non-standard things in the check directory ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 3 WARNINGs, 6 NOTEs
+Status: 1 ERROR, 2 WARNINGs, 5 NOTEs

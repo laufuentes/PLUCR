@@ -9,17 +9,17 @@ learn_threshold(theta, X, A, Y, Xi, folds, alpha)
 \arguments{
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
 
-\item{X}{A matrix or data frame of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix or data frame of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \link{0, 1}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
 
 \item{Xi}{A numeric vector or matrix of adverse events outcomes.}
 
 \item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \link{0,1/2}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
 }
 \value{
 A numeric value corresponding to the optimal threshold chosen

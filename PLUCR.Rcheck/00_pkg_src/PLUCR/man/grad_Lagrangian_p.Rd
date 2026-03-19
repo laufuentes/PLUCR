@@ -27,9 +27,9 @@ grad_Lagrangian_p_X(
 )
 }
 \arguments{
-\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \code{[-1, 1]}.}
+\item{psi}{A function that takes an input \code{X} and returns a numeric vector with values in the range \verb{[-1,1]}.}
 
-\item{X}{A matrix of covariates of size n x d (input data in \link{0,1}).}
+\item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
 \item{delta_Mu}{A function of \code{X} that determines the contrast between primary outcomes.}
 
@@ -37,9 +37,17 @@ grad_Lagrangian_p_X(
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 
+\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).}
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+
+\item{psi_X}{The function psi evaluated at \code{X} (numeric vector).}
+
+\item{delta_Mu_X}{The function delta_Mu evaluated at \code{X} (numeric vector).}
+
+\item{delta_Nu_X}{The function delta_Nu evaluated at \code{X} (numeric vector).}
 }
 \value{
 A numeric vector representing the gradient of the objective function with respect to \code{psi(X)}.

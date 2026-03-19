@@ -25,7 +25,6 @@ grad_Lagrangian_p	grad_Lagrangian_p
 grad_Lagrangian_p_X	grad_Lagrangian_p
 HX	HX
 Lagrangian_p	Lagrangian_p
-lambda_evol	lambda_evol
 learn_threshold	learn_threshold
 logit	expit
 lwr_upper_bound_estimators	lwr_upper_bound_estimators
@@ -49,7 +48,6 @@ oracular_process_results	oracular_process_results
 phi	phi
 phi_inv	phi_inv
 plot_metric_comparison	plot_metric_comparison
-plot_nuisance	plot_nuisance
 plot_realistic	plot_realistic
 predict.SL.grf	predict.SL.grf
 process_results	process_results
