@@ -18,7 +18,7 @@ A numeric vector with the transformed values based on covariates and treatment.
 Computes a mix of a linear and threshold shaped interaction term between covariates and treatment.
 }
 \examples{
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_mix(X, A)
 }

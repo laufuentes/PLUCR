@@ -16,6 +16,6 @@ A numeric vector with the transformed values based on covariates and treatment.
 Computes a close to zero interaction term between covariates and treatment.
 }
 \examples{
-X <- matrix(stats::runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*3), 10, 3)
 model_Xi_satisfied(X)
 }

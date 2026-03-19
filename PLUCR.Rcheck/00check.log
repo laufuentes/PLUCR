@@ -11,7 +11,7 @@
 * this is package ‘PLUCR’ version ‘0.1.0’
 * package encoding: UTF-8
 * checking CRAN incoming feasibility ... NOTE
-Maintainer: ‘X X <example@gmail.com>’
+Maintainer: ‘Anonymous Author <author@gmail.com>’
 
 New submission
 * checking package namespace information ... OK
@@ -70,9 +70,9 @@ The error most likely occurred in:
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_threshold(X)
-Error in X[, 3] : subscript out of bounds
+Error in X[, 4] : subscript out of bounds
 Calls: delta_nu_threshold
 Execution halted
 * checking for unstated dependencies in vignettes ... OK

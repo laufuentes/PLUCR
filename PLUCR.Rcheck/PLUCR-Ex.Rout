@@ -72,7 +72,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_constant(X)
  [1] 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768
  [8] 0.4188768 0.4188768 0.4188768
@@ -95,7 +95,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_linear(X)
  [1]  0.46003416  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
  [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
@@ -117,7 +117,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_mix(X)
  [1]  0.94530202  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
  [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
@@ -139,7 +139,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_null(X)
 [1] 0
 > 
@@ -182,7 +182,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_mu_threshold(X)
  [1] -0.40080405 -0.40080405  0.47549420  0.04746046  0.04746046  0.04746046
  [7]  0.47549420  0.47549420  0.04746046  0.04746046
@@ -205,7 +205,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_linear(X)
  [1] 0.1768154 0.1614112 0.5090720 0.2896018 0.5597804 0.3732744 0.5286332
  [8] 0.6580168 0.2867140 0.5640662
@@ -228,7 +228,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_mix(X)
  [1] 0.21217846 0.19369339 0.04268329 0.34752211 0.67173653 0.44792933
  [7] 0.63435989 0.78962015 0.04268329 0.67687943
@@ -272,7 +272,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_satisfied(X)
 [1] 0.0396
 > 
@@ -294,8 +294,8 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*2), 10, 2)
+> X <- matrix(stats::runif(10*3), 10, 3)
 > delta_nu_threshold(X)
-Error in X[, 3] : subscript out of bounds
+Error in X[, 4] : subscript out of bounds
 Calls: delta_nu_threshold
 Execution halted

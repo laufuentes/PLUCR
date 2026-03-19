@@ -16,6 +16,6 @@ A numeric vector that represents the contrast between primary outcomes for given
 Computes the difference in expected Y outcomes under treatment and control, using \code{h_Y}.
 }
 \examples{
-X <- matrix(stats::runif(10*2), 10, 2)
+X <- matrix(stats::runif(10*3), 10, 3)
 delta_mu_threshold(X)
 }

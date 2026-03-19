@@ -10,7 +10,7 @@ logit <- stats::qlogis
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_linear(X, A)
 #' @export
@@ -28,7 +28,7 @@ model_Y_linear <- function(X,A){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_threshold(X, A)
 #' @export
@@ -47,7 +47,7 @@ model_Y_threshold <- function(X, A) {
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_mix(X, A)
 #' @export
@@ -68,7 +68,7 @@ model_Y_mix <- function(X, A) {
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_null_TE(X, A)
 #' @export
@@ -85,7 +85,7 @@ model_Y_null<- function(X,A){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_constant_TE(X, A)
 #' @export
@@ -102,7 +102,7 @@ model_Y_constant<- function(X, A) {
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' model_Xi_linear(X)
 #' @export
 model_Xi_linear <- function(X){
@@ -122,7 +122,7 @@ model_Xi_linear <- function(X){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' model_Xi_threshold(X)
 #' @export
 model_Xi_threshold <- function(X){
@@ -142,7 +142,7 @@ model_Xi_threshold <- function(X){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' model_Xi_mix(X)
 #' @export
 model_Xi_mix <- function(X) {
@@ -175,7 +175,7 @@ model_Xi_mix <- function(X) {
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' model_Xi_satisfied(X)
 #' @export
 model_Xi_satisfied <- function(X){
@@ -194,7 +194,7 @@ model_Xi_satisfied <- function(X){
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_linear(X)
 #' @export
 delta_mu_linear <- function(X){
@@ -212,7 +212,7 @@ attr(delta_mu_linear, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_threshold(X)
 #' @export
 delta_mu_threshold <- function(X){
@@ -230,7 +230,7 @@ attr(delta_mu_threshold, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_mix(X)
 #' @export
 delta_mu_mix <- function(X){
@@ -248,7 +248,7 @@ attr(delta_mu_mix, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_null(X)
 #' @export
 delta_mu_null <- function(X){
@@ -266,7 +266,7 @@ attr(delta_mu_null, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_constant(X)
 #' @export
 delta_mu_constant <- function(X){
@@ -285,7 +285,7 @@ attr(delta_mu_constant, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_nu_linear(X)
 #' @export
 delta_nu_linear <- function(X){
@@ -304,7 +304,7 @@ attr(delta_nu_linear, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_nu_threshold(X)
 #' @export
 delta_nu_threshold <- function(X){
@@ -324,7 +324,7 @@ attr(delta_nu_threshold, "vars")<- c(3, 4)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_nu_mix(X)
 #' @export
 delta_nu_mix <- function(X){
@@ -344,7 +344,7 @@ attr(delta_nu_mix, "vars")<- c(1, 2)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_nu_satisfied(X)
 #' @export
 delta_nu_satisfied <- function(X){
@@ -468,7 +468,7 @@ generate_data <- function(n, ncov=10L, scenario_mu=c("Linear", "Threshold", "Mix
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
 #' model_Y_linear(X, A)
 #' @export
@@ -485,7 +485,7 @@ model_Y_realistic <- function(X,A){
 #'
 #' @return A numeric vector with the transformed values based on covariates and treatment.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' model_Xi_linear(X)
 #' @export
 model_Xi_realistic <- function(X){
@@ -507,7 +507,7 @@ model_Xi_realistic <- function(X){
 #'
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_mu_realistic(X)
 #' @export
 delta_mu_realistic <- function(X){
@@ -526,7 +526,7 @@ attr(delta_mu_realistic, "vars")<- c(1, 4)
 #'
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
-#' X <- matrix(stats::runif(10*3), 10, 3)
+#' X <- matrix(stats::runif(10*5), 10, 5)
 #' delta_nu_realistic(X)
 #' @export
 delta_nu_realistic <- function(X){
