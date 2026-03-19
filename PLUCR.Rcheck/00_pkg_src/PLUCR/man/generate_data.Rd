@@ -35,7 +35,7 @@ functions delta_Mu and delta_Nu.
 Generates a dataset simulating treatment assignment, covariates, and potential outcomes.
 }
 \examples{
-data <- data_gen(100)
+data <- generate_data(100)
 head(data[[1]])  # complete data
 head(data[[2]])  # observed data
 }

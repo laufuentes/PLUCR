@@ -371,7 +371,7 @@ attr(delta_nu_satisfied, "vars")<- c(1, 2)
 #' treatment assignments and  \code{df_obs} with observed outcomes based on treatment) and the oracular 
 #' functions delta_Mu and delta_Nu. 
 #' @examples
-#' data <- data_gen(100)
+#' data <- generate_data(100)
 #' head(data[[1]])  # complete data
 #' head(data[[2]])  # observed data
 #' @export
