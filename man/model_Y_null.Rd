@@ -20,5 +20,5 @@ Computes a null treatment effect for everyone
 \examples{
 X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
-model_Y_null_TE(X, A)
+model_Y_null(X, A)
 }

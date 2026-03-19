@@ -17,5 +17,5 @@ Computes a realistic interaction term between covariates and treatment.
 }
 \examples{
 X <- matrix(stats::runif(10*5), 10, 5)
-model_Xi_linear(X)
+model_Xi_realistic(X)
 }

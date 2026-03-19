@@ -579,12 +579,12 @@ numeric(0)
 > ### ** Examples
 > 
 > X <- matrix(stats::runif(10*5), 10, 5)
-> model_Xi_linear(X)
+> model_Xi_realistic(X)
 [[1]]
- [1] 0 1 0 0 0 0 0 0 0 0
+ [1] 0 0 0 0 0 0 0 0 0 0
 
 [[2]]
- [1] 1 1 1 0 1 0 1 1 0 0
+ [1] 1 0 0 0 1 0 0 1 0 1
 
 > 
 > 
@@ -658,7 +658,75 @@ numeric(0)
 > 
 > X <- matrix(stats::runif(10*5), 10, 5)
 > A <- rep(1, 10)
-> model_Y_constant_TE(X, A)
-Error in model_Y_constant_TE(X, A) : 
-  could not find function "model_Y_constant_TE"
+> model_Y_constant(X, A)
+ [1] 2 2 2 2 2 2 2 2 2 2
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("model_Y_constant", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("model_Y_linear")
+> ### * model_Y_linear
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: model_Y_linear
+> ### Title: Linear treatment effect on Y component function
+> ### Aliases: model_Y_linear
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*5), 10, 5)
+> A <- rep(1, 10)
+> model_Y_linear(X, A)
+ [1]  1.05703352  0.90263870 -0.51975242 -0.58462302  0.05695330 -0.79217785
+ [7] -1.32458755 -1.30540777 -0.01829845  0.32153702
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("model_Y_linear", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("model_Y_mix")
+> ### * model_Y_mix
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: model_Y_mix
+> ### Title: Mixed treatment effect on Y component function
+> ### Aliases: model_Y_mix
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*5), 10, 5)
+> A <- rep(1, 10)
+> model_Y_mix(X, A)
+ [1]  6.00000000  0.90263870 -0.51975242 -0.58462302  0.05695330 -0.79217785
+ [7] -1.32458755 -1.30540777 -0.01829845  0.32153702
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("model_Y_mix", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("model_Y_null")
+> ### * model_Y_null
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: model_Y_null
+> ### Title: No treatment effect on Y component function
+> ### Aliases: model_Y_null
+> 
+> ### ** Examples
+> 
+> X <- matrix(stats::runif(10*5), 10, 5)
+> A <- rep(1, 10)
+> model_Y_null_TE(X, A)
+Error in model_Y_null_TE(X, A) : 
+  could not find function "model_Y_null_TE"
 Execution halted

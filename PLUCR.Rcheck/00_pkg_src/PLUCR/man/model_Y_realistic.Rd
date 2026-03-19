@@ -20,5 +20,5 @@ Computes a realistic interaction term between covariates and treatment.
 \examples{
 X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
-model_Y_linear(X, A)
+model_Y_realistic(X, A)
 }

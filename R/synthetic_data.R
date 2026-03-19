@@ -70,7 +70,7 @@ model_Y_mix <- function(X, A) {
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
 #' A <- rep(1, 10)
-#' model_Y_null_TE(X, A)
+#' model_Y_null(X, A)
 #' @export
 model_Y_null<- function(X,A){
   return(0)
