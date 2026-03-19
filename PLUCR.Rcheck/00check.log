@@ -63,17 +63,14 @@ Running examples in ‘PLUCR-Ex.R’ failed
 The error most likely occurred in:
 
 > base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: delta_nu_threshold
-> ### Title: Thresholded Conditional Average Treatment Effect estimator for
-> ###   Xi
-> ### Aliases: delta_nu_threshold
+> ### Name: generate_data
+> ### Title: Synthetic data generator and functions generator
+> ### Aliases: generate_data
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
-> delta_nu_threshold(X)
-Error in X[, 4] : subscript out of bounds
-Calls: delta_nu_threshold
+> data <- data_gen(100)
+Error in data_gen(100) : could not find function "data_gen"
 Execution halted
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK

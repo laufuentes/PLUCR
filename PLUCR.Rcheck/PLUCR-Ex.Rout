@@ -72,7 +72,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_constant(X)
  [1] 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768 0.4188768
  [8] 0.4188768 0.4188768 0.4188768
@@ -95,7 +95,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_linear(X)
  [1]  0.46003416  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
  [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
@@ -117,7 +117,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_mix(X)
  [1]  0.94530202  0.40183376 -0.24147076 -0.27004789  0.02704551 -0.35776766
  [7] -0.55089349 -0.54481302 -0.00869152  0.15142770
@@ -139,7 +139,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_null(X)
 [1] 0
 > 
@@ -160,7 +160,7 @@ Type 'q()' to quit R.
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_realistic(X)
 numeric(0)
 > 
@@ -182,7 +182,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_mu_threshold(X)
  [1] -0.40080405 -0.40080405  0.47549420  0.04746046  0.04746046  0.04746046
  [7]  0.47549420  0.47549420  0.04746046  0.04746046
@@ -205,7 +205,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_nu_linear(X)
  [1] 0.1768154 0.1614112 0.5090720 0.2896018 0.5597804 0.3732744 0.5286332
  [8] 0.6580168 0.2867140 0.5640662
@@ -228,7 +228,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_nu_mix(X)
  [1] 0.21217846 0.19369339 0.04268329 0.34752211 0.67173653 0.44792933
  [7] 0.63435989 0.78962015 0.04268329 0.67687943
@@ -250,7 +250,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_nu_realistic(X)
  [1] -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01 -0.01
 > 
@@ -272,7 +272,7 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_nu_satisfied(X)
 [1] 0.0396
 > 
@@ -294,8 +294,140 @@ numeric(0)
 > 
 > ### ** Examples
 > 
-> X <- matrix(stats::runif(10*3), 10, 3)
+> X <- matrix(stats::runif(10*5), 10, 5)
 > delta_nu_threshold(X)
-Error in X[, 4] : subscript out of bounds
-Calls: delta_nu_threshold
+ [1] 0.315 0.765 0.765 0.315 0.315 0.765 0.315 0.315 0.315 0.765
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("delta_nu_threshold", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("estimate_mu")
+> ### * estimate_mu
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: estimate_mu
+> ### Title: Estimate mu
+> ### Aliases: estimate_mu
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D set.seed(123)
+> ##D X <- matrix(stats::rnorm(100 * 5), ncol = 5)
+> ##D A <- stats::rbinom(100, 1, 0.5)
+> ##D Y <- stats::runif(100)
+> ##D JFold <- 3
+> ##D folds <- SuperLearner::CVFolds(
+> ##D   n, 
+> ##D   id = NULL,
+> ##D   Y = Y, 
+> ##D   cvControl = SuperLearner::SuperLearner.CV.control(
+> ##D     V = JFold, 
+> ##D     shuffle = TRUE
+> ##D   )
+> ##D )
+> ##D SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
+> ##D mu_functions <- estimate_mu(Y, A, X, folds)
+> ##D # Apply a function from the list to new data:
+> ##D mu_functions(1,X[1:5, ],1)  # Predict treated outcomes
+> ## End(Not run)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("estimate_mu", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("estimate_nu")
+> ### * estimate_nu
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: estimate_nu
+> ### Title: Estimate nu
+> ### Aliases: estimate_nu
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D set.seed(123)
+> ##D X <- matrix(stats::rnorm(100 * 5), ncol = 5)
+> ##D A <- stats::rbinom(100, 1, 0.5)
+> ##D Xi <- stats::rbinom(100, n=1, p=0.5)
+> ##D JFold <- 3
+> ##D folds <- SuperLearner::CVFolds(
+> ##D   n, 
+> ##D   id = NULL,
+> ##D   Y = Y, 
+> ##D   cvControl = SuperLearner::SuperLearner.CV.control(
+> ##D     V = JFold, 
+> ##D     shuffle = TRUE
+> ##D   )
+> ##D )
+> ##D SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
+> ##D nu_functions <- estimate_nu(Xi, A, X, folds)
+> ##D # Apply a function from the list to new data:
+> ##D nu_functions(1,X[1:5, ],1)  # Predict treated outcomes
+> ## End(Not run)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("estimate_nu", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("estimate_ps")
+> ### * estimate_ps
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: estimate_ps
+> ### Title: Estimate propensity score
+> ### Aliases: estimate_ps
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D set.seed(123)
+> ##D X <- matrix(stats::rnorm(100 * 5), ncol = 5)
+> ##D A <- stats::rbinom(100, 1, 0.5)
+> ##D JFold <- 3
+> ##D folds <- SuperLearner::CVFolds(
+> ##D   n, 
+> ##D   id = NULL,
+> ##D   Y = Y, 
+> ##D   cvControl = SuperLearner::SuperLearner.CV.control(
+> ##D     V = JFold, 
+> ##D     shuffle = TRUE
+> ##D   )
+> ##D )
+> ##D SL.library <- c("SL.glm", "SL.mean")
+> ##D prop_score <- estimate_ps(A, X, folds)
+> ##D # Apply a function from the list to new data:
+> ##D prop_score(1,X[1:5, ])  # Predict treated outcomes
+> ## End(Not run)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("estimate_ps", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("generate_data")
+> ### * generate_data
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: generate_data
+> ### Title: Synthetic data generator and functions generator
+> ### Aliases: generate_data
+> 
+> ### ** Examples
+> 
+> data <- data_gen(100)
+Error in data_gen(100) : could not find function "data_gen"
 Execution halted

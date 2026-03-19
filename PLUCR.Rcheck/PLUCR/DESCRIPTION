@@ -15,7 +15,7 @@ Imports: dplyr, ggplot2, grf, gridExtra, magrittr, R.utils, scales,
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2026-03-19 11:02:14 UTC; laurafuentesvicente
+Packaged: 2026-03-19 11:05:08 UTC; laurafuentesvicente
 Author: Anonymous Author [aut, cre]
 Maintainer: Anonymous Author <author@gmail.com>
-Built: R 4.5.2; ; 2026-03-19 11:02:26 UTC; unix
+Built: R 4.5.2; ; 2026-03-19 11:05:19 UTC; unix

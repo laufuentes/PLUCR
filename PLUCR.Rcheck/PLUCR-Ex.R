@@ -52,7 +52,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_constant(X)
 
 
@@ -73,7 +73,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_linear(X)
 
 
@@ -93,7 +93,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_mix(X)
 
 
@@ -113,7 +113,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_null(X)
 
 
@@ -133,7 +133,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_realistic(X)
 
 
@@ -154,7 +154,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_mu_threshold(X)
 
 
@@ -175,7 +175,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_linear(X)
 
 
@@ -196,7 +196,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_mix(X)
 
 
@@ -216,7 +216,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_realistic(X)
 
 
@@ -237,7 +237,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_satisfied(X)
 
 
@@ -258,7 +258,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_threshold(X)
 
 
@@ -433,7 +433,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 model_Xi_linear(X)
 
 
@@ -453,7 +453,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 model_Xi_mix(X)
 
 
@@ -473,7 +473,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 model_Xi_linear(X)
 
 
@@ -493,7 +493,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 model_Xi_satisfied(X)
 
 
@@ -513,7 +513,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 model_Xi_threshold(X)
 
 
@@ -533,7 +533,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_constant_TE(X, A)
 
@@ -554,7 +554,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_linear(X, A)
 
@@ -575,7 +575,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_mix(X, A)
 
@@ -596,7 +596,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_null_TE(X, A)
 
@@ -617,7 +617,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_linear(X, A)
 
@@ -638,7 +638,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 
 ### ** Examples
 
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 A <- rep(1, 10)
 model_Y_threshold(X, A)
 

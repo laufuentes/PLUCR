@@ -16,6 +16,6 @@ A numeric vector that represents the contrast between adverse event outcomes for
 Computes the difference in expected outcomes under treatment and control.
 }
 \examples{
-X <- matrix(stats::runif(10*3), 10, 3)
+X <- matrix(stats::runif(10*5), 10, 5)
 delta_nu_mix(X)
 }
