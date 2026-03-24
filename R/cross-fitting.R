@@ -1,4 +1,4 @@
-#' CVFolds (from SuperLearner package) 
+ #' CVFolds (from SuperLearner package) 
 #' 
 #' Creates a list of row numbers for the V-fold cross validation.
 #' @param N Sample size.

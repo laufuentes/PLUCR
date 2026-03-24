@@ -33,7 +33,7 @@ naive_approach_algorithm(
 
 \item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
 
-\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
 \item{mu0_train}{A function predicting primary outcome (Y) given treatment (A) and covariates (X) for training.}
 

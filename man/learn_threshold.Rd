@@ -17,7 +17,7 @@ learn_threshold(theta, X, A, Y, Xi, folds, alpha)
 
 \item{Xi}{A numeric vector or matrix of adverse events outcomes.}
 
-\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
 \item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
 }

@@ -63,14 +63,14 @@ update_mu <- function(A, X, mu0, epsilon1, theta_collection, prop_score){
 #' Update nu via augmented covariate adjustment
 #'
 #' Computes updated Nu predictions by adding the bias correction for all previous solutions at X 
-#' \code{sigma_beta(psi(X),beta,centered)} scaled by coefficients \code{epsilon2_collection},
+#' using \code{sigma_beta} scaled by coefficients \code{epsilon2_collection},
 #' then transforms back via the logistic function.
 #'
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
 #' @param epsilon2 A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.
-#' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.
+#' @param theta_collection A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta} applied to \code{psi} functions.
 #' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
 #' @param beta A non-negative numeric scalar controlling the sharpness of the probability function (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).

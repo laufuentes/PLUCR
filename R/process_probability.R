@@ -11,11 +11,10 @@
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
-#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
+#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #'
-#' @return 
-#' A numeric value corresponding to the optimal threshold chosen 
+#' @return  A numeric value corresponding to the optimal threshold chosen 
 #' from the candidate sequence.
 #' 
 #' @export

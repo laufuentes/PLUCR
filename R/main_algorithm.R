@@ -29,7 +29,10 @@ utils::globalVariables(c(
 #' @param max_iter A numeric scalar specifying the maximum number of iterations (5 by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #' 
-#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. 
+#' These matrices are used to construct the optimal treatment rule in two steps. 
+#' First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). 
+#' Then, obtain the optimal treatment rule by applying \code{sigma_beta} to the selected `beta` attribute.
 #' @export
 main_algorithm <- function(X, A, Y, Xi, 
                            Lambdas=seq(1, 8, by=1), alpha=0.1, precision=0.05,

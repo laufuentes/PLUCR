@@ -4,7 +4,14 @@
 \alias{estimate_real_valued_mu}
 \title{Estimate real-valued mu}
 \usage{
-estimate_real_valued_mu(Y, A, X, folds, SL.library, V = 2L)
+estimate_real_valued_mu(
+  Y,
+  A,
+  X,
+  folds,
+  SL.library = c("SL.glm", "SL.mean"),
+  V = 2L
+)
 }
 \arguments{
 \item{Y}{A numeric vector or matrix of length n representing primary outcomes (in R).}
@@ -13,9 +20,9 @@ estimate_real_valued_mu(Y, A, X, folds, SL.library, V = 2L)
 
 \item{X}{A matrix or data frame of covariates of size n x d (input data in R).}
 
-\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
-\item{SL.library}{Vector of libraries for training SuperLearner.}
+\item{SL.library}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default).}
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 }

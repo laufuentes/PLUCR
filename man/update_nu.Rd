@@ -24,7 +24,7 @@ update_nu(
 
 \item{epsilon2}{A numeric vector of GLM coefficients for each column in \code{sigma_psi_collection}.}
 
-\item{theta_collection}{A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta(psi)} functions.}
+\item{theta_collection}{A list of the optimal \code{theta} enabling the reconstruction of optimal \code{sigma_beta} applied to \code{psi} functions.}
 
 \item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
 
@@ -37,6 +37,6 @@ A numeric vector of updated nu on the \verb{[0,1]} scale.
 }
 \description{
 Computes updated Nu predictions by adding the bias correction for all previous solutions at X
-\code{sigma_beta(psi(X),beta,centered)} scaled by coefficients \code{epsilon2_collection},
+using \code{sigma_beta} scaled by coefficients \code{epsilon2_collection},
 then transforms back via the logistic function.
 }

@@ -4,7 +4,15 @@
 \alias{estimate_mu}
 \title{Estimate mu}
 \usage{
-estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.01)
+estimate_mu(
+  Y,
+  A,
+  X,
+  folds,
+  SL.library = c("SL.glm", "SL.mean"),
+  V = 2L,
+  threshold = 0.01
+)
 }
 \arguments{
 \item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
@@ -13,9 +21,9 @@ estimate_mu(Y, A, X, folds, SL.library, V = 2L, threshold = 0.01)
 
 \item{X}{A matrix or data frame of covariates of size n x d (input data in \verb{[0,1]}).}
 
-\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
-\item{SL.library}{Vector of libraries for training SuperLearner.}
+\item{SL.library}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default).}
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 
@@ -27,26 +35,4 @@ A fold-specific function predicting primary outcome (Y) given treatment (A) and 
 \description{
 This function trains conditional mean of primary outcome models for treated and control groups
 using \code{SuperLearner}, applying cross-validation to compute out-of-fold estimates.
-}
-\examples{
-\dontrun{
-set.seed(123)
-X <- matrix(stats::rnorm(100 * 5), ncol = 5)
-A <- stats::rbinom(100, 1, 0.5)
-Y <- stats::runif(100)
-JFold <- 3
-folds <- SuperLearner::CVFolds(
-  n, 
-  id = NULL,
-  Y = Y, 
-  cvControl = SuperLearner::SuperLearner.CV.control(
-    V = JFold, 
-    shuffle = TRUE
-  )
-)
-SL.library <- c("SL.glm", "SL.mean", "SL.ranger")
-mu_functions <- estimate_mu(Y, A, X, folds)
-# Apply a function from the list to new data:
-mu_functions(1,X[1:5, ],1)  # Predict treated outcomes
-}
 }

@@ -11,7 +11,7 @@
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
-#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
+#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #' @param mu0_train A function predicting primary outcome (Y) given treatment (A) and covariates (X) for training.
 #' @param mu0_test A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X) for testing.
 #' @param nu0_train A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for training.
@@ -159,7 +159,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
-#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
+#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #' @param ncov An integer indicating the number of covariates in synthetic setting.  
 #' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
 #' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.

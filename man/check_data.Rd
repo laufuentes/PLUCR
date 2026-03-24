@@ -15,7 +15,7 @@ check_data(Y, Xi, A, X, folds)
 
 \item{X}{A matrix or data frame of covariates of size n x d (input data in \verb{[0,1]}).}
 
-\item{folds}{A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}.}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 }
 \value{
 A list with elements: \code{ok} (logical), and \code{diagnoses} (character vector of issues).

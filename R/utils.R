@@ -6,7 +6,7 @@
 #' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
-#' @param folds A list of cross-validation folds, typically created with \code{SuperLearner::CVFolds}. 
+#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #'
 #' @return A list with elements: `ok` (logical), and `diagnoses` (character vector of issues).
 #' @export
