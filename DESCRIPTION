@@ -8,7 +8,7 @@ Authors@R: person(given = "Anonymous",
 Description: Estimating treatment probabilities that maximize a primary 
     clinical outcome while controlling for the occurrence of adverse events. 
     The 'PLUCR' package implements methods for constrained policy learning. 
-License: AGPL-3 + file LICENSE
+License: AGPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
