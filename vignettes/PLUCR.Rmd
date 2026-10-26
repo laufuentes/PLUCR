@@ -56,15 +56,9 @@ We generate synthetic observational data using the built-in `generate_data()` fu
 ```{r, eval=FALSE}
 n <- 3000  # Sample size
 ncov <- 10L # Number of covariates
-scenario_mu <- "Linear"
-scenario_nu <- "Linear"
 
 # Generate synthetic scenario
-exp <- PLUCR::generate_data(n, 
-                            ncov, 
-                            scenario_mu = scenario_mu, 
-                            scenario_nu = scenario_nu, 
-                            seed=2025) 
+exp <- PLUCR::generate_data(n, ncov, seed=2025) 
 
 # # Observational data (to be used for training)
 df_obs <- exp[[2]]
@@ -82,8 +76,8 @@ In this step, we extract the necessary variables from the observational data set
 #   (dummy variables) prior to inclusion. 
 # ---------------------------------------------------------------
 
-X <- df_obs %>%
-  dplyr::select(starts_with("X."))%>%
+X <- df_obs |>
+  dplyr::select(starts_with("X."))|>
   as.matrix()
 
 # ---------------------------------------------------------------
@@ -118,18 +112,19 @@ We now define the parameters to be passed to `main_algorithm()`. These include t
 # - SL.ranger: random forest
 # - SL.grf: generalized random forest
 # - SL.xgboost: gradient boosting
-SL.library <- c("SL.mean", "SL.glm", "SL.ranger", "SL.grf", "SL.xgboost")
+SL.library1 <- c("SL.ranger")
+SL.library2 <- c("SL.mean", "SL.glm", "SL.ranger", "SL.grf", "SL.xgboost")
 
 # Insert a root directory where output files, results and images will be saved
 root.path <- "results"
 
 # An increasing sequence of non-negative numeric scalars controlling 
-# the penalty for violating the constraint (seq(1,8, by=1) by default).
+# the penalty for violating the constraint (seq(1, 10, by=1) by default).
 Lambda_candidates <- seq(1, 10, by=1)
 
 # A vector of non-negative scalars controlling the sharpness of the 
-# treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default)
-Beta_candidates <- c(0, 0.05, 0.1, 0.25, 0.5)
+# treatment probability function (c(0, 0.25, 0.5) by default)
+Beta_candidates <- c(0, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.2 means the policy may increase adverse event probability by up to 20%
@@ -161,15 +156,12 @@ The output of this procedure includes:
 # ===============================================================
 # Run the Main Algorithm to Learn the Optimal Treatment Rule
 # ===============================================================
-
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                 Lambdas = Lambda_candidates,
-                                alpha=alpha.tolerance, 
-                                B= Beta_candidates, 
+                                alpha=alpha.tolerance, B= Beta_candidates, 
                                 precision=optimization.precision,
-                                centered=centered,
-                                SL.library = SL.library, 
-                                root.path=root.path)
+                                centered=centered, SL.library1 = SL.library1, 
+                                SL.library2 = SL.library2, root.path=root.path)
 
 # ---------------------------------------------------------------
 # Extract learned parameters from output
@@ -186,7 +178,9 @@ if(is.list(output)){
 }
 ```
 
-The main function returns a list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps, as follows:
+The main function returns a list of matrices (`theta_0` and `theta_final`), or 
+`theta_0` alone. These matrices are used to construct the optimal treatment rule 
+in two steps, as follows:
 
 ```{r, eval=FALSE}
 # ===============================================================
@@ -204,7 +198,8 @@ psi_final <- PLUCR::make_psi(theta_final)
 # Apply the treatment probability function `sigma_beta`, 
 # controlled by beta. 
 # ---------------------------------------------------------------
-optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), beta=attr(theta_final, "beta"))
+optimal_treatment_probability <- PLUCR::sigma_beta(psi_final(X), 
+                                                   beta=attr(theta_final, "beta"))
 ```
 
 
@@ -233,20 +228,22 @@ Xi_test <- Xi[folds[[3]]]
 # ---------------------------------------------------------------
 # Step 3. Extract test nuisance functions
 # ---------------------------------------------------------------
-mu0_test <- function(a,x){mu.hat.nj(a,x,3)}
-nu0_test <- function(a,x){nu.hat.nj(a,x,3)}
-prop_score_test <- function(a,x){ps.hat.nj(a,x,3)}
+mu0_test <- function(a,x){mu.hat.nj(a = a, x = x, ff = 3)}
+nu0_test <- function(a,x){nu.hat.nj(a = a,x = x, ff = 3)}
+prop_score_test <- function(a,x){ps.hat.nj(a = a, x = x, ff = 3)}
 
 # ---------------------------------------------------------------
 # Step 4. Evaluate the learned optimal treatment rule
 # ---------------------------------------------------------------
-eval_plucr <- process_results(theta=theta_final, X=X_test, A=A_test, Y=Y_test,
-                              Xi=Xi_test, mu0=mu0_test, nu0=nu0_test,
-                              prop_score=prop_score_test, 
-                              lambda=attr(theta_final, "lambda"),
-                              alpha=alpha.tolerance, 
-                              beta=attr(theta_final, "beta"), 
-                              centered=centered)
+eval_plucr <- PLUCR::process_results(theta=theta_final, X=X_test, A=A_test, 
+                                     Y=Y_test, Xi=Xi_test, mu0=mu0_test, 
+                                     nu0=nu0_test, prop_score=prop_score_test, 
+                                     lambda=attr(theta_final, "lambda"),
+                                     alpha=alpha.tolerance, 
+                                     beta=attr(theta_final, "beta"), 
+                                     centered=centered, 
+                                     card_lambda = length(Lambdas) + 1, 
+                                     card_B = length(B))
 
 # ---------------------------------------------------------------
 # Optional: Oracular evaluation (synthetic scenarios only)
@@ -258,12 +255,11 @@ delta_mu <- exp[[3]] # Oracular delta_mu function (treatment effect over Y condi
 delta_nu <- exp[[4]] # Oracular delta_nu function (treatment effect over xi conditioned on X) 
 
 # Oracular evaluation
-eval_plucr_oracular <- PLUCR::oracular_process_results(theta=theta_final, ncov=ncov,
-                                              scenario_mu = scenario_mu, 
-                                              scenario_nu = scenario_nu, 
-                                              lambda = attr(theta_final, "lambda"), 
-                                              alpha = alpha.tolerance, 
-                                              beta= attr(theta_final, "beta"))
+eval_plucr_oracular <- PLUCR::oracular_process_results(theta=theta_final, 
+                                                       ncov=ncov,
+                                                       lambda = attr(theta_final, "lambda"), 
+                                                       alpha = alpha.tolerance, 
+                                                       beta= attr(theta_final, "beta"))
 ```
 
 We can further learn a threshold that translates the treatment probabilities into binary choices.
@@ -283,63 +279,28 @@ t <- learn_threshold(theta_final, X, A, Y, Xi, folds, alpha.tolerance)
 optimal_treatment_decision <- ifelse(optimal_treatment_probability>t, 1, 0)
 ```
 
-
-For non-normalized data, we can as well provide an evaluation in data scale for both probabilistic policy and its binary counterpartt
-```{r, eval=FALSE}
-# ===============================================================
-# Evaluate the Optimal Treatment Rule using non-normalized data
-# ===============================================================
-# ---------------------------------------------------------------
-# Step 1. Train pre-required objects (algorithm outputs)
-# ---------------------------------------------------------------
-Y_non_normalized <- # Insert non scaled primary outcome 
-covariates <- # Insert X prior to `phi(X)`
-mu.hat.nj <- estimate_real_valued_mu(Y= Y_non_normalized, A= A, X=covariates, folds, SL.library = SL.library, V=2L)
-nu.hat.nj <- estimate_nu(Xi= Xi, A= A, X=covariates, folds, SL.library = SL.library, V=2L, threshold = 0.01)
-
-# Nuisances trained on testing subset for unbiased evaluation
-mu0_test <- function(a,x){mu.hat.nj(a,x,ff=3)}
-nu0_test <- function(a,x){nu.hat.nj(a,x,ff=3)}
-
-# Data testing subset
-covariates_test <- covariates[folds[[3]],]
-Y_non_test <- Y_non_normalized[folds[[3]]]
-proba_pi <- optimal_treatment_probability[folds[[3]]]
-pi_decision <- optimal_treatment_decision[folds[[3]]]
-  
-# Step 2. Evaluate probabilistic policy and derived decision
-# ---------------------------------------------------------------
-# Evaluation of optimal treatment probabilities 
-policy_value_proba <- V_Pn(proba_pi, 
-                           y1 = mu0_test(a = rep(1, nrow(covariates_test)), covariates_test), 
-                           y0 = mu0_test(a = rep(0, nrow(covariates_test)), covariates_test))
-
-constraint_value_proba <- mean(proba_pi*(nu0_test(a = rep(1, nrow(covariates_test)), covariates_test) - nu0_test(a = rep(0, nrow(covariates_test)), covariates_test))) - alpha.tolerance
-
-print(c(policy_value_proba, constraint_value_proba))
-
-# Evaluation of optimal treatment decisions derived from probabilities 
-policy_value_decision <- V_Pn(pi_decision, 
-                              y1 = mu0_test(a = rep(1, nrow(covariates_test)), covariates_test), 
-                              y0 = mu0_test(a = rep(0, nrow(covariates_test)), covariates_test))
-
-constraint_value_decision <- mean(pi_decision*(nu0_test(a = rep(1, nrow(covariates_test)), covariates_test) - nu0_test(a = rep(0, nrow(covariates_test)), covariates_test))) - alpha.tolerance
-
-print(c(policy_value_decision, constraint_value_decision))
-```
-
 ## 2.5. Other results 
 ### 2.5.1. Naive approach 
 
-As an alternative, we can apply the `naive_approach_algorithm`, which relies on baseline nuisance parameter estimators and omits the correction step implemented in `main_algorithm()`. This function assumes that the nuisance components—specifically the outcome regression, the adverse event regression and the propensity score model, have already been estimated and saved in their respective folders (`Mu.hat`, `Nu.hat`, `PS.hat`). 
+As an alternative, we can apply the `naive_approach_algorithm`, which relies on 
+baseline nuisance parameter estimators and omits the correction step implemented 
+in `main_algorithm()`. This function assumes that the nuisance components—specifically 
+the outcome regression, the adverse event regression and the propensity score model, 
+have already been estimated and saved in their respective folders 
+(`Mu.hat`, `Nu.hat`, `PS.hat`). 
 
-Using these pre-computed components, the algorithm directly learns a treatment policy that, maximizes the estimated policy value, and enforces the estimated constraint on the probability of adverse events, using the baseline nuisance estimates.
+Using these pre-computed components, the algorithm directly learns a treatment 
+policy that, maximizes the estimated policy value, and enforces the estimated 
+constraint on the probability of adverse events, using the baseline nuisance 
+estimates.
 
 The output includes:
 
-- An unconstrained policy, which maximizes the primary outcome without regard to adverse events.
+- An unconstrained policy, which maximizes the primary outcome without regard to 
+adverse events.
 
-- A constrained-optimal policy, which satisfies the specified constraint on adverse event probability using the uncorrected nuisance estimators.
+- A constrained-optimal policy, which satisfies the specified constraint on 
+adverse event probability using the uncorrected nuisance estimators.
 ```{r, eval=FALSE}
 # ===============================================================
 # Run the Naive Algorithm to Learn the Optimal Treatment Rule
@@ -353,7 +314,7 @@ naive_output <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                          prop_score_train = prop_score_train,
                                          prop_score_test = prop_score_test, 
                                          alpha = alpha.tolerance, 
-                                         centered=centered,
+                                         centered=centered, 
                                          precision=optimization.precision,
                                          root.path = root.path)
 
@@ -372,21 +333,22 @@ if(is.list(naive_output)){
 # =================================================================
 # Evaluate the Optimal Treatment Rule according to Naive Approach
 # =================================================================
-eval_naive <- process_results(theta=theta_naive, X=X_test, A=A_test, Y=Y_test,
-                              Xi=Xi_test, mu0=mu0_test, nu0=nu0_test,
-                              prop_score=prop_score_test, 
-                              lambda=attr(theta_naive, "lambda"),
-                              alpha=alpha.tolerance, 
-                              beta=attr(theta_naive, "beta"), 
-                              centered=centered)
+eval_naive <- PLUCR::process_results(theta = theta_naive, X = X_test, A = A_test, 
+                                     Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                                     nu0 = nu0_test, 
+                                     prop_score = prop_score_test, 
+                                     lambda = attr(theta_naive, "lambda"),
+                                     alpha = alpha.tolerance, 
+                                     beta = attr(theta_naive, "beta"), 
+                                     centered = centered, 
+                                     card_lambda = length(Lambda)+1, 
+                                     card_B = length(B))
 
 # ---------------------------------------------------------------
 # Optional: Oracular evaluation (synthetic scenarios only)
 # Uses the known data-generating process. 
 # ---------------------------------------------------------------
 eval_naive_oracular <- PLUCR::oracular_process_results(theta=theta_naive, ncov=ncov,
-                                              scenario_mu = scenario_mu, 
-                                              scenario_nu = scenario_nu, 
                                               lambda = attr(theta_naive, "lambda"), 
                                               alpha = alpha.tolerance, 
                                               beta= attr(theta_naive, "beta"))
@@ -435,12 +397,11 @@ if(is.list(oracular_output)){
 # =================================================================
 # Evaluate oracularly the Optimal Treatment Rule
 # =================================================================
-eval_oracular <- oracular_process_results(theta=theta_oracular, ncov=ncov,  
-                                          scenario_mu = scenario_mu, 
-                                          scenario_nu = scenario_nu, 
-                                          lambda = attr(theta_oracular, "lambda"), 
-                                          alpha = alpha.tolerance, 
-                                          beta= attr(theta_oracular, "beta"))
+eval_oracular <- PLUCR::oracular_process_results(theta=theta_oracular, 
+                                                 ncov=ncov,  
+                                                 lambda = attr(theta_oracular, "lambda"), 
+                                                 alpha = alpha.tolerance, 
+                                                 beta= attr(theta_oracular, "beta"))
 ```
 
 # 3. Play with results 
@@ -510,7 +471,15 @@ Finally, we compare treatment recommendations across approaches by evaluating th
 # ===============================================================
 # Visualize metrics for different outcomes 
 # ===============================================================
-eval_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda=attr(theta_0, "lambda"), alpha.tolerance,  beta=attr(theta_0, "beta"), centered)[[1]]
+eval_0 <- PLUCR:: process_results(theta = theta_0, X = X_test, A = A_test, 
+                                  Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                                  nu0 = nu0_test, prop_score = prop_score_test, 
+                                  lambda=attr(theta_0, "lambda"), 
+                                  alpha = alpha.tolerance,  
+                                  beta=attr(theta_0, "beta"), 
+                                  centered = centered, 
+                                  card_lambda = lenght(Lambdas) + 1, 
+                                  card_B = length(B))[[1]]
 
 if(is.list(output)){
   data <- tibble(
@@ -534,9 +503,7 @@ if(is.list(output)){
                  eval_oracular$constraint))
 }
 
-# Call the function
-plot_metric_comparison(data, metrics = select(data, -"method") %>% colnames(), 
-                       techniques = data$method, root.path = root.path)
+print(data)
 ```
 
 In a simulated setting where the true data-generating mechanisms are known, we can evaluate the oracle performance of each parameter value, `theta_naive`, `theta_0`, and `theta_final`, by computing their corresponding outcomes using the `oracular_process_results()` function, as demonstrated for `theta_oracular`.
@@ -586,23 +553,18 @@ Each model is fit separately and the estimates are saved for later use in policy
 # Estimate primary outcome model E[Y | A, X]
 mu.hat.nj <- PLUCR::estimate_mu(
   Y = Y, A = A, X = X, folds = folds,
-  SL.library = SL.library, V = 2L
-)
-saveRDS(mu.hat.nj, file = file.path(root.path, "Mu.hat", "mu.hat.nj.rds"))
+  SL.library1 = SL.library1, SL.library2 = SL.library2, V = 2L)
 
 # Estimate adverse event model E[Xi | A, X]
 nu.hat.nj <- PLUCR::estimate_nu(
   Xi = Xi, A = A, X = X, folds = folds,
-  SL.library = SL.library, V = 2L
-)
-saveRDS(nu.hat.nj, file = file.path(root.path, "Nu.hat", "nu.hat.nj.rds"))
+  SL.library1 = SL.library1, SL.library2 = SL.library2, V = 2L)
 
 # Estimate propensity score model P[A | X]
 ps.hat.nj <- PLUCR::estimate_ps(
   A = A, X = X, folds = folds,
-  SL.library = SL.library, V = 2L
-)
-saveRDS(ps.hat.nj, file = file.path(root.path, "PS.hat", "ps.hat.nj.rds"))
+  SL.library = SL.library2, V = 2L)
+
 ```
 
 After estimating the nuisance parameters, the next step is to organize the data into **training** and **testing** sets. This allows us to:
@@ -624,7 +586,6 @@ A_train <- A[folds[[2]]]
 Y_train <- Y[folds[[2]]]
 Xi_train <- Xi[folds[[2]]]
   
-
 # Testing functions & data (third fold)
 # functions
 mu0_test <- function(a,x){mu.hat.nj(a,x,3)}
@@ -668,132 +629,112 @@ Whether with $\lambda = 0$ or $\lambda > 0$, the procedure iterates as follows:
 
 4. Repeat until convergence or until the maximum number of iterations is reached.
 ```{r, eval=FALSE}
-# Start by testing the unconstrained case with lambda = 0
-saved <- FALSE  # Flag to track whether a valid result has already been saved
-combinations <- NULL  # Matrix to store (beta, lambda) pairs that satisfy the constraint
-beta_0 <- NULL  # Arbitrary beta value since constraint is not evaluated yet
-lambda <- 0
-
-# Run optimization with lambda = 0 (no constraint)
-out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
-                                      prop_score=prop_score_train, 
-                                      X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
-                                      lambda=0, alpha=alpha, precision=precision, beta=0.05,
-                                      centered=centered, tol=tol, max_iter=max_iter)
-
-# Extract the final policy from the iteration  
-theta_0 <- out$theta_collection[[length(out$theta_collection)]]
-attr(theta_0, "lambda") <- 0  # Save the lambda as an attribute 
-
-# Evaluate the policy on the test data for all possible betas
+first_lambda <- Lambdas[1]
+Lambdas <- sort(Lambdas, decreasing = TRUE)
+cardLambda <- length(Lambdas) + 1 # add the test of lambda = 0 
+cardB <- length(B)
+saved <- FALSE
+combinations <- opt_res <- NULL
+theta_saved <- list()
+##### 1.1- Test different \code{lambda} and \code{beta} combinations and save 
+##### the last solution satisfying the constraint
 for (beta in B){
-    res_0 <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, 
-                             mu0_test, nu0_test, prop_score_test, lambda=0, 
-                             alpha,  beta, centered)
-    # Loop to check constraint satisfaction
-    if (res_0[[1]]$constraint < 0) {
-      min_constraint_lambda0 <- res_0[[1]]$constraint
-      
-      if (res_0[[1]]$lwr_bound_policy_value > max_policy_value) {
-        beta_0 <- beta
-        max_policy_value <- res_0[[1]]$lwr_bound_policy_value
-        saveRDS(theta_0, file = file.path(root.path, "Theta_opt", paste0(beta, "_", 0, ".rds")))
-         attr(theta_0, "lambda") <- lambda
-          attr(theta_0, "beta") <- beta
-        saveRDS(out, file=file.path(root.path,"Intermediate",paste0(beta,"_",0,".rds")))
-        saveRDS(res_0[[1]], file=file.path(root.path,"Evaluation",paste0(beta,"_",0,".rds")))
-        combinations <- rbind(combinations, c(beta_0, 0))
-        saved <- TRUE}
-    }else{
-      if(res_0[[1]]$constraint<min_constraint_lambda0){
-        min_constraint_lambda0 <- res_0[[1]]$constraint
-        beta_0 <- beta
-      }
+  last_sucessfull_lambda <- saved_result <- theta_opt <- NULL
+  for(lambda in Lambdas){
+    if(beta * lambda >= 8){break}
+    out <- PLUCR::Optimization_Estimation(mu0 = mu0_train, nu0 = nu0_train, 
+                                            prop_score = prop_score_train, 
+                                            X = X_train, A = A_train, 
+                                            Y = Y_train, Xi = Xi_train, 
+                                            lambda = lambda, alpha = alpha, 
+                                            precision = precision, beta = beta, 
+                                            centered = centered, tol = tol)
+    theta <- out$theta_collection[[length(out$theta_collection)]]
+    res <- process_results(theta = theta_opt, X = X_test, A = A_test, 
+                           Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                           nu0 = nu0_test, prop_score = prop_score_test, 
+                           lambda = lambda, alpha = alpha, beta = beta, 
+                           centered = centered, conf_level = conf_level, 
+                           card_lambda = cardLambda, card_B = cardB)
+    if(res$upper_bound_constraint <= 0){
+      # Save solutions satisfying the constraint
+      saved_res <- res 
+      theta_opt <- theta
+      attr(theta_opt, "lambda") <- lambda
+      attr(theta_opt, "beta") <- beta
+      last_success_lambda <- lambda
+    }else{break}
   }
-    if(res_0[[2]]<0){
-      warning(sprintf(paste("The constraint was already satisfied for lambda=0.")))
-      attr(theta_0, "beta") <- beta_0
-      return(theta_0)
+  # Keep only the last solution satisfying the constraint
+  if (!is.null(last_success_lambda)) {
+    opt_res <- rbind(opt_res, saved_result)
+    theta_saved[[length(theta_saved)+1]] <- theta_opt
+    combinations <- rbind(combinations, c(beta, last_success_lambda))
+    saved <- TRUE
+    }
+}
+##### 1.2- Test \code{lambda}=0 if all previous solutions satisfied the constraint
+if(last_success_lambda == first_lambda){
+  out0 <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
+                                         prop_score=prop_score_train, 
+                                         X=X_train, A=A_train, Y=Y_train, 
+                                         Xi=Xi_train, lambda=0, alpha=alpha, 
+                                         precision=precision, beta=0, 
+                                         centered=centered, tol=tol, 
+                                         max_iter=max_iter)
+  theta_0 <- out0$theta_collection[[length(out0$theta_collection)]]
+  attr(theta_0, "lambda") <- 0
+  for (beta in B){
+    res_0 <- process_results(theta= theta_0, X = X_test, A = A_test, 
+                             Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                             nu0 = nu0_test, prop_score = prop_score_test, 
+                             lambda=0, alpha = alpha, beta = beta, 
+                             centered = centered, conf_level = conf_level,
+                             card_lambda = cardLambda, card_B = cardB)
+    # Loop to check constraint satisfaction
+    if (res_0$upper_bound_constraint <= 0) {
+      opt_res <- rbind(opt_res, saved_result)
+      attr(theta_0, "beta") <- beta
+      theta_saved[[length(theta_saved)+1]] <- theta_0
+      combinations <- rbind(combinations, c(beta, 0))
+      saved <- TRUE
+      }
     }
   }
-  attr(theta_0, "beta") <- beta_0 # Save the beta as an attribute 
-
-  # Begin training over the grid: find for each beta value the optimal lambda
- for (beta in B){
-      saved <- FALSE
-      for (lambda in Lambdas){
-       # Run alternated procedure for each beta and lambda combination 
-         out <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
-                                               prop_score=prop_score_train, 
-                                               X=X_train, A=A_train, Y=Y_train, Xi=Xi_train, 
-                                               lambda=lambda, alpha=alpha, precision=precision, 
-                                               beta=beta, centered=centered, 
-                                               tol=tol, max_iter=max_iter)
-        # Extract final policy
-        theta_opt <- out$theta_collection[[length(out$theta_collection)]]
-        ### Evaluating 
-        res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, 
-                               mu0_test, nu0_test, prop_score_test, lambda, 
-                               alpha,  beta, centered)
-        if (!saved && res[[1]]$constraint < 0) {
-          saveRDS(res[[1]], file=file.path(root.path,"Evaluation", 
-                                           paste0(beta, "_", lambda,".rds")))
-          saveRDS(out, file=file.path(root.path,"Intermediate",
-                                      paste0(beta,"_",lambda,".rds")))
-          saveRDS(theta_opt, file = file.path(root.path, "Theta_opt", 
-                                              paste0(beta, "_", lambda, ".rds")))
-          attr(theta_opt, "lambda") <- lambda
-          attr(theta_opt, "beta") <- beta
-          saved <- TRUE
-          combinations <- rbind(combinations, c(beta, lambda))
-        }
-        # Stop search if constraint's upper CI bound is negative
-        if(res[[2]]<0){
-          break
-        }
-      }
- }
-# Select the optimal combination (beta, lambda)
-files_del <- file.path(root.path,"Intermediate")
-unlink(files_del, recursive = TRUE)
   
+if (!saved) {warning("Algorithm stopped: None of the parameters 
+                        satisfied the constraint")}
+
+if(!is.null(combinations)){
 # Select the optimal combination (beta, lambda)
-optimal_combination <- get_opt_beta_lambda(combinations,root.path)
-beta <- optimal_combination$beta
-lambda <- optimal_combination$lambda
-theta_keep <- paste0(beta, "_", lambda, ".rds")
-
-# Delete unwanted files in Theta_opt
-theta_files <- list.files(file.path(root.path, "Theta_opt"))
-theta_to_delete <- theta_files[basename(theta_files) != theta_keep]
-file.remove(file.path(root.path,"Theta_opt",theta_to_delete))
-
-# Delete unwanted files in Evaluation
-eval_files <- list.files(file.path(root.path, "Evaluation"))
-eval_to_delete <- eval_files[basename(eval_files) != theta_keep]
-file.remove(file.path(root.path,"Evaluation", eval_to_delete))
-
-# Load the corresponding theta for the optimal (beta, lambda) combination
-theta_final <- readRDS(file = file.path(root.path, "Theta_opt", 
-                                            paste0(optimal_combination$beta, "_",
-                                                   optimal_combination$lambda, ".rds"))) 
-# Save the optimal combiation (lambda, beta) as an attribute 
-attr(theta_final, "lambda") <- optimal_combination$lambda 
-attr(theta_final, "beta") <- optimal_combination$beta
+  idx_opt <- which.max(opt_res$lwr_bound_policy_value)
+  beta <- optimal_combination[idx_opt,]$beta
+  lambda <- optimal_combination[idx_opt,]$lambda
     
-# Compute the optimal treatment probabilities with sigma_beta
-psi_values <- make_psi(theta_final)(X_test)
-optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
+  theta_final <- theta_saved[[idx_opt]]
+  }else{
+    theta_final <- -sign(theta)*theta * 1e100
+    res <- process_results(theta = theta_final, X =  X_test, A = A_test, 
+                           Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                           nu0 = nu0_test, prop_score = prop_score_test, 
+                           lambda = lambda, alpha = alpha, beta = 0, 
+                           centered = centered, conf_level = conf_level,
+                           card_lambda = cardLambda, card_B = cardB)
+    attr(theta_final, "lambda") <- lambda
+    attr(theta_final, "beta") <- 0
+  }
+  psi_values <- make_psi(theta_final)(X_test)
+  optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
     
-# Calculate proportion over 0.5 and warn the user if the treatment probabilities are too low.
-prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
-if(prop_over_0.50<0.1){
-  warning(sprintf(
-        paste("Only %.1f%% of the test set has an optimal treatment probability above 0.5.",
+  # Calculate proportion over 0.5
+  prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
+  if(prop_over_0.50<0.1){
+    warning(sprintf(
+      paste(
+          "Only %.1f%% of the test set has an optimal treatment probability above 0.5.",
           "This may indicate that your tolerance for adverse events (alpha) is too strict.",
-          "Consider relaxing it if treatment is being under-assigned."), 100 * prop_over_0.50))
-}
-  
-print(list(theta_0, theta_final))
+          "Consider relaxing it if treatment is being under-assigned."), 
+        100 * prop_over_0.50))
+    }
 ```
 

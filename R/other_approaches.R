@@ -1,31 +1,53 @@
 #' Naive approach main algorithm
 #' 
 #' Learning an optimal treatment policy under constraints.
-#' This function begins by validating and preprocessing the input data, and assumes that the nuisance components mu0, nu0, and prop_score (train and test), 
-#' have already been estimated. Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm. 
-#' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
-#' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
+#' This function begins by validating and preprocessing the input data, and 
+#' assumes that the nuisance components mu0, nu0, and prop_score (train and 
+#' test), have already been estimated. Subsequently, it estimates the optimal 
+#' treatment policy via the Frank-Wolfe optimization algorithm. The procedure 
+#' includes an inner grid search over candidate values of `lambda` and `beta` to 
+#' identify the policy that maximizes the expected primary outcome (policy 
+#' value) while satisfying a constraint on the expected rate of adverse events.
 #' 
 #'
 #' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
-#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
-#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
-#' @param mu0_train A function predicting primary outcome (Y) given treatment (A) and covariates (X) for training.
-#' @param mu0_test A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X) for testing.
-#' @param nu0_train A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for training.
-#' @param nu0_test A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for testing.
-#' @param prop_score_train A function that estimates the propensity score given treatment (A) and covariates (X) for training.
-#' @param prop_score_test A function that estimates the propensity score given treatment (A) and covariates (X) for testing.
-#' @param Lambdas A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
-#' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
-#' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes 
+#' (in `[0,1]`).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events 
+#' (0 or 1).
+#' @param folds A list of cross-validation folds (e.g., a list of indices for 
+#' each fold). 
+#' @param mu0_train A function predicting primary outcome (Y) given treatment 
+#' (A) and covariates (X) for training.
+#' @param mu0_test A fold-specific function predicting primary outcome (Y) given 
+#' treatment (A) and covariates (X) for testing.
+#' @param nu0_train A function predicting adverse event outcome (Xi) given 
+#' treatment (A) and covariates (X) for training.
+#' @param nu0_test A function predicting adverse event outcome (Xi) given 
+#' treatment (A) and covariates (X) for testing.
+#' @param prop_score_train A function that estimates the propensity score given 
+#' treatment (A) and covariates (X) for training.
+#' @param prop_score_test A function that estimates the propensity score given 
+#' treatment (A) and covariates (X) for testing.
+#' @param Lambdas A sequence of non-negative numeric scalars controlling the 
+#' penalty for violating the constraint (seq(1,8,by=1) by default).
+#' @param alpha A numeric scalar representing the constraint tolerance (in 
+#' `[0,1/2]`, 0.1 by default).
+#' @param precision A numeric scalar defining the desired convergence precision 
+#' (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely 
+#' proportional to this value, calculated as 1/precision.
+#' @param B A vector of non-negative scalars controlling the sharpness of the 
+#' treatment probability function (c(0, 0.25, 0.5) by default).
+#' @param centered A logical value indicating whether to apply centering in 
+#' \code{sigma_beta} (FALSE by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #' 
-#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. 
+#' These matrices are used to construct the optimal treatment rule in two steps. 
+#' First, build `psi` using the `make_psi` function and evaluate it at `X` 
+#' (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying 
+#' `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
 naive_approach_algorithm <- function(X, A, Y, Xi, folds, 
                                      mu0_train, mu0_test, 
@@ -33,7 +55,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                                      prop_score_train, prop_score_test, 
                                      Lambdas=seq(1, 8, by=1), 
                                      alpha=0.1, precision=0.05,
-                                     B=c(0.05, 0.1, 0.25, 0.5), 
+                                     B=c(0, 0.25, 0.5), 
                                      conf_level = 0.05,
                                      centered=FALSE, root.path){
   
@@ -112,7 +134,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                                            lambda = 0, alpha = alpha, 
                                            precision = precision, tol = tol,
                                            beta = 0.05, centered = centered)
-    theta_0 <- out0$theta_collection[[length(out0$theta_collection)]] # Fixed out -> out0
+    theta_0 <- out0$theta_collection[[length(out0$theta_collection)] 
     attr(theta_0, "lambda") <- 0 
     for (beta in B){
       res_0 <- process_results(theta = theta_0, X = X_test, A = A_test, 
@@ -177,35 +199,51 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
 
 #' Oracular approach main algorithm
 #' 
-#' Learns an optimal treatment policy under constraints using true data structures.
-#' It begins by validating and preprocessing the input data. 
-#' Subsequently, it approximates the optimal treatment policy via the Frank-Wolfe optimization algorithm. 
-#' The procedure includes an inner grid search over candidate values of `lambda` and `beta` to identify the policy 
-#' that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
+#' Learns an optimal treatment policy under constraints using true data 
+#' structures. It begins by validating and preprocessing the input data. 
+#' Subsequently, it approximates the optimal treatment policy via the 
+#' Frank-Wolfe optimization algorithm. The procedure includes an inner grid 
+#' search over candidate values of `lambda` and `beta` to identify the policy 
+#' that maximizes the expected primary outcome (policy value) while satisfying a 
+#' constraint on the expected rate of adverse events.
 #'
 #' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
 #' @param A A binary vector of size n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
-#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
-#' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
-#' @param ncov An integer indicating the number of covariates in synthetic setting.  
-#' @param delta_Mu A function that computes the treatment effect (mu difference) from covariates.
-#' @param delta_Nu A function that computes the selection effect (nu difference) from covariates.
-#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
-#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
-#' @param Lambdas A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).
-#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
-#' @param precision A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.
-#' @param B A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes 
+#' (in `[0,1]`).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events 
+#' (0 or 1).
+#' @param folds A list of cross-validation folds (e.g., a list of indices for 
+#' each fold). 
+#' @param ncov An integer indicating the number of covariates in synthetic 
+#' setting.  
+#' @param delta_Mu A function that computes the treatment effect (mu difference) 
+#' from covariates.
+#' @param delta_Nu A function that computes the selection effect (nu difference) 
+#' from covariates.
+#' @param Lambdas A sequence of non-negative numeric scalars controlling the 
+#' penalty for violating the constraint (seq(1,8,by=1) by default).
+#' @param alpha A numeric scalar representing the constraint tolerance 
+#' (in `[0,1/2]`, 0.1 by default).
+#' @param precision A numeric scalar defining the desired convergence precision 
+#' (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely 
+#' proportional to this value, calculated as 1/precision.
+#' @param B A vector of non-negative scalars controlling the sharpness of the 
+#' treatment probability function (c(0, 0.25, 0.5) by default).
+#' @param centered A logical value indicating whether to apply centering in 
+#' \code{sigma_beta} (FALSE by default).
 #' @param root.path Path to the folder where all results are to be saved.
 #' 
-#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. These matrices are used to construct the optimal treatment rule in two steps. First, build `psi` using the `make_psi` function and evaluate it at `X` (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
+#' @return A list of matrices (`theta_0` and `theta_final`), or `theta_0` alone. 
+#' These matrices are used to construct the optimal treatment rule in two steps. 
+#' First, build `psi` using the `make_psi` function and evaluate it at `X` 
+#' (i.e., `psi(X)`). Then, obtain the optimal treatment rule by applying 
+#' `sigma_beta` to the selected `beta` attribute (`sigma_beta(psi(X), beta)`).
 #' @export
 oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
-                                     delta_Mu, delta_Nu, scenario_mu, scenario_nu, 
-                                     Lambdas=seq(1, 8, by=1), alpha=0.1, 
-                                     precision=0.05,B=c(0.05, 0.1, 0.25, 0.5), 
+                                     delta_Mu, delta_Nu, 
+                                     Lambdas = seq(1, 8, by=1), alpha = 0.1, 
+                                     precision = 0.05, B=c(0, 0.25, 0.5), 
                                      centered=FALSE, root.path){
   
   if (!dir.exists(root.path)) {
@@ -274,7 +312,8 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
   }
   attr(theta_0, "beta") <- beta_0
   ##### If your constraint was not satified with lambda=0 goes onto step 2
-  ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
+  ##### 2.1- Test different lambda and beta combinations and save the optimal 
+  ##### solutions satisfying the constraint 
   ### Training 
   if(!stopped){
     for (beta in B){
@@ -319,7 +358,7 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
                                           "Oracular.rds"))
     
     res <- oracular_process_results(theta = theta_final, ncov= ncov, 
-                                    lambda = lambda,alpha=alpha, beta=beta, 
+                                    lambda = lambda, alpha=alpha, beta=beta, 
                                     centered=centered)
     saveRDS(res, file=file.path(root.path, "Evaluation", "Oracular.rds"))
 
