@@ -10,32 +10,6 @@
 #'         using a convex combination of past \code{theta} solutions.
 #' @export
 make_psi <- function(Theta) {
-  # Theta: k x d
-  # gamma: real
-  if(FALSE){
-    ## ------------
-    ## lazy version
-    ## ------------
-    psi_iterative <- function(x) {
-      # x: n x d
-      K <- nrow(Theta)
-      Theta_x <- x %*% t(Theta)
-      psi_x <- 2*expit(Theta_x[,1])-1
-      weights <- rep(0,K)
-      weights[1] <- 1
-      # Theta_x: n x K
-      for (k in 1:(ncol(Theta_x)-1)){
-        gamma <- 2/(2+k)
-        weights[1:k] <- weights[1:k]*(1-gamma)
-        weights[k+1] <- gamma
-        psi_x <- (1-gamma) * psi_x + gamma * (2 * expit(Theta_x[, k+1])-1)
-      }
-      return(psi_x)
-    }
-  }
-  ## ----------------
-  ## Smarter version
-  ## ----------------
   psi <- function(x){
     k <- nrow(Theta)
     Gamma <- matrix((2 / ((k + 1) * k)) * (1:k), ncol = 1)

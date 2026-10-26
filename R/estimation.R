@@ -7,12 +7,15 @@
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
-#' @param SL.library Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default).
+#' @param SL.library1 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.
+#' @param SL.library2 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.
 #' @param V Number of folds inside the SuperLearner (2L by default).
 #' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to `[threshold, 1 - threshold]`.
 #' @return A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X)
 #' @export
-estimate_mu <- function(Y, A, X, folds, SL.library = c("SL.glm", "SL.mean"), V = 2L, threshold = 1e-2) {
+estimate_mu <- function(Y, A, X, folds, SL.library1 = c("SL.glm", "SL.mean"), 
+                        SL.library2 = c("SL.glm", "SL.mean"), V = 2L, 
+                        threshold = 1e-2) {
   if (!(threshold<5*1e-2 & threshold>0)) {
     msg_threshold <- paste("Threshold:", threshold, "is not small enough or not positive")
     warning(msg_threshold)
@@ -21,8 +24,11 @@ estimate_mu <- function(Y, A, X, folds, SL.library = c("SL.glm", "SL.mean"), V =
     msg_folds <- paste("Number of folds:",V, "is either smaller than 1 or greater than 10")
     warning(msg_folds)
   }
-  if (missing(SL.library)) {
-    SL.library <- c("SL.mean", "SL.glm")
+  if (missing(SL.library1)) {
+    SL.library1 <- c("SL.mean", "SL.glm")
+  }
+  if (missing(SL.library2)) {
+    SL.library2 <- c("SL.mean", "SL.glm")
   }
   if (!is.data.frame(X)){
     X <- as.data.frame(X)
@@ -31,14 +37,18 @@ estimate_mu <- function(Y, A, X, folds, SL.library = c("SL.glm", "SL.mean"), V =
   method <- "method.NNLS"
   n <- nrow(X)
   objects <- vector("list", length(folds))
-  for (ff in c(1,3)) {
-    train_indices <- folds[[ff]]
-    objects[[ff]] <- SuperLearner::SuperLearner(Y[train_indices],
-                                                data.frame(X, A = A)[train_indices, , drop = FALSE],
-                                                SL.library = SL.library,
-                                                family = stats::gaussian(),
-                                                cvControl = cvControl, method = method)
-  }
+  objects[[1]] <- SuperLearner::SuperLearner(Y[folds[[1]]],
+                                             data.frame(X, A = A)[folds[[1]], , drop = FALSE],
+                                             SL.library = SL.library1,
+                                             family = stats::gaussian(),
+                                             cvControl = cvControl, method = method)
+  
+  objects[[3]] <- SuperLearner::SuperLearner(Y[folds[[3]]],
+                                             data.frame(X, A = A)[folds[[3]], , drop = FALSE],
+                                             SL.library = SL.library2,
+                                             family = stats::gaussian(),
+                                             cvControl = cvControl, method = method)  
+  
   mu <- function(a, x, ff) {
     if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
     out <- rep(NA, length(a))
@@ -59,12 +69,15 @@ estimate_mu <- function(Y, A, X, folds, SL.library = c("SL.glm", "SL.mean"), V =
 #' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
 #' @param X A matrix or data frame of covariates of size n x d (input data in `[0,1]`).
 #' @param folds A list of cross-validation folds (e.g., a list of indices for each fold).
-#' @param SL.library Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default).
+#' @param SL.library1 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.
+#' @param SL.library2 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.
 #' @param V Number of folds inside the SuperLearner (2L by default).
 #' @param threshold A numeric scalar that sets the minimum allowed value for upper and lower bound estimations (1e-2 by default). Constrains estimation to `[threshold, 1 - threshold]`.
 #' @return A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X)
 #' @export
-estimate_nu <- function(Xi, A, X, folds, SL.library=c("SL.glm", "SL.mean"), V = 2L, threshold = 1e-2) {
+estimate_nu <- function(Xi, A, X, folds, SL.library1=c("SL.glm", "SL.mean"),  
+                        SL.library2=c("SL.glm", "SL.mean"), 
+                        V = 2L, threshold = 1e-2) {
   if (!(threshold<5*1e-2 & threshold>0)) {
     msg_threshold <- paste("Threshold:", threshold, "is not small enough or not positive")
     warning(msg_threshold)
@@ -73,8 +86,11 @@ estimate_nu <- function(Xi, A, X, folds, SL.library=c("SL.glm", "SL.mean"), V = 
     msg_folds <- paste("Number of folds:",V, "is either smaller than 1 or greater than 10")
     warning(msg_folds)
   }
-  if (missing(SL.library)) {
-    SL.library <- c("SL.mean", "SL.glm")
+  if (missing(SL.library1)) {
+    SL.library1 <- c("SL.mean", "SL.glm")
+  }
+  if (missing(SL.library2)) {
+    SL.library2 <- c("SL.mean", "SL.glm")
   }
   if (!is.data.frame(X)){
     X <- as.data.frame(X)
@@ -83,14 +99,16 @@ estimate_nu <- function(Xi, A, X, folds, SL.library=c("SL.glm", "SL.mean"), V = 
   method <- "method.NNLS"
   n <- nrow(X)
   objects <- vector("list", length(folds))
-  for (ff in c(1,3)) {
-    train_indices <- folds[[ff]]
-    objects[[ff]] <- SuperLearner::SuperLearner(Xi[train_indices],
-                                                data.frame(X, A = A)[train_indices, , drop = FALSE],
-                                                SL.library = SL.library,
-                                                family = stats::binomial(),
-                                                cvControl = cvControl, method = method)
-  }
+  objects[[1]] <- SuperLearner::SuperLearner(Xi[folds[[1]]],
+                                             data.frame(X, A = A)[folds[[1]], , drop = FALSE],
+                                             SL.library = SL.library1,
+                                             family = stats::binomial(),
+                                             cvControl = cvControl, method = method)
+  objects[[3]] <- SuperLearner::SuperLearner(Xi[folds[[3]]],
+                                             data.frame(X, A = A)[folds[[3]], , drop = FALSE],
+                                             SL.library = SL.library2,
+                                             family = stats::binomial(),
+                                             cvControl = cvControl, method = method)  
   nu <- function(a, x, ff) {
     if (length(a) != nrow(x)) stop("Length of 'a' must match number of rows in 'x'")
     out <- stats::predict(objects[[ff]],newdata = data.frame(cbind(x,A=a)))$pred

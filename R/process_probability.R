@@ -13,12 +13,16 @@
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
+#' @param SL.library1 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.
+#' @param SL.library2 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.
 #'
 #' @return  A numeric value corresponding to the optimal threshold chosen 
 #' from the candidate sequence.
 #' 
 #' @export
-learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha){
+learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha, 
+                            SL.library1 = SL.library1, 
+                            SL.library2 = SL.library2){
   check_data(Y, Xi, A, X, folds)
   
   X_train <- X[folds[[2]],]
@@ -26,9 +30,14 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha){
   Y_train <- Y[folds[[2]]]
   Xi_train <- Xi[folds[[2]]]
 
-  mu.hat.nj <- PLUCR::estimate_mu(Y=Y, A=A, X=X, folds=folds, SL.library = SL.library, V=2L)
-  nu.hat.nj <- PLUCR::estimate_nu(Xi=Xi, A=A, X=X, folds=folds, SL.library = SL.library,V=2L)
-  ps.hat.nj <- PLUCR::estimate_ps(A=A, X=X, folds=folds, SL.library = SL.library,V=2L)
+  mu.hat.nj <- PLUCR::estimate_mu(Y=Y, A=A, X=X, folds=folds, 
+                                  SL.library1 = SL.library1, 
+                                  SL.library2 = SL.library2, V=2L)
+  nu.hat.nj <- PLUCR::estimate_nu(Xi=Xi, A=A, X=X, folds=folds, 
+                                  SL.library1 = SL.library1, 
+                                  SL.library2 = SL.library2, V=2L)
+  ps.hat.nj <- PLUCR::estimate_ps(A=A, X=X, folds=folds, 
+                                  SL.library = SL.library2, V=2L)
   
   mu0_train <- function(a,x){mu.hat.nj(a=a,x=x,ff=1)}
   nu0_train <- function(a,x){nu.hat.nj(a=a,x=x,ff=1)}
@@ -69,6 +78,10 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha){
 #' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
+#' @param conf_level A numeric scalar representing the confidence level (0.05 by default).
+#' @param card_lambda A numeric scalar representing the cardinal of Lambdas.
+#' @param card_B A numeric scalar representing the cardinal of B
+
 #'
 #' @return 
 #' A list containing a numeric vector of length 2:
@@ -78,9 +91,11 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha){
 #' }
 #' 
 #' @export
-lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, alpha){
+lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, alpha, 
+                                       conf_level, card_lambda, card_B){
   offset_nu <- stats::qlogis(nu0(A, X))
   H_XA <- HX(A, X, prop_score)
+  
   
   df_nu <- tibble::tibble(xi = Xi, new.cov = ifelse(H_XA * as.vector(pi) == 0, 1e-5, H_XA * as.vector(pi)))
   nu_update_obj <- stats::glm(xi ~ -1 + ., offset = offset_nu, 
@@ -93,13 +108,14 @@ lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, al
   }
   updated_nuXA <- update_nu_XA(stats::qlogis(nu0(A, X)),epsilon2, sigma_psi_collection=pi, H_XA = HX(A, X, prop_score))
   s_n <- binary_S_p(pi, X, alpha, Delta_nu)
-  
+  quantile_S <- qnorm(1-(conf_level/card_B))
   Vs_n <- stats::var(ifelse(A==pi,H_XA,0) * (Xi - updated_nuXA) + pi * Delta_nu(X) - s_n)
-  upper_bound_sn <- s_n + 1.64 * sqrt(Vs_n/nrow(X))
+  upper_bound_sn <- s_n + quantile_S * sqrt(Vs_n/nrow(X))
   
   epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi, X)) + ifelse(pi == A, HX(pi, X, prop_score),0), family = stats::gaussian())
   V_targeted<- mean(mu0(pi,X) + stats::coef(epsilon_model) * ifelse(pi==A,HX(pi,X,prop_score),0))
+  quantile_V <- qnorm(1-(conf_level/(card_B*card_lambda)))
   Var_pn <- stats::var( (ifelse(A==pi,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi,X))-V_targeted) #varphi
-  lower_bound_V_pn <- V_targeted - 1.64*sqrt(Var_pn/nrow(X))
+  lower_bound_V_pn <- V_targeted - quantile_V*sqrt(Var_pn/nrow(X))
   return(list(c(lower_bound_V_pn, upper_bound_sn)))
 }

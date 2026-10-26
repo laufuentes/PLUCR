@@ -133,39 +133,28 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
 #' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
-#' @param scenario_mu String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").
-#' @param scenario_nu String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").
 #' @param seed Integer or NA (NA by default).
+#' @param policy A numeric vector of treatment recommendations associated 
+#' with \code{X} (length n). Defaults to NULL.
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
-V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, ncov=10L, 
-                scenario_mu=c("Linear", "Threshold", "Mix", "Linear2", "Null", "Realistic"), 
-                scenario_nu=c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"), seed=NA){
-  `%>%`<- magrittr::`%>%`
-  if(scenario_mu=="Realistic"){
-    df <- generate_realistic_data(B, ncov=5L, seed=NA)[[1]]
-    y1 <- (df$Y.1 - min(df$Y.1))/(max(df$Y.1)-min(df$Y.1))
-    y0 <- (df$Y.0 - min(df$Y.0))/(max(df$Y.0)-min(df$Y.0))
-    X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
-    X_norm <- (X - matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE)) /
-      (matrix(apply(X,2,max), nrow(X), ncol(X), byrow=TRUE) - 
-         matrix(apply(X,2,min), nrow(X), ncol(X), byrow=TRUE))
-    attr(X, "min_Y") <- unique(df_complete$min_Y)
-    attr(X, "max_Y") <- unique(df_complete$max_Y)
-    psi_X <- psi(X_norm)
-  }else{
-    df <- generate_data(B, ncov=ncov, scenario_mu=scenario_mu, scenario_nu=scenario_nu, seed=seed)[[1]]
-    y1 <- df$Y.1
-    y0 <- df$Y.0
-    X <- df%>%dplyr::select(dplyr::starts_with("X."))%>% as.matrix()
-    psi_X <- psi(X)
-  }
-  sigma_psi <-sigma_beta(psi_X, beta, centered)
+V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, 
+                ncov=10L, seed=NA, policy = NULL){
   if(!is.na(seed)){
     set.seed(seed)
   }
-  action <- stats::rbinom(nrow(X), 1, sigma_psi)
+  df <- generate_data(B, ncov=ncov, seed=seed)[[1]]
+  y1 <- df$Y.1
+  y0 <- df$Y.0
+  X <- df|>dplyr::select(dplyr::starts_with("X."))|> as.matrix()
+  if(is.null(policy)){
+    psi_X <- psi(X)
+    sigma_psi <-sigma_beta(psi_X, beta, centered)
+    action <- stats::rbinom(nrow(X), 1, sigma_psi)
+  }else{
+    action <- policy
+  }
   out <- mean(action * y1 + (1 - action) * y0)
   return(out)
 }
@@ -184,7 +173,6 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6, ncov=10L,
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
 V_Pn <- function(policy, y1, y0){
-  `%>%`<- magrittr::`%>%`
   out <- mean(policy * y1 + (1 - policy) * y0)
   return(out)
 }

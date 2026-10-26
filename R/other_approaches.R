@@ -32,7 +32,9 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                                      nu0_train, nu0_test, 
                                      prop_score_train, prop_score_test, 
                                      Lambdas=seq(1, 8, by=1), 
-                                     alpha=0.1, precision=0.05,B=c(0.05, 0.1, 0.25, 0.5), 
+                                     alpha=0.1, precision=0.05,
+                                     B=c(0.05, 0.1, 0.25, 0.5), 
+                                     conf_level = 0.05,
                                      centered=FALSE, root.path){
   
   if (!dir.exists(root.path)) {
@@ -69,69 +71,96 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
   ##########################################
   # Step 2: Training process: grid search  #
   ##########################################
-  ##### 1.1- Start by testing \code{lambda}=0 
-  combinations <- NULL
-  naive_opt_res <- NULL
-  naive_opt_theta <- NULL
-  stopped <- FALSE
-  lambda <- 0
-
-  theta_0 <- PLUCR::FW(X_train,delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
-                       delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}, 
-                       lambda=0, beta=0.05, precision=precision) 
-  
-  ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
-  attr(theta_0, "lambda") <- 0 
-  for(beta in B){
-    res <- process_results(theta_0, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, 0, alpha,  beta, centered)
-    if (res$upper_bound_constraint < 0) {
-      combinations <- rbind(combinations, c(beta, 0))
-      naive_opt_res <- rbind(naive_opt_res,res)
-      naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_0
-      stopped<-TRUE
+  first_lambda <- Lambdas[1]
+  Lambdas <- sort(Lambdas, decreasing = TRUE)
+  last_success_lambda <- naive_opt_res <- naive_opt_theta <- combinations <- NULL
+  cardLambda <- length(Lambdas) + 1 
+  cardB <- length(B)
+  for (beta in B){
+    for (lambda in Lambdas){
+      if(beta*lambda >= 8){break}
+      # Policy optimization
+      theta <- FW(X = X_train, lambda=lambda, beta=beta, precision=precision,
+                  delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
+                  delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}) 
+      
+      res <- process_results(theta = theta, X=  X_test, A = A_test, 
+                             Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                             nu0 = nu0_test, prop_score = prop_score_test, 
+                             lambda = lambda, alpha = alpha, beta=  beta, 
+                             centered = centered, card_lambda = cardLambda, 
+                             card_B = cardB, conf_level = conf_level)
+      if (res$upper_bound_constraint <= 0) {
+        saved_result <- res
+        theta_opt <- theta
+        attr(theta_opt, "lambda") <- lambda
+        last_success_lambda <- lambda
+      } else {break}
+    } 
+    if (!is.null(last_success_lambda)) {
+      naive_opt_res <- rbind(naive_opt_res, saved_result)
+      naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_opt
+      combinations <- rbind(combinations, c(beta, last_success_lambda))
+      saved <- TRUE
     }
   }
-  ##### If your constraint was not satified with lambda=0 goes onto step 2
-  ##### 2.1- Test different lambda and beta combinations and save the optimal solutions satisfying the constraint 
-  ### Training 
-  if(!stopped){
+  if (last_success_lambda == first_lambda) {
+    out0 <- PLUCR::Optimization_Estimation(mu0 = mu0_train, nu0 = nu0_train, 
+                                           prop_score = prop_score_train, 
+                                           X = X_train, A = A_train, 
+                                           Y = Y_train, Xi = Xi_train, 
+                                           lambda = 0, alpha = alpha, 
+                                           precision = precision, tol = tol,
+                                           beta = 0.05, centered = centered)
+    theta_0 <- out0$theta_collection[[length(out0$theta_collection)]] # Fixed out -> out0
+    attr(theta_0, "lambda") <- 0 
     for (beta in B){
-      saved <- FALSE
-      for (lambda in Lambdas){
-        # Policy optimization
-        theta_opt <- FW(X_train,delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
-                        delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}, 
-                        lambda=lambda, beta=beta, precision=precision) 
+      res_0 <- process_results(theta = theta_0, X = X_test, A = A_test, 
+                               Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                               nu0 = nu0_test, prop_score = prop_score_test, 
+                               lambda = 0, alpha = alpha, beta = beta, 
+                               centered = centered, card_lambda = cardLambda, 
+                               card_B = cardB, conf_level = conf_level)    
       
-        res <- process_results(theta_opt, X_test, A_test, Y_test, Xi_test, mu0_test, nu0_test, prop_score_test, lambda, alpha,  beta, centered)
-        if (!saved && res$upper_bound_constraint < 0) {
-          saved <- TRUE
-          combinations <- rbind(combinations, c(beta, lambda))
-          naive_opt_res <- rbind(naive_opt_res,res)
-          naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_opt
-          saved <- TRUE
-          break
-        }
+      if (res_0$upper_bound_constraint <= 0){
+        naive_opt_res <- rbind(naive_opt_res, res_0)
+        naive_opt_theta[[length(naive_opt_theta)+1]] <- theta_0
+        combinations <- rbind(combinations, c(beta, 0))
+        saved <- TRUE
       }
     }
-  }
-  if(!is.null(naive_opt_theta)){
+  }                                   
+  if (!saved) {warning("Algorithm stopped: None of the parameters satisfied the constraint")}
+  if(!is.null(naive_opt_res)){
     idx_n <- which.max(naive_opt_res$lwr_bound_policy_value)
+    saveRDS(naive_opt_res[idx_n,], 
+            file=file.path(root.path, "Evaluation","Naive.rds"))
+    
+    theta_final <- naive_opt_theta[[idx_n]]
     beta_n <-combinations[idx_n,][1]
     lambda_n <-combinations[idx_n,][2]
-    theta_final <- naive_opt_theta[[idx_n]]
     attr(theta_final, "lambda") <- lambda_n
     attr(theta_final, "beta") <- beta_n
-    saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Naive_approach.rds")))
+    saveRDS(theta_final, file=file.path(root.path, "Theta_opt", 
+                                        "Naive.rds"))
   }else{
-    theta_final <- -sign(theta_0)*theta_0 * 1e100
+    theta_final <- -sign(theta)*theta * 1e100
+    res <- process_results(theta = theta_final, X = X_test, A = A_test, 
+                           Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
+                           nu0 = nu0_test, prop_score = prop_score_test, 
+                           lambda = lambda, alpha = alpha, beta = 0, 
+                           centered = centered, conf_level = conf_level,
+                           card_lambda = cardLambda, card_B = cardB)
+    saveRDS(res, file=file.path(root.path,"Evaluation", "Naive.rds"))
     attr(theta_final, "lambda") <- lambda
     attr(theta_final, "beta") <- 0
-    saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Naive_approach.rds")))
+    saveRDS(theta_final, file = file.path(root.path, "Theta_opt", 
+                                          "Naive.rds"))
   }
   
   psi_values <- make_psi(theta_final)(X_test)
-  optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
+  optimal_treatment_rule <- sigma_beta(psi_values, 
+                                       beta = attr(theta_final, "beta"))
   
   # Calculate proportion over 0.5
   prop_over_0.50 <- mean(optimal_treatment_rule > 0.5)
@@ -143,8 +172,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
         "Consider relaxing it if treatment is being under-assigned."), 
       100 * prop_over_0.50))
   }
-  
-  return(list(theta_0,theta_final))
+  return(theta_final)
 }
 
 #' Oracular approach main algorithm
@@ -198,7 +226,6 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
   ########################################
   # Step 1: Compute nuisance parameters #
   ########################################
-  
   ### Training data 
   X_train <- X[folds[[2]],]
   A_train <- A[folds[[2]]]
@@ -228,16 +255,17 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
   theta_0 <- PLUCR::FW(X_train,delta_Mu=delta_Mu, delta_Nu=delta_Nu, 
                        lambda=0, beta=0.05, precision=precision) 
   
-  ##### 1.2- Check whether not considering your constraint satisfies already your constraint  
+  ##### 1.2- Check whether not considering your constraint satisfies already 
+  ##### the constraint  
   attr(theta_0, "lambda") <- 0 
   for(beta in B){
     saved <- FALSE
-    res <- oracular_process_results(theta_0, ncov= ncov,
-                                    scenario_mu=scenario_mu, scenario_nu = scenario_nu, 
-                                    lambda=0, alpha=alpha, beta=beta, centered=centered)
+    res <- oracular_process_results(theta = theta_0, ncov= ncov, lambda = 0, 
+                                    alpha = alpha, beta = beta, 
+                                    centered = centered)
     if (!saved && res$constraint < 0) {
       combinations <- rbind(combinations, c(beta, 0))
-      opt_res <- rbind(opt_res,res)
+      opt_res <- rbind(opt_res, res)
       opt_theta[[length(opt_theta)+1]] <- theta_0
       saved <- TRUE
       stopped <- TRUE 
@@ -257,9 +285,9 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
                         delta_Nu=delta_Nu, 
                         lambda=lambda, beta=beta, precision=precision) 
         
-        res <- oracular_process_results(theta_opt, ncov= ncov, 
-                                        scenario_mu=scenario_mu, scenario_nu = scenario_nu, 
-                                        lambda=lambda, alpha=alpha, beta=beta, centered=centered)
+        res <- oracular_process_results(theta= theta_opt, ncov= ncov, 
+                                        lambda = lambda,alpha=alpha, 
+                                        beta=beta, centered=centered)
         if (!saved && res$constraint < 0) {
           saved <- TRUE
           combinations <- rbind(combinations, c(beta, lambda))
@@ -271,14 +299,32 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
       }
     }
   }
-  idx_opt <- which.max(opt_res$policy_value)
-  beta_opt <-combinations[idx_opt,][1]
-  lambda_opt <-combinations[idx_opt,][2]
-  theta_final <- opt_theta[[idx_opt]]
-  saveRDS(theta_final, file.path(root.path, "Theta_opt", paste0("Oracular_approach.rds")))
+  if(!is.null(combinations)){
+    idx_opt <- which.max(opt_res$policy_value)
+    saveRDS(opt_res[idx_opt,], 
+            file=file.path(root.path, "Evaluation", "Oracular.rds"))
+    beta_opt <-combinations[idx_opt,][1]
+    lambda_opt <-combinations[idx_opt,][2]
+    theta_final <- opt_theta[[idx_opt]]
+    saveRDS(theta_final, file.path(root.path, "Theta_opt", 
+                                   paste0("Oracular.rds")))
+    
+    attr(theta_final, "lambda") <- lambda_opt
+    attr(theta_final, "beta") <- beta_opt
+  }else{
+    theta_final <- -sign(theta)*theta * 1e100
+    attr(theta_final, "lambda") <- lambda
+    attr(theta_final, "beta") <- 0
+    saveRDS(theta_final, file = file.path(root.path, "Theta_opt", 
+                                          "Oracular.rds"))
+    
+    res <- oracular_process_results(theta = theta_final, ncov= ncov, 
+                                    lambda = lambda,alpha=alpha, beta=beta, 
+                                    centered=centered)
+    saveRDS(res, file=file.path(root.path, "Evaluation", "Oracular.rds"))
+
+  }
   
-  attr(theta_final, "lambda") <- lambda_opt
-  attr(theta_final, "beta") <- beta_opt
   
   psi_values <- make_psi(theta_final)(X_test)
   optimal_treatment_rule <- sigma_beta(psi_values, beta = attr(theta_final, "beta"))
