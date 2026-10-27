@@ -16,33 +16,58 @@ process_results(
   lambda,
   alpha = 0.1,
   beta = 0.05,
-  centered = FALSE
+  centered = FALSE,
+  conf_level = 0.05,
+  card_lambda,
+  card_B,
+  pi_X = NULL
 )
 }
 \arguments{
-\item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
+\item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization,
+used to recover an extremal point for convex function construction.}
 
 \item{X}{A matrix of covariates of size n x d (input data in \verb{[0,1]}).}
 
-\item{A}{A binary vector or matrix of length n indicating treatment assignment (0 or 1).}
+\item{A}{A binary vector or matrix of length n indicating treatment assignment
+(0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes
+(in \verb{[0,1]}).}
 
-\item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
+\item{Xi}{A numeric vector or matrix of length n indicating adverse events
+(0 or 1).}
 
-\item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
+\item{mu0}{A fold-specific function predicting primary outcome (Y) given
+treatment (A) and covariates (X).}
 
-\item{nu0}{A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).}
+\item{nu0}{A fold-specific function predicting adverse event outcome (Xi)
+given treatment (A) and covariates (X).}
 
-\item{prop_score}{A function that estimates the propensity score given treatment (A) and covariates (X).}
+\item{prop_score}{A function that estimates the propensity score given
+treatment (A) and covariates (X).}
 
-\item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
+\item{lambda}{A non-negative numeric scalar controlling the penalty for
+violating the constraint.}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in
+\verb{[0,1/2]}, 0.1 by default).}
 
-\item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function.}
+\item{beta}{A non-negative numeric scalar controlling the sharpness of the
+probability function.}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+\item{centered}{A logical value indicating whether to apply centering in
+\code{sigma_beta} (FALSE by default).}
+
+\item{conf_level}{A numeric scalar representing the confidence level (0.05
+by default).}
+
+\item{card_lambda}{A numeric scalar representing the cardinal of Lambdas.}
+
+\item{card_B}{A numeric scalar representing the cardinal of B}
+
+\item{pi_X}{A numeric vector of treatment recommendations associated with
+\code{X} (length n). Defaults to NULL.}
 }
 \value{
 A vector of results for given \code{theta}.

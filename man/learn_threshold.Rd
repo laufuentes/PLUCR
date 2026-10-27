@@ -4,7 +4,17 @@
 \alias{learn_threshold}
 \title{Learn Optimal Decision Threshold}
 \usage{
-learn_threshold(theta, X, A, Y, Xi, folds, alpha)
+learn_threshold(
+  theta,
+  X,
+  A,
+  Y,
+  Xi,
+  folds,
+  alpha,
+  SL.library1 = SL.library1,
+  SL.library2 = SL.library2
+)
 }
 \arguments{
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
@@ -20,6 +30,10 @@ learn_threshold(theta, X, A, Y, Xi, folds, alpha)
 \item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
 \item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+
+\item{SL.library1}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.}
+
+\item{SL.library2}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.}
 }
 \value{
 A numeric value corresponding to the optimal threshold chosen

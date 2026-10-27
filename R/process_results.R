@@ -5,22 +5,35 @@
 #' targeted estimation of the objective functions: risk, constraint, and the main objective, providing a consistent upper bound 
 #' for the constraint estimator.
 #'
-#' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.
+#' @param theta A numeric matrix (k x d). Each row is from FW inner minimization, 
+#' used to recover an extremal point for convex function construction.
 #' @param X A matrix of covariates of size n x d (input data in `[0,1]`).
-#' @param A A binary vector or matrix of length n indicating treatment assignment (0 or 1).
-#' @param Y A numeric vector or matrix of length n representing primary outcomes (in `[0,1]`).
-#' @param Xi A numeric vector or matrix of length n indicating adverse events (0 or 1).
-#' @param mu0 A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).
-#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) given treatment (A) and covariates (X).
-#' @param prop_score A function that estimates the propensity score given treatment (A) and covariates (X).
-#' @param lambda A non-negative numeric scalar controlling the penalty for violating the constraint.
-#' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
-#' @param beta A non-negative numeric scalar controlling the sharpness of the probability function.
-#' @param centered A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).
-#' @param conf_level A numeric scalar representing the confidence level (0.05 by default).
+#' @param A A binary vector or matrix of length n indicating treatment assignment 
+#' (0 or 1).
+#' @param Y A numeric vector or matrix of length n representing primary outcomes 
+#' (in `[0,1]`).
+#' @param Xi A numeric vector or matrix of length n indicating adverse events 
+#' (0 or 1).
+#' @param mu0 A fold-specific function predicting primary outcome (Y) given 
+#' treatment (A) and covariates (X).
+#' @param nu0 A fold-specific function predicting adverse event outcome (Xi) 
+#' given treatment (A) and covariates (X).
+#' @param prop_score A function that estimates the propensity score given 
+#' treatment (A) and covariates (X).
+#' @param lambda A non-negative numeric scalar controlling the penalty for 
+#' violating the constraint.
+#' @param alpha A numeric scalar representing the constraint tolerance (in 
+#' `[0,1/2]`, 0.1 by default).
+#' @param beta A non-negative numeric scalar controlling the sharpness of the 
+#' probability function.
+#' @param centered A logical value indicating whether to apply centering in 
+#' \code{sigma_beta} (FALSE by default).
+#' @param conf_level A numeric scalar representing the confidence level (0.05 
+#' by default).
 #' @param card_lambda A numeric scalar representing the cardinal of Lambdas.
 #' @param card_B A numeric scalar representing the cardinal of B
-#' @param pi_X A numeric vector of treatment recommendations associated with \code{X} (length n). Defaults to NULL. 
+#' @param pi_X A numeric vector of treatment recommendations associated with 
+#' \code{X} (length n). Defaults to NULL. 
 #'
 #' @return A vector of results for given `theta`.
 #' @export
@@ -41,37 +54,44 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda,
     df_mu <- tibble::tibble(
       y = Y, new.cov=H_XA*as.vector(psi_X))
     
-    mu_update_obj <- stats::glm(y ~ -1 + ., offset=offset_mu, data = df_mu, family=stats::binomial())
+    mu_update_obj <- stats::glm(y ~ -1 + ., offset=offset_mu, data = df_mu, 
+                                family=stats::binomial())
     epsilon1 <- as.matrix(as.numeric(mu_update_obj$coefficients))
     
-    Delta_mu <- function(X) { update_mu_XA(stats::qlogis(mu0(rep(1,nrow(X)),X)), epsilon1, psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
-        update_mu_XA(stats::qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, HX(rep(0,nrow(X)),X,prop_score)) }
+    Delta_mu <- function(X) { update_mu_XA(stats::qlogis(mu0(rep(1,nrow(X)),X)), 
+                                           epsilon1, psi_X, HX(rep(1,nrow(X)),
+                                                               X, prop_score)) - 
+        update_mu_XA(stats::qlogis(mu0(rep(0,nrow(X)),X)), epsilon1, psi_X, 
+                     HX(rep(0,nrow(X)), X, prop_score)) }
     r_value <- R_p(psi, X, Delta_mu)
     
     # Build targeted constraint estimator
     df_nu <- tibble::tibble(
       xi = Xi, new.cov=H_XA*as.vector(sigma_psi_X))
     
-    nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, family=stats::binomial())
+    nu_update_obj <- stats::glm(xi ~ -1 + ., offset=offset_nu, data = df_nu, 
+                                family=stats::binomial())
     epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
     
     Delta_nu <- function(X) { update_nu_XA(stats::qlogis(nu0(rep(1,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(1,nrow(X)),X,prop_score)) - 
-        update_nu_XA(stats::qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, sigma_psi_X, HX(rep(0,nrow(X)),X,prop_score))}
+        update_nu_XA(stats::qlogis(nu0(rep(0,nrow(X)),X)), epsilon2, 
+                     sigma_psi_X, HX(rep(0,nrow(X)), X, prop_score))}
     
     constraint <- S_p(psi, X, beta, alpha, centered, Delta_nu)
-    l_value <- Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, centered)
-    pi_X <- rbinom(nrow(X), 1, prob = sigma_psi_X)
+    l_value <- Lagrangian_p(psi, X, Delta_mu, Delta_nu, lambda, alpha, beta, 
+                            centered)
+    pi_X <- stats::rbinom(nrow(X), 1, prob = sigma_psi_X)
   }else{
     sigma_psi_X <- pi_X
     df_nu <- tibble::tibble(xi = Xi, new.cov = H_XA * as.vector(sigma_psi_X))
     nu_update_obj <- stats::glm(xi ~ -1 + ., offset = offset_nu, 
-                                data = df_nu, family = binomial())
+                                data = df_nu, family = stats::binomial())
     epsilon2 <- as.matrix(as.numeric(nu_update_obj$coefficients))
     
     Delta_nu <- function(X) {
-      update_nu_XA(qlogis(nu0(rep(1, nrow(X)), X)), epsilon2, 
+      update_nu_XA(stats::qlogis(nu0(rep(1, nrow(X)), X)), epsilon2, 
                    sigma_psi_X, HX(rep(1, nrow(X)), X, prop_score)) - 
-        update_nu_XA(qlogis(nu0(rep(0, nrow(X)), X)), epsilon2, 
+        update_nu_XA(stats::qlogis(nu0(rep(0, nrow(X)), X)), epsilon2, 
                      sigma_psi_X, HX(rep(0, nrow(X)), X, prop_score))
     }
     r_value <- NA
@@ -79,14 +99,14 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda,
     l_value <- NA
   }  
   
-  quantile_V <- qnorm(1-(conf_level/(card_B*card_lambda)))
+  quantile_V <- stats::qnorm(1-(conf_level/(card_B*card_lambda)))
   epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi_X, X)) + 
                                 ifelse(pi_X == A, HX(pi_X, X, prop_score), 0), 
-                              family = gaussian())
-  V_pn <- mean(mu0(pi_X, X) + coef(epsilon_model) * ifelse(pi_X == A, 
+                              family = stats::gaussian())
+  V_pn <- mean(mu0(pi_X, X) + stats::coef(epsilon_model) * ifelse(pi_X == A, 
                                                            HX(pi_X, X, 
                                                               prop_score), 0))
-  Var_pn <- var((ifelse(A == pi_X, 1, 0)/prop_score(A, X)) * (Y - mu0(A, X) + 
+  Var_pn <- stats::var((ifelse(A == pi_X, 1, 0)/prop_score(A, X)) * (Y - mu0(A, X) + 
                                                                 mu0(pi_X, X)) 
                 - V_pn)
   
@@ -107,11 +127,11 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda,
     return(results)
     }
   
-  quantile_S <- qnorm(1-(conf_level/card_B))
+  quantile_S <- stats::qnorm(1-(conf_level/card_B))
   updated_nuXA <- update_nu_XA(stats::qlogis(nu0(A,X)), epsilon2, 
                                sigma_psi_X, H_XA)
   
-  Vs_n <- var(H_XA * sigma_psi_X * (Xi - updated_nuXA) + sigma_psi_X * 
+  Vs_n <- stats::var(H_XA * sigma_psi_X * (Xi - updated_nuXA) + sigma_psi_X * 
                 Delta_nu(X) - constraint)
   upper_bound_sn <- constraint + quantile_S * sqrt(Vs_n/nrow(X))
   

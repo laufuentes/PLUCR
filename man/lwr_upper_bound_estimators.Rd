@@ -4,7 +4,20 @@
 \alias{lwr_upper_bound_estimators}
 \title{Lower and upper bound estimators for policy value and constraint}
 \usage{
-lwr_upper_bound_estimators(mu0, nu0, prop_score, pi, X, A, Y, Xi, alpha)
+lwr_upper_bound_estimators(
+  mu0,
+  nu0,
+  prop_score,
+  pi,
+  X,
+  A,
+  Y,
+  Xi,
+  alpha,
+  conf_level,
+  card_lambda,
+  card_B
+)
 }
 \arguments{
 \item{mu0}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X).}
@@ -25,6 +38,12 @@ under the learned decision rule.}
 \item{Xi}{A numeric vector or matrix of adverse events outcomes.}
 
 \item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+
+\item{conf_level}{A numeric scalar representing the confidence level (0.05 by default).}
+
+\item{card_lambda}{A numeric scalar representing the cardinal of Lambdas.}
+
+\item{card_B}{A numeric scalar representing the cardinal of B}
 }
 \value{
 A list containing a numeric vector of length 2:

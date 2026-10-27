@@ -13,6 +13,9 @@
 #' @param Xi A numeric vector or matrix of adverse events outcomes.
 #' @param folds A list of cross-validation folds (e.g., a list of indices for each fold). 
 #' @param alpha A numeric scalar representing the constraint tolerance (in `[0,1/2]`, 0.1 by default).
+#' @param conf_level A numeric scalar representing the confidence level (0.05 by default).
+#' @param card_lambda A numeric scalar representing the cardinal of Lambdas.
+#' @param card_B A numeric scalar representing the cardinal of B
 #' @param SL.library1 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.
 #' @param SL.library2 Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.
 #'
@@ -20,8 +23,8 @@
 #' from the candidate sequence.
 #' 
 #' @export
-learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha, 
-                            SL.library1 = SL.library1, 
+learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha, conf_level=0.05,
+                            card_lambda, card_B, SL.library1 = SL.library1, 
                             SL.library2 = SL.library2){
   check_data(Y, Xi, A, X, folds)
   
@@ -54,7 +57,13 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha,
     Y_t <- Y[sample_id]
     Xi_t <- Xi[sample_id]
     pi_train <- ifelse(sigma_psi[sample_id]>t, 1,0)
-    corr_nparams <- lwr_upper_bound_estimators(mu0=mu0_train, nu0=nu0_train, prop_score=prop_score_train, pi=pi_train, X=X_t, A=A_t, Y=Y_t, Xi=Xi_t, alpha=alpha)[[1]]
+    corr_nparams <- lwr_upper_bound_estimators(mu0=mu0_train, nu0=nu0_train, 
+                                               prop_score=prop_score_train, 
+                                               pi=pi_train, X=X_t, A=A_t, Y=Y_t, 
+                                               Xi=Xi_t, alpha=alpha, 
+                                               conf_level = conf_level, 
+                                               card_lambda = card_lambda, 
+                                               card_B = card_B)[[1]]
     results <- rbind(results, c(corr_nparams[[1]], corr_nparams[[2]]))
   }
   final_threshold <- thresholds[which(results[, 2] < 0 & results[, 1] == max(results[results[, 2] < 0, 1]))]
@@ -92,7 +101,7 @@ learn_threshold <- function(theta, X, A, Y, Xi, folds, alpha,
 #' 
 #' @export
 lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, alpha, 
-                                       conf_level, card_lambda, card_B){
+                                       conf_level=0.05, card_lambda, card_B){
   offset_nu <- stats::qlogis(nu0(A, X))
   H_XA <- HX(A, X, prop_score)
   
@@ -108,13 +117,13 @@ lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, al
   }
   updated_nuXA <- update_nu_XA(stats::qlogis(nu0(A, X)),epsilon2, sigma_psi_collection=pi, H_XA = HX(A, X, prop_score))
   s_n <- binary_S_p(pi, X, alpha, Delta_nu)
-  quantile_S <- qnorm(1-(conf_level/card_B))
+  quantile_S <- stats::qnorm(1-(conf_level/card_B))
   Vs_n <- stats::var(ifelse(A==pi,H_XA,0) * (Xi - updated_nuXA) + pi * Delta_nu(X) - s_n)
   upper_bound_sn <- s_n + quantile_S * sqrt(Vs_n/nrow(X))
   
   epsilon_model <- stats::glm(Y ~ -1 + offset(mu0(pi, X)) + ifelse(pi == A, HX(pi, X, prop_score),0), family = stats::gaussian())
   V_targeted<- mean(mu0(pi,X) + stats::coef(epsilon_model) * ifelse(pi==A,HX(pi,X,prop_score),0))
-  quantile_V <- qnorm(1-(conf_level/(card_B*card_lambda)))
+  quantile_V <- stats::qnorm(1-(conf_level/(card_B*card_lambda)))
   Var_pn <- stats::var( (ifelse(A==pi,1,0)/prop_score(A,X))*(Y- mu0(A,X) + mu0(pi,X))-V_targeted) #varphi
   lower_bound_V_pn <- V_targeted - quantile_V*sqrt(Var_pn/nrow(X))
   return(list(c(lower_bound_V_pn, upper_bound_sn)))

@@ -19,7 +19,8 @@ naive_approach_algorithm(
   Lambdas = seq(1, 8, by = 1),
   alpha = 0.1,
   precision = 0.05,
-  B = c(0.05, 0.1, 0.25, 0.5),
+  B = c(0, 0.25, 0.5),
+  conf_level = 0.05,
   centered = FALSE,
   root.path
 )
@@ -29,43 +30,68 @@ naive_approach_algorithm(
 
 \item{A}{A binary vector of size n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes
+(in \verb{[0,1]}).}
 
-\item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
+\item{Xi}{A numeric vector or matrix of length n indicating adverse events
+(0 or 1).}
 
-\item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
+\item{folds}{A list of cross-validation folds (e.g., a list of indices for
+each fold).}
 
-\item{mu0_train}{A function predicting primary outcome (Y) given treatment (A) and covariates (X) for training.}
+\item{mu0_train}{A function predicting primary outcome (Y) given treatment
+(A) and covariates (X) for training.}
 
-\item{mu0_test}{A fold-specific function predicting primary outcome (Y) given treatment (A) and covariates (X) for testing.}
+\item{mu0_test}{A fold-specific function predicting primary outcome (Y) given
+treatment (A) and covariates (X) for testing.}
 
-\item{nu0_train}{A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for training.}
+\item{nu0_train}{A function predicting adverse event outcome (Xi) given
+treatment (A) and covariates (X) for training.}
 
-\item{nu0_test}{A function predicting adverse event outcome (Xi) given treatment (A) and covariates (X) for testing.}
+\item{nu0_test}{A function predicting adverse event outcome (Xi) given
+treatment (A) and covariates (X) for testing.}
 
-\item{prop_score_train}{A function that estimates the propensity score given treatment (A) and covariates (X) for training.}
+\item{prop_score_train}{A function that estimates the propensity score given
+treatment (A) and covariates (X) for training.}
 
-\item{prop_score_test}{A function that estimates the propensity score given treatment (A) and covariates (X) for testing.}
+\item{prop_score_test}{A function that estimates the propensity score given
+treatment (A) and covariates (X) for testing.}
 
-\item{Lambdas}{A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).}
+\item{Lambdas}{A sequence of non-negative numeric scalars controlling the
+penalty for violating the constraint (seq(1,8,by=1) by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in
+\verb{[0,1/2]}, 0.1 by default).}
 
-\item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
+\item{precision}{A numeric scalar defining the desired convergence precision
+(0.05 by default). The number of Frank-Wolfe iterations (K) is inversely
+proportional to this value, calculated as 1/precision.}
 
-\item{B}{A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0.05, 0.1, 0.25, 0.5) by default).}
+\item{B}{A vector of non-negative scalars controlling the sharpness of the
+treatment probability function (c(0, 0.25, 0.5) by default).}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+\item{conf_level}{A numeric scalar representing the confidence level
+(0.05 by default).}
+
+\item{centered}{A logical value indicating whether to apply centering in
+\code{sigma_beta} (FALSE by default).}
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
 \value{
-A list of matrices (\code{theta_0} and \code{theta_final}), or \code{theta_0} alone. These matrices are used to construct the optimal treatment rule in two steps. First, build \code{psi} using the \code{make_psi} function and evaluate it at \code{X} (i.e., \code{psi(X)}). Then, obtain the optimal treatment rule by applying \code{sigma_beta} to the selected \code{beta} attribute (\code{sigma_beta(psi(X), beta)}).
+A list of matrices (\code{theta_0} and \code{theta_final}), or \code{theta_0} alone.
+These matrices are used to construct the optimal treatment rule in two steps.
+First, build \code{psi} using the \code{make_psi} function and evaluate it at \code{X}
+(i.e., \code{psi(X)}). Then, obtain the optimal treatment rule by applying
+\code{sigma_beta} to the selected \code{beta} attribute (\code{sigma_beta(psi(X), beta)}).
 }
 \description{
 Learning an optimal treatment policy under constraints.
-This function begins by validating and preprocessing the input data, and assumes that the nuisance components mu0, nu0, and prop_score (train and test),
-have already been estimated. Subsequently, it estimates the optimal treatment policy via the Frank-Wolfe optimization algorithm.
-The procedure includes an inner grid search over candidate values of \code{lambda} and \code{beta} to identify the policy
-that maximizes the expected primary outcome (policy value) while satisfying a constraint on the expected rate of adverse events.
+This function begins by validating and preprocessing the input data, and
+assumes that the nuisance components mu0, nu0, and prop_score (train and
+test), have already been estimated. Subsequently, it estimates the optimal
+treatment policy via the Frank-Wolfe optimization algorithm. The procedure
+includes an inner grid search over candidate values of \code{lambda} and \code{beta} to
+identify the policy that maximizes the expected primary outcome (policy
+value) while satisfying a constraint on the expected rate of adverse events.
 }

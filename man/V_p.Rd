@@ -11,9 +11,8 @@ V_p(
   alpha = 0.1,
   B = 1e+06,
   ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix", "Linear2", "Null", "Realistic"),
-  scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),
-  seed = NA
+  seed = NA,
+  policy = NULL
 )
 }
 \arguments{
@@ -29,11 +28,10 @@ V_p(
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
 
-\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix").}
-
-\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix").}
-
 \item{seed}{Integer or NA (NA by default).}
+
+\item{policy}{A numeric vector of treatment recommendations associated
+with \code{X} (length n). Defaults to NULL.}
 }
 \value{
 A numeric scalar representing the expected primary outcome under the policy.

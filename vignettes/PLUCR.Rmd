@@ -128,7 +128,7 @@ Beta_candidates <- c(0, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.2 means the policy may increase adverse event probability by up to 20%
-alpha.tolerance <- 0.2
+alpha.tolerance <- 0.1
 
 # Optimization precision: Controls the granularity of the policy search.
 # Smaller values lead to finer approximations but require more computation (default is 0.025).
@@ -158,9 +158,11 @@ The output of this procedure includes:
 # ===============================================================
 output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                 Lambdas = Lambda_candidates,
-                                alpha=alpha.tolerance, B= Beta_candidates, 
+                                alpha=alpha.tolerance, 
+                                B= Beta_candidates, 
                                 precision=optimization.precision,
-                                centered=centered, SL.library1 = SL.library1, 
+                                centered=centered, 
+                                SL.library1 = SL.library1, 
                                 SL.library2 = SL.library2, root.path=root.path)
 
 # ---------------------------------------------------------------
@@ -170,12 +172,8 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
 #   - A single theta object if constraint satisfied at lambda=0
 # ---------------------------------------------------------------
 
-if(is.list(output)){
-  theta_0 <- output[[1]]
-  theta_final <- output[[2]]
-}else{
-  theta_final <- output
-}
+
+theta_final <- output
 ```
 
 The main function returns a list of matrices (`theta_0` and `theta_final`), or 
@@ -242,8 +240,8 @@ eval_plucr <- PLUCR::process_results(theta=theta_final, X=X_test, A=A_test,
                                      alpha=alpha.tolerance, 
                                      beta=attr(theta_final, "beta"), 
                                      centered=centered, 
-                                     card_lambda = length(Lambdas) + 1, 
-                                     card_B = length(B))
+                                     card_lambda = length(Lambda_candidates) + 1, 
+                                     card_B = length(Beta_candidates))
 
 # ---------------------------------------------------------------
 # Optional: Oracular evaluation (synthetic scenarios only)
@@ -270,7 +268,10 @@ We can further learn a threshold that translates the treatment probabilities int
 # ---------------------------------------------------------------
 # Step 1. Learn the decision threshold t
 # ---------------------------------------------------------------
-t <- learn_threshold(theta_final, X, A, Y, Xi, folds, alpha.tolerance)
+t <- learn_threshold(theta = theta_final, X = X, A = A, Y = Y, Xi = Xi, 
+                     folds = folds, alpha = alpha.tolerance, 
+                     card_lambda = length(Lambda_candidates)+1, 
+                     card_B = length(Beta_candidates))
 
 # ---------------------------------------------------------------
 # Step 2. Convert treatment probabilities into binary decisions
@@ -302,10 +303,14 @@ adverse events.
 - A constrained-optimal policy, which satisfies the specified constraint on 
 adverse event probability using the uncorrected nuisance estimators.
 ```{r, eval=FALSE}
+mu0_train <- function(a,x){mu.hat.nj(a = a, x = x, ff = 1)}
+nu0_train <- function(a,x){nu.hat.nj(a = a,x = x, ff = 1)}
+prop_score_train <- function(a,x){ps.hat.nj(a = a, x = x, ff = 1)}
+
 # ===============================================================
 # Run the Naive Algorithm to Learn the Optimal Treatment Rule
 # ===============================================================
-naive_output <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
+theta_naive <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                          folds= folds, 
                                          mu0_train = mu0_train, 
                                          mu0_test = mu0_test, 
@@ -316,19 +321,9 @@ naive_output <- naive_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                          alpha = alpha.tolerance, 
                                          centered=centered, 
                                          precision=optimization.precision,
-                                         root.path = root.path)
-
-# ---------------------------------------------------------------
-# Extract learned parameters from output
-# Depending on configuration, the algorithm may return:
-#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
-#   - A single theta object if constraint satisfied at lambda=0
-# ---------------------------------------------------------------
-if(is.list(naive_output)){
- theta_naive <- naive_output[[2]] 
-}else{
-  theta_naive <- naive_output[[1]]
-}
+                                         root.path = root.path, 
+                                         Lambdas = Lambda_candidates, 
+                                         B = Beta_candidates)
 
 # =================================================================
 # Evaluate the Optimal Treatment Rule according to Naive Approach
@@ -341,8 +336,8 @@ eval_naive <- PLUCR::process_results(theta = theta_naive, X = X_test, A = A_test
                                      alpha = alpha.tolerance, 
                                      beta = attr(theta_naive, "beta"), 
                                      centered = centered, 
-                                     card_lambda = length(Lambda)+1, 
-                                     card_B = length(B))
+                                     card_lambda = length(Lambda_candidates)+1, 
+                                     card_B = length(Beta_candidates))
 
 # ---------------------------------------------------------------
 # Optional: Oracular evaluation (synthetic scenarios only)
@@ -372,34 +367,25 @@ This approach serves as a theoretical upper bound on performance and offers a me
 # ===============================================================
 # Run the Orcular Algorithm to Learn the Optimal Treatment Rule
 # ===============================================================
-oracular_output <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
+output_oracular <- oracular_approach_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                                folds=folds,  ncov=ncov,
                                                delta_Mu=delta_mu, delta_Nu= delta_nu, 
                                                alpha = alpha.tolerance,
                                                centered=centered,
                                                precision = optimization.precision, 
-                                               scenario_mu=scenario_mu,
-                                               scenario_nu=scenario_nu, 
                                                root.path = root.path)
 
-# ---------------------------------------------------------------
-# Extract learned parameters from output
-# Depending on configuration, the algorithm may return:
-#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
-#   - A single theta object if constraint satisfied at lambda=0
-# ---------------------------------------------------------------
-if(is.list(oracular_output)){
- theta_oracular <- oracular_output[[2]] 
+if(is.list(output_oracular)){
+  theta_oracular <- output_oracular[[2]]
 }else{
-  theta_oracular <- oracular_output[[1]]
+  theta_oracular <- output_oracular[[1]]
 }
-
 # =================================================================
 # Evaluate oracularly the Optimal Treatment Rule
 # =================================================================
 eval_oracular <- PLUCR::oracular_process_results(theta=theta_oracular, 
                                                  ncov=ncov,  
-                                                 lambda = attr(theta_oracular, "lambda"), 
+                                                 lambda =  attr(theta_oracular, "lambda"), 
                                                  alpha = alpha.tolerance, 
                                                  beta= attr(theta_oracular, "beta"))
 ```
@@ -419,7 +405,7 @@ The function `synthetic_data_plot()` function provides an initial visualization 
 fig <- PLUCR::synthetic_data_plot(delta_Mu=delta_mu, 
                                   delta_Nu=delta_nu, 
                                   root.path=root.path, 
-                                  name=paste0(scenario_mu,"-", scenario_nu))
+                                  name="")
 
 print(fig)
 ```
@@ -433,35 +419,29 @@ In addition, we can visualize the learned treatment policies by plotting treatme
 # two selected covariates (X.1 and X.2) to enable 2-D visualization 
 # of the treatment probabilities. 
 # ===============================================================
+df_new <- PLUCR::generate_data(n=1e6, ncov=ncov, seed = 1)[[1]]
+X_new <- df_new |>select(starts_with("X."))|> as.matrix()
 
-if(is.list(output)){
- PLUCR::visual_treatment_plot(make_psi(theta_0)(X), 
-                              lambda = attr(theta_0, "lambda"), 
-                              beta = attr(theta_0, "beta"), 
-                              centered = centered, 
-                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
-                              root.path = root.path, name = "Initial") 
-}
 
- PLUCR::visual_treatment_plot(make_psi(theta_naive)(X), 
+ PLUCR::visual_treatment_plot(make_psi(theta_naive)(X_new), 
                               lambda = attr(theta_naive, "lambda"), 
                               beta = attr(theta_naive, "beta"), 
                               centered = centered, 
-                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              Var_X_axis = df_new$X.1, Var_Y_axis = df_new$X.2,
                               root.path = root.path, name = "Naive")
  
- PLUCR::visual_treatment_plot(make_psi(theta_final)(X), 
+ PLUCR::visual_treatment_plot(make_psi(theta_final)(X_new), 
                               lambda = attr(theta_final, "lambda"), 
                               beta = attr(theta_final, "beta"), 
                               centered = centered, 
-                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              Var_X_axis = df_new$X.1, Var_Y_axis = df_new$X.2,
                               root.path = root.path, name = "Final")
  
- PLUCR::visual_treatment_plot(make_psi(theta_oracular)(X), 
+ PLUCR::visual_treatment_plot(make_psi(theta_oracular)(X_new), 
                               lambda = attr(theta_oracular, "lambda"), 
                               beta = attr(theta_oracular, "beta"), 
                               centered = centered, 
-                              Var_X_axis = df_obs$X.1, Var_Y_axis = df_obs$X.2,
+                              Var_X_axis = df_new$X.1, Var_Y_axis = df_new$X.2,
                               root.path = root.path, name = "Oracular")
 ```
 
@@ -471,29 +451,7 @@ Finally, we compare treatment recommendations across approaches by evaluating th
 # ===============================================================
 # Visualize metrics for different outcomes 
 # ===============================================================
-eval_0 <- PLUCR:: process_results(theta = theta_0, X = X_test, A = A_test, 
-                                  Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
-                                  nu0 = nu0_test, prop_score = prop_score_test, 
-                                  lambda=attr(theta_0, "lambda"), 
-                                  alpha = alpha.tolerance,  
-                                  beta=attr(theta_0, "beta"), 
-                                  centered = centered, 
-                                  card_lambda = lenght(Lambdas) + 1, 
-                                  card_B = length(B))[[1]]
-
-if(is.list(output)){
-  data <- tibble(
-  method = c("Theta.0", "Theta.naive.PLUCR", "Theta.PLUCR", "Theta.Oracle.PLCUR"),
-  policy_value = c(eval_0$policy_value, 
-                   eval_naive_oracular$policy_value, 
-                   eval_plucr_oracular$policy_value, 
-                   eval_oracular$policy_value),
-  constraint = c(eval_0$constraint, 
-                 eval_naive_oracular$constraint, 
-                 eval_plucr_oracular$constraint, 
-                 eval_oracular$constraint))
-}else{
-  data <- tibble(
+data <- tibble(
   method = c("Theta_naive", "Theta_final", "Theta_oracular"),
   policy_value = c(eval_naive_oracular$policy_value, 
                    eval_plucr_oracular$policy_value, 
@@ -501,7 +459,6 @@ if(is.list(output)){
   constraint = c(eval_naive_oracular$constraint, 
                  eval_plucr_oracular$constraint, 
                  eval_oracular$constraint))
-}
 
 print(data)
 ```
@@ -533,7 +490,6 @@ folds <- SuperLearner::CVFolds(n,
                                cvControl = SuperLearner::SuperLearner.CV.control(V = Jfold, 
                                                                                  shuffle = TRUE))
 
-saveRDS(folds, file=file.path(root.path,"Folds","folds.rds")) 
 checks<- PLUCR::check_data(Y, Xi, A, X, folds)
 ```
 
@@ -639,7 +595,7 @@ theta_saved <- list()
 ##### 1.1- Test different \code{lambda} and \code{beta} combinations and save 
 ##### the last solution satisfying the constraint
 for (beta in B){
-  last_sucessfull_lambda <- saved_result <- theta_opt <- NULL
+  last_success_lambda <- saved_result <- theta_opt <- NULL
   for(lambda in Lambdas){
     if(beta * lambda >= 8){break}
     out <- PLUCR::Optimization_Estimation(mu0 = mu0_train, nu0 = nu0_train, 
@@ -674,7 +630,7 @@ for (beta in B){
     }
 }
 ##### 1.2- Test \code{lambda}=0 if all previous solutions satisfied the constraint
-if(last_success_lambda == first_lambda){
+if((!is.null(last_success_lambda)) && last_success_lambda == first_lambda){
   out0 <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
                                          prop_score=prop_score_train, 
                                          X=X_train, A=A_train, Y=Y_train, 

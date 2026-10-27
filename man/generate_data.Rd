@@ -4,23 +4,12 @@
 \alias{generate_data}
 \title{Synthetic data generator and functions generator}
 \usage{
-generate_data(
-  n,
-  ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Linear2"),
-  scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied"),
-  is_RCT = FALSE,
-  seed = NA
-)
+generate_data(n, ncov = 10L, is_RCT = FALSE, seed = NA)
 }
 \arguments{
 \item{n}{Number of observations to generate.}
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
-
-\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Null", "Constant").}
-
-\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix", "Satisfied").}
 
 \item{is_RCT}{Logical value indicating whether the scenario is an RCT (FALSE by default).}
 

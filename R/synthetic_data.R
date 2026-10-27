@@ -100,7 +100,7 @@ model_Xi <- function(X, A){
 #' @return A numeric vector that represents the contrast between primary outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
-#' delta_mu_linear(X)
+#' delta_mu(X)
 #' @export
 delta_mu <- function(X){
   out <- model_Y(X, 1) - model_Y(X, 0)
@@ -117,7 +117,7 @@ attr(delta_mu, "vars")<- c(1, 3)
 #' @return A numeric vector that represents the contrast between adverse event outcomes for given \code{X}.
 #' @examples
 #' X <- matrix(stats::runif(10*5), 10, 5)
-#' delta_nu_linear(X)
+#' delta_nu(X)
 #' @export
 delta_nu <- function(X){
   out <- model_Xi(X, 1) - model_Xi(X, 0)
@@ -160,14 +160,14 @@ generate_data <- function(n, ncov=10L, is_RCT=FALSE, seed=NA){
   
   Treatment <- stats::rbinom(n,1,p.s)
   
-  Y.1 <- rbinom(n, 1, mod_Y(X,1)) 
-  Y.0 <- rbinom(n, 1, mod_Y(X,0))
+  Y.1 <- stats::rbinom(n, 1, mod_Y(X,1)) 
+  Y.0 <- stats::rbinom(n, 1, mod_Y(X,0))
   
   delta_Nu <- delta_nu
   mod_Xi <- model_Xi
   
-  Xi.0 <- rbinom(n, 1, mod_Xi(X,0))
-  Xi.1<- rbinom(n, 1, mod_Xi(X,1))
+  Xi.0 <- stats::rbinom(n, 1, mod_Xi(X,0))
+  Xi.1<- stats::rbinom(n, 1, mod_Xi(X,1))
   
   Y_obs <- ifelse(Treatment==1, Y.1, Y.0)
   Xi_obs <- ifelse(Treatment==1, Xi.1, Xi.0)

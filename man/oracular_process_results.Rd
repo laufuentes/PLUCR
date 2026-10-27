@@ -7,8 +7,6 @@
 oracular_process_results(
   theta,
   ncov = 10L,
-  scenario_mu = c("Linear", "Threshold", "Mix", "Null", "Linear2", "Realistic"),
-  scenario_nu = c("Linear", "Threshold", "Mix", "Satisfied", "Realistic"),
   lambda,
   alpha = 0.1,
   beta = 0.05,
@@ -19,10 +17,6 @@ oracular_process_results(
 \item{theta}{A numeric matrix (k x d). Each row is from FW inner minimization, used to recover an extremal point for convex function construction.}
 
 \item{ncov}{Number of baseline covariates (at least 2L and 10L by default).}
-
-\item{scenario_mu}{String indicating the type of scenario for delta_Mu ("Linear", "Threshold", "Mix", "Linear2", "Realistic").}
-
-\item{scenario_nu}{String indicating the type of scenario for delta_Nu ("Linear", "Threshold", "Mix","Satisfied", "Realistic").}
 
 \item{lambda}{A non-negative numeric scalar controlling the penalty for violating the constraint.}
 

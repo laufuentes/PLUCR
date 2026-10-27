@@ -9,7 +9,8 @@ estimate_mu(
   A,
   X,
   folds,
-  SL.library = c("SL.glm", "SL.mean"),
+  SL.library1 = c("SL.glm", "SL.mean"),
+  SL.library2 = c("SL.glm", "SL.mean"),
   V = 2L,
   threshold = 0.01
 )
@@ -23,7 +24,9 @@ estimate_mu(
 
 \item{folds}{A list of cross-validation folds (e.g., a list of indices for each fold).}
 
-\item{SL.library}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default).}
+\item{SL.library1}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to fit the nuisances for training PLUC.}
+
+\item{SL.library2}{Vector of libraries for training SuperLearner (c("SL.glm", "SL.mean") by default). This library is used to evaluate policies.}
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 

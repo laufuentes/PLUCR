@@ -39,6 +39,8 @@
 #' proportional to this value, calculated as 1/precision.
 #' @param B A vector of non-negative scalars controlling the sharpness of the 
 #' treatment probability function (c(0, 0.25, 0.5) by default).
+#' @param conf_level A numeric scalar representing the confidence level 
+#' (0.05 by default).
 #' @param centered A logical value indicating whether to apply centering in 
 #' \code{sigma_beta} (FALSE by default).
 #' @param root.path Path to the folder where all results are to be saved.
@@ -106,7 +108,7 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
                   delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
                   delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)}) 
       
-      res <- process_results(theta = theta, X=  X_test, A = A_test, 
+      res <- process_results(theta = theta, X =  X_test, A = A_test, 
                              Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
                              nu0 = nu0_test, prop_score = prop_score_test, 
                              lambda = lambda, alpha = alpha, beta=  beta, 
@@ -126,15 +128,12 @@ naive_approach_algorithm <- function(X, A, Y, Xi, folds,
       saved <- TRUE
     }
   }
-  if (last_success_lambda == first_lambda) {
-    out0 <- PLUCR::Optimization_Estimation(mu0 = mu0_train, nu0 = nu0_train, 
-                                           prop_score = prop_score_train, 
-                                           X = X_train, A = A_train, 
-                                           Y = Y_train, Xi = Xi_train, 
-                                           lambda = 0, alpha = alpha, 
-                                           precision = precision, tol = tol,
-                                           beta = 0.05, centered = centered)
-    theta_0 <- out0$theta_collection[[length(out0$theta_collection)] 
+  if (!is.null(last_success_lambda) && last_success_lambda == first_lambda) {
+    out0 <- PLUCR::FW(X = X_train, lambda = 0, beta = 0.05, 
+                      precision = precision,
+                      delta_Mu=function(X){mu0_train(rep(1,nrow(X)),X)-mu0_train(rep(0,nrow(X)),X)}, 
+                      delta_Nu=function(X){nu0_train(rep(1,nrow(X)),X)-nu0_train(rep(0,nrow(X)),X)})
+    theta_0 <- out0$theta_collection[[length(out0$theta_collection)]] 
     attr(theta_0, "lambda") <- 0 
     for (beta in B){
       res_0 <- process_results(theta = theta_0, X = X_test, A = A_test, 
@@ -324,7 +323,7 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
                         delta_Nu=delta_Nu, 
                         lambda=lambda, beta=beta, precision=precision) 
         
-        res <- oracular_process_results(theta= theta_opt, ncov= ncov, 
+        res <- oracular_process_results(theta = theta_opt, ncov= ncov, 
                                         lambda = lambda,alpha=alpha, 
                                         beta=beta, centered=centered)
         if (!saved && res$constraint < 0) {
@@ -351,7 +350,7 @@ oracular_approach_algorithm <- function(X, A, Y, Xi, folds, ncov,
     attr(theta_final, "lambda") <- lambda_opt
     attr(theta_final, "beta") <- beta_opt
   }else{
-    theta_final <- -sign(theta)*theta * 1e100
+    theta_final <- -sign(theta_opt)*theta_opt * 1e100
     attr(theta_final, "lambda") <- lambda
     attr(theta_final, "beta") <- 0
     saveRDS(theta_final, file = file.path(root.path, "Theta_opt", 

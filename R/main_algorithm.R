@@ -140,7 +140,7 @@ main_algorithm <- function(X, A, Y, Xi,
   ##### 1.1- Test different \code{lambda} and \code{beta} combinations and save 
   ##### the last solution satisfying the constraint
   for (beta in B){
-    last_sucessfull_lambda <- saved_result <- theta_opt <- NULL
+    last_success_lambda <- saved_result <- theta_opt <- NULL
     for(lambda in Lambdas){
       if(beta * lambda >= 8){break}
       out <- PLUCR::Optimization_Estimation(mu0 = mu0_train, nu0 = nu0_train, 
@@ -151,7 +151,7 @@ main_algorithm <- function(X, A, Y, Xi,
                                             precision = precision, beta = beta, 
                                             centered = centered, tol = tol)
       theta <- out$theta_collection[[length(out$theta_collection)]]
-      res <- process_results(theta = theta_opt, X = X_test, A = A_test, 
+      res <- process_results(theta = theta, X = X_test, A = A_test, 
                              Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
                              nu0 = nu0_test, prop_score = prop_score_test, 
                              lambda = lambda, alpha = alpha, beta = beta, 
@@ -159,7 +159,7 @@ main_algorithm <- function(X, A, Y, Xi,
                              card_lambda = cardLambda, card_B = cardB)
       if(res$upper_bound_constraint <= 0){
         # Save solutions satisfying the constraint
-        saved_res <- res 
+        saved_result <- res 
         theta_opt <- theta
         attr(theta_opt, "lambda") <- lambda
         attr(theta_opt, "beta") <- beta
@@ -179,7 +179,7 @@ main_algorithm <- function(X, A, Y, Xi,
     }
   }
   ##### 1.2- Test \code{lambda}=0 if all previous solutions satisfied the constraint
-  if(last_success_lambda == first_lambda){
+  if(!is.null(last_success_lambda) && last_success_lambda == first_lambda){
     out0 <- PLUCR::Optimization_Estimation(mu0=mu0_train, nu0=nu0_train, 
                                            prop_score=prop_score_train, 
                                            X=X_train, A=A_train, Y=Y_train, 
@@ -190,7 +190,7 @@ main_algorithm <- function(X, A, Y, Xi,
     theta_0 <- out0$theta_collection[[length(out0$theta_collection)]]
     attr(theta_0, "lambda") <- 0
     for (beta in B){
-      res_0 <- process_results(theta= theta_0, X = X_test, A = A_test, 
+      res_0 <- process_results(theta = theta_0, X = X_test, A = A_test, 
                                Y = Y_test, Xi = Xi_test, mu0 = mu0_test, 
                                nu0 = nu0_test, prop_score = prop_score_test, 
                                lambda=0, alpha = alpha, beta = beta, 

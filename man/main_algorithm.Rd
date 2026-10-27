@@ -16,7 +16,9 @@ main_algorithm(
   centered = FALSE,
   Jfold = 3L,
   V = 2L,
-  SL.library = c("SL.mean", "SL.glm", "SL.ranger", "SL.grf"),
+  conf_level = 0.05,
+  SL.library1 = c("SL.mean", "SL.glm", "SL.ranger", "SL.grf"),
+  SL.library2 = c("SL.mean", "SL.glm", "SL.ranger", "SL.grf"),
   tol = 0.025,
   max_iter = 5,
   root.path
@@ -27,29 +29,47 @@ main_algorithm(
 
 \item{A}{A binary vector of size n indicating treatment assignment (0 or 1).}
 
-\item{Y}{A numeric vector or matrix of length n representing primary outcomes (in \verb{[0,1]}).}
+\item{Y}{A numeric vector or matrix of length n representing primary outcomes
+(in \verb{[0,1]}).}
 
-\item{Xi}{A numeric vector or matrix of length n indicating adverse events (0 or 1).}
+\item{Xi}{A numeric vector or matrix of length n indicating adverse events
+(0 or 1).}
 
-\item{Lambdas}{A sequence of non-negative numeric scalars controlling the penalty for violating the constraint (seq(1,8,by=1) by default).}
+\item{Lambdas}{A sequence of non-negative numeric scalars controlling the
+penalty for violating the constraint (seq(1,8,by=1) by default).}
 
-\item{alpha}{A numeric scalar representing the constraint tolerance (in \verb{[0,1/2]}, 0.1 by default).}
+\item{alpha}{A numeric scalar representing the constraint tolerance (in
+\verb{[0,1/2]}, 0.1 by default).}
 
-\item{precision}{A numeric scalar defining the desired convergence precision (0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
+\item{precision}{A numeric scalar defining the desired convergence precision
+(0.05 by default). The number of Frank-Wolfe iterations (K) is inversely proportional to this value, calculated as 1/precision.}
 
-\item{B}{A vector of non-negative scalars controlling the sharpness of the treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default).}
+\item{B}{A vector of non-negative scalars controlling the sharpness of the
+treatment probability function (c(0, 0.05, 0.1, 0.25, 0.5) by default).}
 
-\item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+\item{centered}{A logical value indicating whether to apply centering in
+\code{sigma_beta} (FALSE by default).}
 
 \item{Jfold}{Number of folds for the main algorithm, needs to be set to 3L.}
 
 \item{V}{Number of folds inside the SuperLearner (2L by default).}
 
-\item{SL.library}{Vector of libraries for training Super Learner (c("SL.mean","SL.glm","SL.ranger","SL.grf") by default).}
+\item{conf_level}{A numeric scalar representing the confidence level
+(0.05 by default).}
 
-\item{tol}{A numeric scalar used as an early stopping criterion based on the RMSE between consecutive solutions (0.025 by default).}
+\item{SL.library1}{Vector of libraries for training SuperLearner
+(c("SL.mean","SL.glm","SL.ranger","SL.grf") by default). This library is used
+to fit the nuisances for training PLUC.}
 
-\item{max_iter}{A numeric scalar specifying the maximum number of iterations (5 by default).}
+\item{SL.library2}{Vector of libraries for training SuperLearner
+(c("SL.mean","SL.glm","SL.ranger","SL.grf") by default). This library is used
+to evaluate policies.}
+
+\item{tol}{A numeric scalar used as an early stopping criterion based on the
+RMSE between consecutive solutions (0.025 by default).}
+
+\item{max_iter}{A numeric scalar specifying the maximum number of iterations
+(5 by default).}
 
 \item{root.path}{Path to the folder where all results are to be saved.}
 }
