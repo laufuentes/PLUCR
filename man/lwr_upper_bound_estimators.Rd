@@ -14,7 +14,7 @@ lwr_upper_bound_estimators(
   Y,
   Xi,
   alpha,
-  conf_level,
+  conf_level = 0.05,
   card_lambda,
   card_B
 )

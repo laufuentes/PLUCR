@@ -128,7 +128,7 @@ Beta_candidates <- c(0, 0.25, 0.5)
 
 # Constraint tolerance (alpha): maximum allowed increase in adverse event risk
 # Example: 0.2 means the policy may increase adverse event probability by up to 20%
-alpha.tolerance <- 0.1
+alpha.tolerance <- 0.05
 
 # Optimization precision: Controls the granularity of the policy search.
 # Smaller values lead to finer approximations but require more computation (default is 0.025).
@@ -156,7 +156,7 @@ The output of this procedure includes:
 # ===============================================================
 # Run the Main Algorithm to Learn the Optimal Treatment Rule
 # ===============================================================
-output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
+theta_final <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi, 
                                 Lambdas = Lambda_candidates,
                                 alpha=alpha.tolerance, 
                                 B= Beta_candidates, 
@@ -165,15 +165,6 @@ output <- PLUCR::main_algorithm(X=X, A=A, Y=Y, Xi=Xi,
                                 SL.library1 = SL.library1, 
                                 SL.library2 = SL.library2, root.path=root.path)
 
-# ---------------------------------------------------------------
-# Extract learned parameters from output
-# Depending on configuration, the algorithm may return:
-#   - A list with (1) initial estimate theta_0 and (2) final estimate theta_final
-#   - A single theta object if constraint satisfied at lambda=0
-# ---------------------------------------------------------------
-
-
-theta_final <- output
 ```
 
 The main function returns a list of matrices (`theta_0` and `theta_final`), or 
