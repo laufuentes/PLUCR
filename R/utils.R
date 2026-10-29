@@ -134,8 +134,7 @@ sigma_beta_prime <- function(t, beta=0.05, centered=FALSE){
 #' @param B Integer, number of Monte Carlo repetitions (1e4 by default).
 #' @param ncov Number of baseline covariates (at least 2L and 10L by default).
 #' @param seed Integer or NA (NA by default).
-#' @param policy A numeric vector of treatment recommendations associated 
-#' with \code{X} (length n). Defaults to NULL.
+#' @param policy A function of \code{X}. Defaults to NULL.
 #'
 #' @return A numeric scalar representing the expected primary outcome under the policy.
 #' @export
@@ -153,7 +152,7 @@ V_p <- function(psi, beta=0.05, centered=FALSE, alpha=0.1, B=1e6,
     sigma_psi <-sigma_beta(psi_X, beta, centered)
     action <- stats::rbinom(nrow(X), 1, sigma_psi)
   }else{
-    action <- policy
+    action <- policy(X)
   }
   out <- mean(action * y1 + (1 - action) * y0)
   return(out)

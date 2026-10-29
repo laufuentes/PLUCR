@@ -10,7 +10,8 @@ oracular_process_results(
   lambda,
   alpha = 0.1,
   beta = 0.05,
-  centered = FALSE
+  centered = FALSE,
+  policy = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ oracular_process_results(
 \item{beta}{A non-negative numeric scalar controlling the sharpness of the probability function.}
 
 \item{centered}{A logical value indicating whether to apply centering in \code{sigma_beta} (FALSE by default).}
+
+\item{policy}{A function of \code{X}. Defaults to NULL}
 }
 \value{
 A vector of optimized policy parameters (\code{theta}) trained across folds.

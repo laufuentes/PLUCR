@@ -30,8 +30,7 @@ V_p(
 
 \item{seed}{Integer or NA (NA by default).}
 
-\item{policy}{A numeric vector of treatment recommendations associated
-with \code{X} (length n). Defaults to NULL.}
+\item{policy}{A function of \code{X}. Defaults to NULL.}
 }
 \value{
 A numeric scalar representing the expected primary outcome under the policy.
