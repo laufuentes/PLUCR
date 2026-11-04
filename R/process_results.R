@@ -181,7 +181,7 @@ oracular_process_results <- function(theta, ncov=10L, lambda, alpha=0.1,
     pi_X <- policy(X)
     r_value <- obj_value <- NA 
     constraint_value <- binary_S_p(pi_X, alpha=alpha, delta_Nu = delta_Nu)
-    Value_policy <- V_P(psi=NULL, beta=beta, centered=centered, 
+    Value_policy <- V_p(psi=NULL, beta=beta, centered=centered, 
                         alpha=alpha, ncov=ncov, policy = policy)
   }
   
