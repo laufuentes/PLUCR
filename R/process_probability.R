@@ -116,7 +116,7 @@ lwr_upper_bound_estimators <- function(mu0, nu0, prop_score, pi, X, A, Y, Xi, al
     return(nu1_updated - nu0_updated)
   }
   updated_nuXA <- update_nu_XA(stats::qlogis(nu0(A, X)),epsilon2, sigma_psi_collection=pi, H_XA = HX(A, X, prop_score))
-  s_n <- binary_S_p(pi, X, alpha, Delta_nu)
+  s_n <- binary_S_p(pi_X = pi, X = X, alpha = alpha, delta_Nu =Delta_nu)
   quantile_S <- stats::qnorm(1-(conf_level/card_B))
   Vs_n <- stats::var(ifelse(A==pi,H_XA,0) * (Xi - updated_nuXA) + pi * Delta_nu(X) - s_n)
   upper_bound_sn <- s_n + quantile_S * sqrt(Vs_n/nrow(X))
