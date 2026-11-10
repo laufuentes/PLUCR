@@ -161,9 +161,9 @@ process_results <- function(theta, X, A, Y, Xi, mu0, nu0, prop_score, lambda,
 #'
 #' @return A vector of optimized policy parameters (`theta`) trained across folds.
 #' @export
-oracular_process_results <- function(theta, ncov=10L, lambda, alpha=0.1, 
+oracular_process_results <- function(theta, ncov=10L, lambda, alpha=0.1, B=1e6,
                                      beta=0.05, centered=FALSE, policy = NULL) {
-  exp<- generate_data(n=n,ncov=ncov)
+  exp<- generate_data(n=B,ncov=ncov)
   df_obs <- exp[[2]]
   X <- df_obs |>
     dplyr::select(tidyselect::starts_with("X."))|> as.matrix()
@@ -175,7 +175,6 @@ oracular_process_results <- function(theta, ncov=10L, lambda, alpha=0.1,
     r_value <- R_p(psi=psi, X, delta_Mu)
     constraint_value <- S_p(psi=psi, X=X, beta=beta, alpha=alpha, centered=centered, delta_Nu)
     obj_value <- Lagrangian_p(psi, X, delta_Mu, delta_Nu, lambda, alpha, beta, centered)
-    # Compute optimal policy value and its lower bound
     Value_policy <- V_p(psi, beta=beta, centered=centered, alpha=alpha, ncov=ncov)
   }else{
     pi_X <- policy(X)
